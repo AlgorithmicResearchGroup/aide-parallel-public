@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+# Start a Ray cluster using env-driven host configuration.
+
+set -euo pipefail
+
+SSH_USER="${AIDE_SSH_USER:-ubuntu}"
+HEAD_HOST="${AIDE_HEAD_HOST:-localhost}"
+HEAD_NODE_IP="${AIDE_HEAD_NODE_IP:-127.0.0.1}"
+WORKER_HOSTS="${AIDE_WORKER_HOSTS:-}"
+RAY_PORT="${AIDE_RAY_PORT:-6379}"
+DASHBOARD_PORT="${AIDE_DASHBOARD_PORT:-8265}"
+NUM_GPUS_PER_NODE="${AIDE_NUM_GPUS_PER_NODE:-8}"
+OBJECT_STORE_MEMORY="${AIDE_OBJECT_STORE_MEMORY:-10000000000}"
+
+run_host_cmd() {
+  local host="$1"
+  local cmd="$2"
+  if [[ "$host" == "localhost" || "$host" == "127.0.0.1" ]]; then
+    bash -lc "$cmd"
+  else
+    ssh "${SSH_USER}@${host}" "$cmd"
+  fi
+}
+
+head_cmd="
+ray stop --force || true
+ulimit -n 65536
+ray start --head \
+  --node-ip-address=${HEAD_NODE_IP} \
+  --port=${RAY_PORT} \
+  --dashboard-host=0.0.0.0 \
+  --dashboard-port=${DASHBOARD_PORT} \
+  --num-gpus=${NUM_GPUS_PER_NODE} \
+  --object-store-memory=${OBJECT_STORE_MEMORY} \
+  --include-dashboard=true
+"
+
+echo "Starting Ray head on ${HEAD_HOST} (node IP ${HEAD_NODE_IP})"
+run_host_cmd "$HEAD_HOST" "$head_cmd"
+
+IFS=',' read -r -a workers <<< "$WORKER_HOSTS"
+for worker in "${workers[@]}"; do
+  worker="$(echo "$worker" | xargs)"
+  [[ -z "$worker" ]] && continue
+
+  worker_cmd="
+ray stop --force || true
+ulimit -n 65536
+ray start --address=${HEAD_NODE_IP}:${RAY_PORT} \
+  --num-gpus=${NUM_GPUS_PER_NODE} \
+  --object-store-memory=${OBJECT_STORE_MEMORY}
+"
+
+  echo "Starting Ray worker on ${worker}"
+  run_host_cmd "$worker" "$worker_cmd"
+done
+
+echo "Ray cluster started."
+echo "Head address: ${HEAD_NODE_IP}:${RAY_PORT}"
+echo "Dashboard: http://${HEAD_NODE_IP}:${DASHBOARD_PORT}"

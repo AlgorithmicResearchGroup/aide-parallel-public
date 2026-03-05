@@ -1,0 +1,173 @@
+#!/bin/bash
+
+# Helper script to run sequences of KernelBench tasks
+# This allows running multiple tasks one after another
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+
+echo "=========================================="
+echo "KernelBench Task Sequence Runner"
+echo "=========================================="
+echo ""
+
+# Default settings
+GPU_FRACTION=${GPU_FRACTION:-0.5}
+NUM_EXPERIMENTS=${NUM_EXPERIMENTS:-16}
+WANDB_PROJECT=${WANDB_PROJECT:-"aide-kernelbench"}
+MODEL=${MODEL:-"gpt-4"}
+
+# Parse arguments
+if [ "$1" = "--help" ]; then
+    echo "Usage: $0 [PRESET|TASK_LIST]"
+    echo ""
+    echo "Presets:"
+    echo "  quick        - Run 5 representative Level 1 tasks"
+    echo "  level1       - Run 10 important Level 1 tasks"
+    echo "  level2       - Run 5 fusion tasks from Level 2"
+    echo "  level3       - Run 5 architecture tasks from Level 3"
+    echo "  matmul       - Run all matrix multiplication variants"
+    echo "  activations  - Run all activation function tasks"
+    echo "  test         - Run just 2 tasks for testing"
+    echo ""
+    echo "Or provide a space-separated list of task IDs:"
+    echo "  $0 1_19 1_23 2_1"
+    echo ""
+    echo "Environment variables:"
+    echo "  GPU_FRACTION     - GPU fraction per experiment (default: 0.5)"
+    echo "  NUM_EXPERIMENTS  - Number of parallel experiments (default: 16)"
+    echo "  WANDB_PROJECT    - W&B project name (default: aide-kernelbench)"
+    echo "  MODEL            - Model to use (default: gpt-4)"
+    echo ""
+    exit 0
+fi
+
+# Define task sets
+case "$1" in
+    "quick")
+        TASKS=("1_1" "1_19" "1_23" "1_26" "1_51")
+        STEPS=(15 15 15 15 15)
+        echo "Running quick representative subset (5 tasks)"
+        ;;
+    "level1")
+        TASKS=("1_1" "1_3" "1_19" "1_23" "1_26" "1_33" "1_40" "1_42" "1_51" "1_84")
+        STEPS=(15 15 15 15 15 15 15 15 15 15)
+        echo "Running important Level 1 tasks (10 tasks)"
+        ;;
+    "level2")
+        TASKS=("2_1" "2_4" "2_9" "2_12" "2_52")
+        STEPS=(20 20 20 20 20)
+        echo "Running Level 2 fusion tasks (5 tasks)"
+        ;;
+    "level3")
+        TASKS=("3_1" "3_9" "3_28" "3_35" "3_43")
+        STEPS=(25 25 30 25 30)
+        echo "Running Level 3 architecture tasks (5 tasks)"
+        ;;
+    "matmul")
+        TASKS=("1_1" "1_3" "1_10" "1_11")
+        STEPS=(15 15 15 15)
+        echo "Running matrix multiplication tasks (4 tasks)"
+        ;;
+    "activations")
+        TASKS=("1_19" "1_20" "1_21" "1_22" "1_23" "1_24" "1_25" "1_26")
+        STEPS=(15 15 15 15 15 15 15 15)
+        echo "Running activation function tasks (8 tasks)"
+        ;;
+    "test")
+        TASKS=("1_19" "1_23")
+        STEPS=(10 10)
+        echo "Running test subset (2 tasks)"
+        ;;
+    "")
+        echo "Error: No task set specified"
+        echo "Use --help for usage information"
+        exit 1
+        ;;
+    *)
+        # Custom task list provided
+        TASKS=($@)
+        STEPS=()
+        for task in "${TASKS[@]}"; do
+            # Determine steps based on level
+            level=${task:0:1}
+            case $level in
+                1) STEPS+=(15) ;;
+                2) STEPS+=(20) ;;
+                3) STEPS+=(25) ;;
+                4) STEPS+=(30) ;;
+                *) STEPS+=(20) ;;
+            esac
+        done
+        echo "Running custom task list: ${TASKS[@]}"
+        ;;
+esac
+
+echo "Settings:"
+echo "  GPU Fraction: $GPU_FRACTION"
+echo "  Experiments: $NUM_EXPERIMENTS"
+echo "  W&B Project: $WANDB_PROJECT"
+echo "  Model: $MODEL"
+echo ""
+
+# Track results
+RESULTS_FILE="kb_sequence_results_$(date +%Y%m%d_%H%M%S).txt"
+echo "Results will be saved to: $RESULTS_FILE"
+echo "" | tee -a "$RESULTS_FILE"
+echo "Task Sequence Results - $(date)" | tee -a "$RESULTS_FILE"
+echo "================================" | tee -a "$RESULTS_FILE"
+
+# Run each task
+TOTAL_TASKS=${#TASKS[@]}
+CURRENT=1
+
+for i in "${!TASKS[@]}"; do
+    task="${TASKS[$i]}"
+    steps="${STEPS[$i]}"
+
+    echo "" | tee -a "$RESULTS_FILE"
+    echo "----------------------------------------" | tee -a "$RESULTS_FILE"
+    echo "[$CURRENT/$TOTAL_TASKS] Running task: $task (Steps: $steps)" | tee -a "$RESULTS_FILE"
+    echo "----------------------------------------" | tee -a "$RESULTS_FILE"
+
+    # Run the task
+    "${REPO_ROOT}/cli/aide-run" \
+        --task kernelbench \
+        --kb-task "$task" \
+        --num-experiments "$NUM_EXPERIMENTS" \
+        --gpu-fraction "$GPU_FRACTION" \
+        --wandb-project "$WANDB_PROJECT" \
+        --model "$MODEL" \
+        --steps "$steps" 2>&1 | tee -a "$RESULTS_FILE"
+
+    # Extract speedup from the output (if available)
+    speedup=$(grep -o "speedup: [0-9.]*" "$RESULTS_FILE" | tail -1 | cut -d' ' -f2)
+    if [ -n "$speedup" ]; then
+        echo "Task $task completed with speedup: $speedup" | tee -a "$RESULTS_FILE"
+    fi
+
+    CURRENT=$((CURRENT + 1))
+
+    # Brief pause between tasks
+    if [ $CURRENT -le $TOTAL_TASKS ]; then
+        echo "Waiting 5 seconds before next task..." | tee -a "$RESULTS_FILE"
+        sleep 5
+    fi
+done
+
+echo "" | tee -a "$RESULTS_FILE"
+echo "========================================" | tee -a "$RESULTS_FILE"
+echo "All tasks completed!" | tee -a "$RESULTS_FILE"
+echo "Results saved to: $RESULTS_FILE" | tee -a "$RESULTS_FILE"
+echo "" | tee -a "$RESULTS_FILE"
+
+# Summary
+echo "Summary:" | tee -a "$RESULTS_FILE"
+echo "--------" | tee -a "$RESULTS_FILE"
+for task in "${TASKS[@]}"; do
+    speedup=$(grep "Task $task completed with speedup:" "$RESULTS_FILE" | tail -1 | cut -d':' -f2)
+    if [ -n "$speedup" ]; then
+        echo "  $task: speedup =$speedup" | tee -a "$RESULTS_FILE"
+    else
+        echo "  $task: no speedup data" | tee -a "$RESULTS_FILE"
+    fi
+done

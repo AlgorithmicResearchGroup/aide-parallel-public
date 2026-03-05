@@ -1,0 +1,19 @@
+num_experiments: 64  # 4 experiments per GPU with 0.25 GPU fraction
+num_iterations: 4
+
+model: o4-mini
+feedback_model: o4-mini
+
+steps: 15
+metric: val_loss
+goal: |
+  You are an expert machine learning engineer tasked with taking a step in optimizing a model.
+  Optimize the training setup in `train.py` to minimize validation loss.
+  Focus on improving the autoregressive language model training setup and performance.
+  This is attention mechanism optimization specifically for GPU hardware.
+
+  Note: Running with fractional GPU (0.25 GPU per experiment = 4 experiments per GPU)
+eval_metric: val_loss
+eval: |
+  After implementing changes, invoke `python evaluate_gpu.py` and report the resulting validation loss metric.
+  Treat lower validation loss as better.

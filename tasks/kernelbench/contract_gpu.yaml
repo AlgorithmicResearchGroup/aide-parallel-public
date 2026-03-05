@@ -1,0 +1,38 @@
+# GPU-optimized contract for KernelBench tasks
+# This single contract handles all 270 KernelBench tasks
+# Task ID is passed dynamically at runtime
+
+num_experiments: 16  # Default - can be overridden
+num_iterations: 3    # Number of refinement iterations
+
+model: gpt-4
+feedback_model: gpt-4
+
+steps: 20            # Default - typically overridden based on level
+metric: speedup
+goal: |
+  [THIS WILL BE DYNAMICALLY GENERATED BASED ON TASK ID]
+
+  The goal is to optimize the given PyTorch model for maximum GPU performance.
+  You should generate a ModelNew class that is functionally equivalent to Model
+  but runs faster on GPU through techniques like:
+  - Custom CUDA kernels
+  - Kernel fusion
+  - Memory optimization
+  - Algorithmic improvements
+
+eval_metric: speedup
+eval: |
+  This will be dynamically set to:
+  python evaluate_gpu.py --task-id {task_id} --solution-path optimize.py --device cuda
+
+  The evaluation script will:
+  1. Load the original KernelBench task
+  2. Load your optimized ModelNew implementation
+  3. Check correctness against the original
+  4. Measure speedup on GPU
+  5. Return the speedup metric
+
+# GPU-specific settings
+gpu_memory_requirement: 20000  # MB per experiment (conservative for H100)
+max_parallel_on_same_gpu: 1    # Can be adjusted based on task complexity

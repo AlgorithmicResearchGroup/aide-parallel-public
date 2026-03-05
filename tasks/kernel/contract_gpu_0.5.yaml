@@ -1,0 +1,19 @@
+num_experiments: 32  # 2 experiments per GPU with 0.5 GPU fraction
+num_iterations: 4
+
+model: o4-mini
+feedback_model: o4-mini
+
+steps: 15
+metric: speedup
+goal: |
+  Optimize the PyTorch kernel in optimize.py for runtime speed on GPU.
+  Fuse operations in the forward method while ensuring the max float deviation stays small.
+  Maintain the current code structure.
+  Focus on GPU-specific optimizations like kernel fusion, memory coalescing, and efficient tensor operations.
+
+  Note: Running with fractional GPU (0.5 GPU per experiment = 2 experiments per GPU)
+eval_metric: speedup
+eval: |
+  After implementing changes, invoke `python evaluate_gpu.py --solution-path optimize.py --device cuda` and report the resulting speedup metric.
+  Treat higher speedup as better.

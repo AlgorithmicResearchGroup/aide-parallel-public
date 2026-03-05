@@ -1,0 +1,26 @@
+# GPU-optimized contract for attention task
+# Configured for 2 GPU nodes with 8 H100s each (16 total GPUs)
+
+num_experiments: 16  # Match the number of available GPUs
+num_iterations: 3    # Number of refinement iterations
+
+model: gpt-5
+feedback_model: o4-mini
+
+steps: 12            # Number of AIDE agent steps per experiment
+metric: val_loss
+goal: |
+  Improve the causal multi-head attention used in nanoGPT to minimize validation loss on a Wikipedia corpus.
+  Modify `optimize.py` to implement a drop-in replacement for the baseline attention block while preserving the
+  same interface and tensor shapes. Explore rotary embeddings, gating, caching, or other attention variants that keep
+  the module compatible with the nanoGPT training loop.
+eval_metric: val_loss
+eval: |
+  After each change run `python evaluate_gpu.py --solution-path optimize.py` inside `tasks/attention`.
+  The script automatically detects and uses the GPU assigned by Ray (via CUDA_VISIBLE_DEVICES).
+  It trains a compact nanoGPT model on a tokenized Wikipedia subset for a short schedule and reports `val_loss`.
+  Lower loss is better.
+
+# GPU-specific settings
+gpu_memory_requirement: 20000  # MB per experiment (H100 has 80GB, leaving headroom)
+max_parallel_on_same_gpu: 1    # Don't share GPUs between experiments

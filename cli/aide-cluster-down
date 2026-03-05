@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+# Stop a Ray cluster using env-driven host configuration.
+
+set -euo pipefail
+
+SSH_USER="${AIDE_SSH_USER:-ubuntu}"
+HEAD_HOST="${AIDE_HEAD_HOST:-localhost}"
+WORKER_HOSTS="${AIDE_WORKER_HOSTS:-}"
+
+stop_host() {
+  local host="$1"
+  [[ -z "$host" ]] && return 0
+  if [[ "$host" == "localhost" || "$host" == "127.0.0.1" ]]; then
+    ray stop --force || true
+    pkill -f "ray::" || true
+  else
+    ssh "${SSH_USER}@${host}" "ray stop --force || true; pkill -f 'ray::' || true; rm -rf /tmp/ray/* 2>/dev/null || true"
+  fi
+}
+
+IFS=',' read -r -a workers <<< "$WORKER_HOSTS"
+for worker in "${workers[@]}"; do
+  worker="$(echo "$worker" | xargs)"
+  [[ -z "$worker" ]] && continue
+  echo "Stopping Ray on worker ${worker}"
+  stop_host "$worker"
+done
+
+echo "Stopping Ray on head ${HEAD_HOST}"
+stop_host "$HEAD_HOST"
+
+echo "Ray cluster stopped."

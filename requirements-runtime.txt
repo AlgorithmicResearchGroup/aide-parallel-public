@@ -1,0 +1,10 @@
+google-generativeai
+anthropic
+together
+openai
+transformers
+python-dotenv
+tqdm
+numpy
+torch
+wandb

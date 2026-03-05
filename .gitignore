@@ -1,0 +1,24 @@
+.DS_Store
+
+# Local secrets
+.env
+
+# Python artifacts
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Runtime outputs
+logs/
+workspaces/
+wandb/
+ray_results/
+/tmp/
+
+# Local virtual environments
+.venv/
+venv/
+
+# OS/editor
+.vscode/
+.idea/

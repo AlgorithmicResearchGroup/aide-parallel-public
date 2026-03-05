@@ -1,0 +1,126 @@
+#!/usr/bin/env bash
+# Public entrypoint for running AIDE experiments.
+
+set -euo pipefail
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+
+TASK="attention"
+HEAD_NODE_IP="${AIDE_HEAD_NODE_IP:-}"
+CONTRACT_FILE=""
+NUM_EXPERIMENTS=""
+NUM_ITERATIONS=""
+STEPS=""
+GPU_FRACTION=""
+WANDB_PROJECT=""
+MODEL=""
+FEEDBACK_MODEL=""
+KB_TASK=""
+LOCAL_MODE="false"
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --task)
+      TASK="$2"; shift 2 ;;
+    --contract)
+      CONTRACT_FILE="$2"; shift 2 ;;
+    --head-node-ip)
+      HEAD_NODE_IP="$2"; shift 2 ;;
+    --num-experiments)
+      NUM_EXPERIMENTS="$2"; shift 2 ;;
+    --num-iterations)
+      NUM_ITERATIONS="$2"; shift 2 ;;
+    --steps)
+      STEPS="$2"; shift 2 ;;
+    --gpu-fraction)
+      GPU_FRACTION="$2"; shift 2 ;;
+    --wandb-project)
+      WANDB_PROJECT="$2"; shift 2 ;;
+    --model)
+      MODEL="$2"; shift 2 ;;
+    --feedback-model)
+      FEEDBACK_MODEL="$2"; shift 2 ;;
+    --kb-task)
+      KB_TASK="$2"; shift 2 ;;
+    --local)
+      LOCAL_MODE="true"; shift ;;
+    --help)
+      cat <<'USAGE'
+Usage: ./cli/aide-run [OPTIONS]
+
+Options:
+  --task TASK              Task to run (attention, kernel, kernelbench)
+  --contract FILE          Contract filename inside tasks/<task>/
+  --head-node-ip IP        Ray head-node IP (default: $AIDE_HEAD_NODE_IP)
+  --num-experiments N      Override number of parallel experiments
+  --num-iterations N       Override number of iterations
+  --steps N                Override steps per experiment
+  --gpu-fraction N         GPU fraction per experiment (0.5=2 per GPU)
+  --wandb-project NAME     W&B project name override
+  --model NAME             Generation model override
+  --feedback-model NAME    Feedback model override
+  --kb-task ID             KernelBench task ID (required for kernelbench)
+  --local                  Run locally (no remote Ray address)
+  --help                   Show this message
+
+Examples:
+  ./cli/aide-run --local --num-experiments 2 --steps 1
+  ./cli/aide-run --task kernelbench --kb-task 1_19 --head-node-ip 10.0.0.5
+USAGE
+      exit 0 ;;
+    *)
+      echo "Unknown option: $1"
+      exit 1 ;;
+  esac
+done
+
+if [[ "$TASK" == "kernelbench" && -z "$KB_TASK" ]]; then
+  echo "ERROR: --kb-task is required for --task kernelbench"
+  exit 1
+fi
+
+if [[ -z "$CONTRACT_FILE" ]]; then
+  if [[ -f "${REPO_ROOT}/tasks/$TASK/contract_gpu.yaml" ]]; then
+    CONTRACT_FILE="contract_gpu.yaml"
+  else
+    CONTRACT_FILE="contract.yaml"
+  fi
+fi
+
+if [[ ! -f "${REPO_ROOT}/tasks/$TASK/$CONTRACT_FILE" ]]; then
+  echo "ERROR: Contract file not found: ${REPO_ROOT}/tasks/$TASK/$CONTRACT_FILE"
+  exit 1
+fi
+
+cp "${REPO_ROOT}/tasks/$TASK/$CONTRACT_FILE" "${REPO_ROOT}/tasks/$TASK/contract.yaml"
+
+echo "Using task=$TASK contract=$CONTRACT_FILE"
+
+CMD=(python "${REPO_ROOT}/src/aide_runner.py" --task "$TASK")
+
+if [[ "$LOCAL_MODE" == "true" ]]; then
+  CMD+=(--local)
+elif [[ -n "$HEAD_NODE_IP" ]]; then
+  CMD+=(--head-node-ip "$HEAD_NODE_IP")
+fi
+
+[[ -n "$NUM_EXPERIMENTS" ]] && CMD+=(--num-experiments "$NUM_EXPERIMENTS")
+[[ -n "$NUM_ITERATIONS" ]] && CMD+=(--num-iterations "$NUM_ITERATIONS")
+[[ -n "$STEPS" ]] && CMD+=(--steps "$STEPS")
+[[ -n "$GPU_FRACTION" ]] && CMD+=(--gpu-fraction "$GPU_FRACTION")
+[[ -n "$WANDB_PROJECT" ]] && CMD+=(--wandb-project "$WANDB_PROJECT")
+[[ -n "$MODEL" ]] && CMD+=(--model "$MODEL")
+[[ -n "$FEEDBACK_MODEL" ]] && CMD+=(--feedback-model "$FEEDBACK_MODEL")
+[[ -n "$KB_TASK" ]] && CMD+=(--kb-task "$KB_TASK")
+
+if [[ "$LOCAL_MODE" != "true" && -n "$HEAD_NODE_IP" ]]; then
+  echo "Checking Ray cluster at ${HEAD_NODE_IP}:6379 ..."
+  if ! python -c "import ray; ray.init(address='${HEAD_NODE_IP}:6379'); print('Cluster reachable'); ray.shutdown()" >/dev/null 2>&1; then
+    echo "ERROR: Ray cluster is not reachable at ${HEAD_NODE_IP}:6379"
+    echo "Tip: start local mode with --local, or export AIDE_HEAD_NODE_IP correctly."
+    exit 1
+  fi
+fi
+
+echo "Executing: ${CMD[*]}"
+"${CMD[@]}"

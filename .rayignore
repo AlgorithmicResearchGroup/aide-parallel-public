@@ -1,0 +1,78 @@
+# .rayignore - Files and directories to exclude from Ray runtime_env distribution
+# This reduces the package size and speeds up distribution to worker nodes
+
+# Version control
+.git/
+.gitignore
+
+# Python cache files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs and temporary files
+logs/
+*.log
+*.tmp
+temp/
+tmp/
+
+# Workspace directories (created dynamically by AIDE)
+workspaces/
+
+# Large data files
+*.pkl
+*.pth
+*.pt
+*.h5
+*.hdf5
+*.tar
+*.gz
+*.zip
+
+# Documentation
+docs/
+*.md
+
+# Test files
+test_*.py
+*_test.py
+tests/
+
+# Jupyter notebooks
+*.ipynb
+.ipynb_checkpoints/
+
+# Environment files (we'll handle these via runtime_env["env_vars"])
+.env
+.env.local
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Ray-specific
+ray_results/
+ray_session_*
+
+# W&B local files
+wandb/
