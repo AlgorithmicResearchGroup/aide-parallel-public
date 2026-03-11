@@ -17,6 +17,7 @@ ray_results/
 
 # Local virtual environments
 .venv/
+.venv*/
 venv/
 
 # OS/editor

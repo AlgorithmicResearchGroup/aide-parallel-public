@@ -20,3 +20,4 @@ tqdm==4.66.3
 coolname>=2.2.0
 igraph>=0.11.3
 genson>=1.2.0
+backoff>=2.2.0

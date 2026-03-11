@@ -1,93 +1,90 @@
 # AIDE Parallel
 
-AIDE Parallel is a Ray-based runner for AIDE experiments, with built-in support for attention and KernelBench tasks.
+AIDE Parallel runs AIDE experiments locally or on a Ray cluster. The simplest first run is the attention task on CPU. KernelBench is available, but it requires a GPU environment and is not the recommended first-run path.
 
-## 1. Prerequisites
+## Quick Start
 
-- Python 3.10+
-- `pip`
-- GPU + CUDA for GPU tasks
-- API keys for your configured model provider(s)
-
-Install dependencies:
+Create a virtual environment and install the repo:
 
 ```bash
-pip install -r requirements.txt
-pip install -e ./aideml
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip setuptools wheel
+python -m pip install -r requirements.txt
+python -m pip install -e ./aideml
 ```
 
-## 2. Configuration
-
-Copy environment template:
+Copy the environment template:
 
 ```bash
 cp .env.example .env
 ```
 
-Set at least the keys you use (for example `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, or `GROQ_API_KEY`).
+Set one provider and one model pair in `.env`.
 
-## 3. Quick Start (Local)
-
-Run a small local test:
+OpenAI example:
 
 ```bash
-./cli/aide-run --local --task attention --num-experiments 1 --num-iterations 1 --steps 1
+OPENAI_API_KEY=...
+AIDE_MODEL=gpt-4o-mini
+AIDE_FEEDBACK_MODEL=gpt-4o-mini
 ```
 
-Run KernelBench locally:
+Groq example:
+
+```bash
+GROQ_API_KEY=...
+OPENAI_BASE_URL=https://api.groq.com/openai/v1
+AIDE_MODEL=llama-3.3-70b-versatile
+AIDE_FEEDBACK_MODEL=llama-3.3-70b-versatile
+```
+
+Run the deterministic setup check:
+
+```bash
+./cli/aide-check
+```
+
+Run one local optimization step:
+
+```bash
+AIDE_ATTENTION_FAST_EVAL=1 ./cli/aide-run --local --task attention --num-experiments 1 --num-iterations 1 --steps 1
+```
+
+## What Works Best
+
+- Use `./cli/aide-check` first. It verifies imports and runs a baseline attention evaluation on CPU.
+- Use the attention task for first run. It now auto-prepares a tiny Shakespeare dataset if the wiki dataset is missing.
+- Set `AIDE_MODEL` and `AIDE_FEEDBACK_MODEL` explicitly. Do not rely on provider-specific default model availability.
+
+## KernelBench
+
+KernelBench needs a CUDA-capable GPU setup.
+
+Run a local KernelBench job:
 
 ```bash
 ./cli/aide-run --local --task kernelbench --kb-task 1_19 --num-experiments 1 --num-iterations 1 --steps 1
 ```
 
-## 4. Distributed Run (Optional)
-
-Set cluster env values (example):
+For Linux GPU nodes, install CUDA-specific PyTorch wheels separately, for example:
 
 ```bash
-export AIDE_HEAD_NODE_IP=10.0.0.5
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
 ```
 
-Then run:
+## Optional Dependencies
+
+If you want notebooks, tracing, or extra benchmarking tools:
 
 ```bash
-./cli/aide-run --task kernelbench --kb-task 1_19 --num-experiments 16 --gpu-fraction 1.0
+python -m pip install -r requirements-optional.txt
 ```
 
-If you manage Ray via provided scripts:
+## Main Commands
 
-```bash
-./cli/aide-cluster-up
-./cli/aide-cluster-down
-```
-
-Cluster scripts are env-driven (`AIDE_HEAD_HOST`, `AIDE_WORKER_HOSTS`, `AIDE_SSH_USER`, etc.).
-
-## 5. Main Commands
-
-- `./cli/aide-run`: primary experiment launcher
-- `python src/aide_runner.py ...`: Python entrypoint equivalent
-- `python src/cluster_gpu_status.py --once`: cluster GPU snapshot
-- `./cli/run-kb-sequence quick`: run preset KernelBench task sequence
-
-## 6. Outputs
-
-- `logs/`: run logs and best solutions
-- `workspaces/`: per-run workspaces
-
-## 7. Compatibility Wrappers
-
-Deprecated names are still available for one release:
-
-- `compat/run_distributed.sh` -> `cli/aide-run`
-- `compat/run_ray_gpu.py` -> `src/aide_runner.py`
-- `compat/start_cluster.sh` -> `cli/aide-cluster-up`
-- `compat/stop_cluster.sh` -> `cli/aide-cluster-down`
-- `compat/gpu_status.py` -> `src/cluster_gpu_status.py`
-
-## 8. Repository Layout
-
-- `cli/`: primary executable scripts
-- `src/`: Python runtime entrypoints and integrations
-- `tasks/`: task contracts and task-specific code
-- `compat/`: temporary wrappers for old command names
+- `./cli/aide-check`: validate the local install with a deterministic CPU run
+- `./cli/aide-run`: run AIDE experiments
+- `./cli/aide-cluster-up`: start a Ray cluster from env vars
+- `./cli/aide-cluster-down`: stop the Ray cluster
+- `./cli/run-kb-sequence quick`: run a preset KernelBench sequence

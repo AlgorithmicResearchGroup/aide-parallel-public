@@ -1,73 +1,16 @@
-# GPU-Parallel AIDE Requirements
-# For H100 GPUs with CUDA 11.8+ or 12.x support
+# Minimal runtime dependencies for first-time installation.
+# AIDE core dependencies are installed via: pip install -e ./aideml
 
-# Core Dependencies
-python-dotenv==1.0.0
-
-# Ray for distributed computing
-ray[default]==2.10.0
-
-# PyTorch and CUDA
-# H100 GPUs require CUDA 11.8 minimum, but work best with CUDA 12.1+
-# PyTorch 2.1+ has native H100 support with improved performance
-# Choose ONE of the following based on your CUDA version:
-
-# For CUDA 12.1 (recommended for H100)
-torch==2.1.0+cu121
-torchvision==0.16.0+cu121
-torchaudio==2.1.0+cu121
-# Install with: pip install torch==2.1.0 torchvision==0.16.0 torchaudio==2.1.0 --index-url https://download.pytorch.org/whl/cu121
-
-# For CUDA 11.8 (if you have older CUDA)
-# torch==2.1.0+cu118
-# torchvision==0.16.0+cu118
-# torchaudio==2.1.0+cu118
-# Install with: pip install torch==2.1.0 torchvision==0.16.0 torchaudio==2.1.0 --index-url https://download.pytorch.org/whl/cu118
-
-# AIDE Core Requirements
-black==24.3.0
-funcy==2.0
-humanize==4.8.0
-jsonschema==4.19.2
-numpy==1.26.2
-openai>=1.69.0
-anthropic>=0.20.0
-pandas==2.1.4
-pytest==7.4.3
-requests>=2.32.4
-scikit-learn==1.5.0
-rich==13.7.0
-scipy==1.11.4
-dataclasses_json>=0.6.4
-omegaconf>=2.3.0
-loguru==0.7.2
-shutup>=0.2.0
-tqdm==4.66.3
-coolname>=2.2.0
-igraph>=0.11.3
-genson>=1.2.0
-
-# Additional ML/NLP dependencies
-transformers>=4.35.0
-datasets>=2.14.0
-einops>=0.7.0
-ninja>=1.11.0  # For faster PyTorch extensions compilation
-
-# Monitoring and utilities
-gpustat>=1.1.1  # GPU monitoring
-nvidia-ml-py>=12.535.133  # NVIDIA Management Library
-psutil>=5.9.0  # System monitoring
+python-dotenv>=1.0.0,<2.0.0
 pyyaml>=6.0
 
-# W&B and Weave for experiment tracking and LLM tracing
+# Local and distributed execution
+ray[default]>=2.31.0,<3.0.0
+
+# Cross-platform PyTorch baseline
+torch>=2.2.0,<3.0.0
+torchvision>=0.17.0,<1.0.0
+torchaudio>=2.2.0,<3.0.0
+
+# Optional logging package used by the attention evaluator and W&B integration
 wandb>=0.16.0
-weave>=0.50.0
-backoff>=2.2.0  # For retry logic
-
-# Optional: for better performance on H100
-# flash-attn>=2.3.0  # Requires separate installation with: pip install flash-attn --no-build-isolation
-
-# Development tools (optional)
-ipython>=8.17.0
-jupyter>=1.0.0
-tensorboard>=2.14.0

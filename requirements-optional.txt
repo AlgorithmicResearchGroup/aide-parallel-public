@@ -1,0 +1,14 @@
+# Optional dependencies for notebooks, tracing, benchmarking helpers, and extra tooling.
+
+transformers>=4.35.0
+datasets>=2.14.0
+einops>=0.7.0
+ninja>=1.11.0
+gpustat>=1.1.1
+nvidia-ml-py>=12.535.133
+psutil>=5.9.0
+weave>=0.50.0
+backoff>=2.2.0
+ipython>=8.17.0
+jupyter>=1.0.0
+tensorboard>=2.14.0

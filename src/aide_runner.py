@@ -24,13 +24,14 @@ except ImportError:
     AIDE_AVAILABLE = False
     print("AIDE will be imported inside Ray actors")
 
-# Try to import wandb_integration, but continue if not available
-try:
-    from wandb_integration import create_wandb_logger_for_experiment, WandbCallback
-    WANDB_AVAILABLE = True
-except ImportError:
-    # Will try to import inside the actor where the path is set correctly
-    WANDB_AVAILABLE = True  # Assume it's available on GPU nodes
+if os.getenv("AIDE_ENABLE_WANDB", "0") == "1":
+    try:
+        from wandb_integration import create_wandb_logger_for_experiment, WandbCallback
+        WANDB_AVAILABLE = True
+    except ImportError:
+        WANDB_AVAILABLE = False
+else:
+    WANDB_AVAILABLE = False
 
 # Set up logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -355,15 +356,22 @@ def run_experiments(
         logger.warning(f"Requested {num_experiments} experiments but only {resources['available_gpus']} GPUs available")
         logger.info("Experiments will queue and run as GPUs become available")
 
+    actor_gpu_fraction = gpu_fraction if resources["total_gpus"] > 0 else 0
+    if actor_gpu_fraction == 0:
+        logger.info("No GPUs detected; scheduling experiments on CPU workers.")
+
     # Create or reuse actors with GPU requirements
     if experiment_actors is None:
         # First iteration - create new actors
         # Dynamically create Ray remote actor with specified GPU fraction
-        ExperimentRemote = ray.remote(num_gpus=gpu_fraction)(Experiment)
+        ExperimentRemote = ray.remote(num_gpus=actor_gpu_fraction)(Experiment)
 
-        logger.info(f"Creating {num_experiments} actors with {gpu_fraction} GPU fraction each")
-        logger.info(f"Total GPU requirement: {num_experiments * gpu_fraction:.1f} GPUs")
-        logger.info(f"Experiments per GPU: {1/gpu_fraction:.1f}")
+        logger.info(f"Creating {num_experiments} actors with {actor_gpu_fraction} GPU fraction each")
+        logger.info(f"Total GPU requirement: {num_experiments * actor_gpu_fraction:.1f} GPUs")
+        if actor_gpu_fraction > 0:
+            logger.info(f"Experiments per GPU: {1/actor_gpu_fraction:.1f}")
+        else:
+            logger.info("Experiments will run on CPU.")
 
         actors = []
         for i in range(num_experiments):
@@ -386,7 +394,10 @@ def run_experiments(
 
     # Wait for results with progress tracking
     print(f"\n🚀 EXPERIMENTS STARTED: {num_experiments} agents running in parallel")
-    print(f"   GPU Fraction: {gpu_fraction} | Experiments per GPU: {1/gpu_fraction:.1f}")
+    if actor_gpu_fraction > 0:
+        print(f"   GPU Fraction: {actor_gpu_fraction} | Experiments per GPU: {1/actor_gpu_fraction:.1f}")
+    else:
+        print("   Running on CPU workers")
     print(f"   Task: {task_type} | Steps per experiment: {steps_per_experiment}")
     print(f"   Waiting for all experiments to complete...\n")
 
@@ -436,16 +447,19 @@ def initialize_ray_cluster(head_node_ip: Optional[str] = None) -> None:
     # Define the project root
     project_root = PROJECT_ROOT
 
+    env_vars = {
+        "AIDE_PROJECT_ROOT": str(project_root),
+        "PYTHONPATH": str(project_root),
+        "KERNELBENCH_PATH": str(project_root / "tasks" / "kernel_bench" / "KernelBench"),
+    }
+
     # Create a comprehensive runtime_env
     runtime_env = {
         # Set working directory - Ray will tar and distribute this entire directory
         "working_dir": str(project_root),
 
         # Environment variables needed on all nodes
-        "env_vars": {
-            "PYTHONPATH": str(project_root),
-            "KERNELBENCH_PATH": str(project_root / "tasks" / "kernel_bench" / "KernelBench"),
-        },
+        "env_vars": dict(env_vars),
 
         # Note: Required packages should be pre-installed on worker nodes
         # Installing via pip in runtime_env can cause virtualenv issues
@@ -453,6 +467,8 @@ def initialize_ray_cluster(head_node_ip: Optional[str] = None) -> None:
         # Explicitly exclude large directories to reduce package size
         "excludes": [
             "venv/",
+            ".venv/",
+            ".venv*/",
             "workspaces/",
             "wandb/",
             "ray_results/",
@@ -470,12 +486,13 @@ def initialize_ray_cluster(head_node_ip: Optional[str] = None) -> None:
     env_file = project_root / ".env"
     if env_file.exists():
         from dotenv import dotenv_values
-        env_vars = dotenv_values(env_file)
+        loaded_env_vars = dotenv_values(env_file)
         # Add API keys and other secrets to runtime_env
-        for key, value in env_vars.items():
+        for key, value in loaded_env_vars.items():
             if value and value != "YOUR_WANDB_KEY_HERE":
                 runtime_env["env_vars"][key] = value
-        logger.info(f"Loaded {len(env_vars)} environment variables from .env")
+                env_vars[key] = value
+        logger.info(f"Loaded {len(loaded_env_vars)} environment variables from .env")
 
     if head_node_ip:
         # Connect to existing Ray cluster with runtime_env
@@ -484,13 +501,15 @@ def initialize_ray_cluster(head_node_ip: Optional[str] = None) -> None:
         logger.info(f"Distributing working directory: {project_root}")
         ray.init(address=ray_address, runtime_env=runtime_env)
     else:
-        # Try to connect to local Ray instance, or start new one
+        # Local runs use the existing filesystem and interpreter, so avoid
+        # packaging the entire repository as a Ray working_dir.
+        local_runtime_env = {"env_vars": env_vars}
         try:
-            ray.init(address="auto", runtime_env=runtime_env)
-            logger.info("Connected to existing local Ray instance with runtime_env")
+            ray.init(address="auto", runtime_env=local_runtime_env)
+            logger.info("Connected to existing local Ray instance")
         except:
-            logger.info("Starting new local Ray instance with runtime_env")
-            ray.init(runtime_env=runtime_env)
+            logger.info("Starting new local Ray instance")
+            ray.init(runtime_env=local_runtime_env)
 
     # Display cluster information
     resources = get_cluster_resources()
@@ -623,6 +642,12 @@ def main(
         logger.info("FINAL RESULTS")
         logger.info("=" * 60)
         logger.info(f"Best Metric: {best_result['valid_metric']}")
+        if best_result["valid_metric"] is None:
+            logger.warning(
+                "No valid metric was produced. The environment ran successfully, "
+                "but the selected model did not generate an evaluable solution. "
+                "Try a stronger model, more steps, or run ./cli/aide-check to verify setup."
+            )
         logger.info(f"Best GPU: {best_result.get('gpu_id', 'N/A')} ({best_result.get('gpu_name', 'N/A')})")
         logger.info(f"Total Experiments Completed: {total_completed}")
         logger.info("-" * 60)

@@ -1,8 +1,8 @@
 num_experiments: 32  # 2 experiments per GPU with 0.5 GPU fraction
 num_iterations: 4
 
-model: o4-mini
-feedback_model: o4-mini
+model: gpt-4.1-mini
+feedback_model: gpt-4.1-mini
 
 steps: 15
 metric: val_loss

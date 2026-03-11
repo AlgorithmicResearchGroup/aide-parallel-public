@@ -9,6 +9,7 @@ from __future__ import annotations
 import argparse
 import importlib.util
 import os
+import sys
 from contextlib import nullcontext
 from pathlib import Path
 from types import ModuleType
@@ -18,26 +19,92 @@ import numpy as np
 import torch
 import torch.nn as nn
 import math
-import wandb
+
+try:
+    import wandb
+except ImportError:
+    wandb = None
 
 # Paths ---------------------------------------------------------------------
 TASK_ROOT = Path(__file__).resolve().parent
 NANOGPT_ROOT = TASK_ROOT / "nanoGPT"
-DATA_DIR = NANOGPT_ROOT / "data" / "wiki"
-
-def _resolve_data_dir(base: Path) -> Path:
-    if (base / "train.bin").exists():
-        return base
-    nested = base / "data" / "wiki"
-    if (nested / "train.bin").exists():
-        return nested
-    raise FileNotFoundError(
-        "Could not locate wiki dataset. Expected train.bin under "
-        f"{base} or {nested}."
-    )
-
-DATA_DIR = _resolve_data_dir(DATA_DIR)
 _DATA_CACHE: dict[str, torch.Tensor] = {}
+
+
+class _NullWandb:
+    run = None
+
+    @staticmethod
+    def init(*args, **kwargs):
+        return None
+
+    @staticmethod
+    def log(*args, **kwargs):
+        return None
+
+
+WANDB = wandb if wandb is not None else _NullWandb()
+WANDB_ENABLED = (
+    wandb is not None
+    and os.environ.get("AIDE_ENABLE_WANDB", "0") == "1"
+    and bool(os.environ.get("WANDB_API_KEY"))
+)
+
+
+def _repo_attention_data_root() -> Path | None:
+    project_root = os.environ.get("AIDE_PROJECT_ROOT")
+    if not project_root:
+        return None
+    candidate = Path(project_root).expanduser().resolve() / "tasks" / "attention" / "nanoGPT" / "data"
+    return candidate if candidate.exists() else None
+
+
+def _prepare_shakespeare_char_dataset(data_dir: Path) -> None:
+    prepare_script = data_dir / "prepare.py"
+    if not prepare_script.exists():
+        raise FileNotFoundError(f"Missing dataset preparation script: {prepare_script}")
+
+    print(f"Preparing bundled dataset in {data_dir} ...", flush=True)
+    result = os.system(f'"{sys.executable}" "{prepare_script}"')
+    if result != 0:
+        raise RuntimeError(f"Dataset preparation failed for {data_dir}")
+
+
+def _resolve_data_dir() -> Path:
+    env_override = os.environ.get("AIDE_ATTENTION_DATA_DIR")
+    candidates = []
+    if env_override:
+        candidates.append(Path(env_override).expanduser().resolve())
+
+    local_data_root = NANOGPT_ROOT / "data"
+    repo_data_root = _repo_attention_data_root()
+    data_roots = [local_data_root]
+    if repo_data_root is not None and repo_data_root != local_data_root:
+        data_roots.append(repo_data_root)
+
+    for data_root in data_roots:
+        candidates.extend(
+            [
+                data_root / "wiki",
+                data_root / "shakespeare_char",
+            ]
+        )
+
+    for candidate in candidates:
+        if (candidate / "train.bin").exists() and (candidate / "val.bin").exists():
+            return candidate
+
+    for data_root in data_roots:
+        shakespeare_char_dir = data_root / "shakespeare_char"
+        if shakespeare_char_dir.exists():
+            _prepare_shakespeare_char_dataset(shakespeare_char_dir)
+            if (shakespeare_char_dir / "train.bin").exists() and (shakespeare_char_dir / "val.bin").exists():
+                return shakespeare_char_dir
+
+    raise FileNotFoundError("Could not locate or prepare an attention dataset.")
+
+
+DATA_DIR = _resolve_data_dir()
 
 
 def load_module(path: Path) -> ModuleType:
@@ -55,6 +122,14 @@ def prepare_environment() -> None:
         torch.cuda.manual_seed_all(1337)
     torch.backends.cuda.matmul.allow_tf32 = True
     torch.backends.cudnn.allow_tf32 = True
+
+
+def _use_fast_eval(device: torch.device) -> bool:
+    if os.environ.get("AIDE_ATTENTION_FULL_EVAL") == "1":
+        return False
+    if os.environ.get("AIDE_ATTENTION_FAST_EVAL") == "0":
+        return False
+    return device.type != "cuda" or DATA_DIR.name != "wiki"
 
 
 def load_meta() -> dict:
@@ -123,20 +198,26 @@ def train_and_eval(builder: Callable[[object], nn.Module], device_str: str) -> f
 
     prepare_environment()
     device = torch.device(device_str)
+    fast_eval = _use_fast_eval(device)
+
+    if fast_eval:
+        print(f"Using fast local evaluation profile with dataset: {DATA_DIR.name}", flush=True)
+    else:
+        print(f"Using full evaluation profile with dataset: {DATA_DIR.name}", flush=True)
 
     # Initialize W&B if not already initialized
-    if wandb.run is None:
-        wandb.init(project="attention-training", name="nanoGPT-training")
+    if WANDB_ENABLED and WANDB.run is None:
+        WANDB.init(project="attention-training", name="nanoGPT-training")
 
     meta = load_meta()
     vocab_size = meta.get("vocab_size", 50304)
 
     config = GPTConfig(
         vocab_size=vocab_size,
-        block_size=512,
-        n_layer=12,
-        n_head=12,
-        n_embd=768,
+        block_size=128 if fast_eval else 512,
+        n_layer=2 if fast_eval else 12,
+        n_head=2 if fast_eval else 12,
+        n_embd=128 if fast_eval else 768,
         dropout=0.1,
         bias=False,
     )
@@ -148,14 +229,14 @@ def train_and_eval(builder: Callable[[object], nn.Module], device_str: str) -> f
 
     base_lr = 4e-4
     min_lr = 4e-5
-    warmup_steps = 100
-    total_optimizer_steps = 900
+    warmup_steps = 2 if fast_eval else 100
+    total_optimizer_steps = 5 if fast_eval else 900
 
     optimizer = torch.optim.AdamW(model.parameters(), lr=base_lr, betas=(0.9, 0.95), weight_decay=1e-2)
 
     model.train()
-    micro_batch_size = 8
-    grad_accum_steps = 6
+    micro_batch_size = 4 if fast_eval else 8
+    grad_accum_steps = 1 if fast_eval else 6
     block_size = config.block_size
 
     optimizer_step = 0
@@ -195,8 +276,8 @@ def train_and_eval(builder: Callable[[object], nn.Module], device_str: str) -> f
                 if optimizer_step % 10 == 0 or optimizer_step in [1, 5, 50, 100, 200, 500, 800]:
                     elapsed = time.time() - start_time
                     print(f"[TRAINING] Step {optimizer_step}/{total_optimizer_steps}: loss = {actual_loss:.4f} | Elapsed: {elapsed:.1f}s", flush=True)
-                if optimizer_step % 10 == 0:
-                    wandb.log({"train_loss": actual_loss, "step": optimizer_step})
+                if optimizer_step % 10 == 0 and WANDB_ENABLED:
+                    WANDB.log({"train_loss": actual_loss, "step": optimizer_step})
             if device.type == "cuda":
                 scaler.scale(loss).backward()
             else:
@@ -230,7 +311,7 @@ def train_and_eval(builder: Callable[[object], nn.Module], device_str: str) -> f
     print(f"Training took {elapsed_time:.1f} seconds ({elapsed_time/60:.1f} minutes)", flush=True)
 
     model.eval()
-    eval_iters = 50
+    eval_iters = 3 if fast_eval else 50
     losses = []
     with torch.no_grad():
         for _ in range(eval_iters):
@@ -248,7 +329,8 @@ def train_and_eval(builder: Callable[[object], nn.Module], device_str: str) -> f
             losses.append(loss.item())
 
     val_loss = float(sum(losses) / len(losses))
-    wandb.log({"val_loss": val_loss})
+    if WANDB_ENABLED:
+        WANDB.log({"val_loss": val_loss})
     return val_loss
 
 
@@ -266,6 +348,8 @@ def main() -> None:
         # Log GPU information for debugging
         print(f"Using GPU: {torch.cuda.get_device_name(0)}")
         print(f"CUDA_VISIBLE_DEVICES: {os.environ.get('CUDA_VISIBLE_DEVICES', 'not set')}")
+
+    print(f"Attention dataset: {DATA_DIR}")
 
     module = load_module(Path(args.solution_path))
     if hasattr(module, "build_attention"):

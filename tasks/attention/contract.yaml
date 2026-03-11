@@ -4,8 +4,8 @@
 num_experiments: 16  # Match the number of available GPUs
 num_iterations: 3    # Number of refinement iterations
 
-model: gpt-5
-feedback_model: o4-mini
+model: gpt-4.1-mini
+feedback_model: gpt-4.1-mini
 
 steps: 12            # Number of AIDE agent steps per experiment
 metric: val_loss
