@@ -17,6 +17,8 @@ ray_results/
 tasks/algotune/vendor/AlgoTune/AlgoTuneTasks/**/*.jsonl
 tasks/algotune/vendor/AlgoTune/AlgoTuneTasks/**/_npy_data/
 tasks/algotune/vendor/AlgoTune/logs/
+tasks/algotune/solver.py
+tasks/algotune/vendor/AlgoTune/*.egg-info/
 
 # Local virtual environments
 .venv/
