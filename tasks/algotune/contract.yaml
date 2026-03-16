@@ -1,0 +1,19 @@
+# Optional advanced contract for AlgoTune tasks.
+# Task-specific goal and eval command are injected by src/aide_runner.py.
+
+num_experiments: 1
+num_iterations: 1
+
+model: gpt-4.1-mini
+feedback_model: gpt-4.1-mini
+
+steps: 4
+metric: speedup
+eval_metric: speedup
+
+goal: |
+  Implement an optimized Solver class for the selected AlgoTune task.
+  See solver.py for the task description and reference implementation.
+
+eval: |
+  python ../input/evaluate_algotune.py --task TASK_NAME --solution-path solver.py --n-problems 5 --n-runs 3 --fast

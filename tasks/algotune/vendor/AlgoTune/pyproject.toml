@@ -1,0 +1,94 @@
+[build-system]
+requires = ["setuptools>=42", "wheel", "cython", "numpy"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "algotune"
+version = "0.1.0"
+description = "A benchmark for testing programming abilities of language models"
+requires-python = ">=3.10"
+dependencies = [
+    "numpy",
+    "pandas",
+    "cython",
+    "numba",
+    "dask",
+    "pulp", 
+    "scipy", 
+    "ortools<9.12.0", 
+    "pyomo", 
+    "highspy", 
+    "networkx", 
+    "python-sat", 
+    "jax", 
+    "diffrax",
+    "sympy",
+    "faiss-cpu",
+    "cryptography",
+    "scikit-learn",
+    "hdbscan",
+    "cvxpy",
+    "torch",
+    "pot",
+    "ecos",
+    "litellm",
+    "google-generativeai",
+    "pylint",
+    "line_profiler",
+    "toml",
+    "orjson",
+    "pyaml",
+    "pillow",
+    "pythran",
+    "dace==0.16.1",
+    "psutil==5.9.8",
+    "huggingface_hub"
+]
+
+[tool.setuptools.packages.find]
+where = ["."]  # Look for packages in the current directory
+exclude = [ # Exclude directories that are not packages
+    "tests*", 
+    "singularity*",
+    "keys*",
+    "logs*",
+    "messages*",
+    ".git*",
+]
+include = ["*"] # Include all found packages unless excluded 
+
+[project.optional-dependencies]
+dev = [
+  "pre-commit",
+  "ruff>=0.3.0"
+]
+
+[tool.ruff]
+# Exclude the test scripts directory from ruff checks
+exclude = [
+  ".git",
+  ".github/scripts/",
+  "__pycache__",
+  "results",
+  "AlgoTuner/",
+  "scripts/",
+  "html/",
+  "aws/",
+  "reports/",
+  "singularity/",
+  "algotune.py"
+]
+# Default ruff settings
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+# Only check critical errors: syntax errors (E9), undefined names (F82), and unused imports (F401)
+select = ["E9", "F82", "F401"]
+ignore = []
+
+[tool.ruff.lint.isort]
+combine-as-imports = true
+extra-standard-library = ["typing_extensions"]
+lines-after-imports = 2
+order-by-type = false

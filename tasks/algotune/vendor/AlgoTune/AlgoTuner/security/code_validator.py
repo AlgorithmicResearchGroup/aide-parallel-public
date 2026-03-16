@@ -1,0 +1,449 @@
+"""
+Simple code validator to detect tampering attempts in solver code.
+
+This validator runs during the edit phase to prevent monkey-patching
+of standard library functions before the code is executed.
+"""
+
+from __future__ import annotations
+
+import ast
+import logging
+import re
+from pathlib import Path
+
+
+logger = logging.getLogger(__name__)
+
+
+class TamperingError(SyntaxError):
+    """Raised when code contains tampering attempts."""
+
+    pass
+
+
+class TamperingDetector(ast.NodeVisitor):
+    """AST visitor that detects attempts to monkey-patch standard library modules."""
+
+    # Modules that should not be modified
+    PROTECTED_MODULES = {
+        # Standard library - security sensitive
+        "hmac",
+        "hashlib",
+        "os",
+        "sys",
+        "subprocess",
+        "importlib",
+        "builtins",
+        "__builtins__",
+        "types",
+        "gc",
+        "inspect",
+        "base64",
+        "gzip",
+        "random",
+        "time",
+        "tempfile",
+        # Standard library - core functionality
+        "math",
+        "ast",
+        "collections",
+        "enum",
+        "itertools",
+        "logging",
+        "multiprocessing",
+        "numbers",
+        "re",
+        "string",
+        "queue",
+        "traceback",
+        "typing",
+        # Third-party libraries used in tasks
+        "numpy",
+        "scipy",
+        "cvxpy",
+        "networkx",
+        "ortools",
+        "sklearn",
+        "sympy",
+        "pysat",
+        "mpmath",
+        "numba",
+        "cryptography",
+        "faiss",
+        "hdbscan",
+        "ot",
+        "orjson",
+    }
+
+    # Specific attributes that are commonly targets for tampering
+    PROTECTED_ATTRIBUTES = {
+        "hmac.compare_digest",
+        "hashlib.sha256",
+        "hashlib.sha512",
+        "hashlib.md5",
+        "os.system",
+        "subprocess.run",
+        "sys.modules",
+    }
+
+    # Runtime code-evasion primitives we do not allow in solver code.
+    DISALLOWED_CALLS = {
+        "exec",
+        "eval",
+        "compile",
+        "gc.get_objects",
+    }
+
+    def __init__(self):
+        self.violations = []
+        self.import_aliases = {}
+
+    def _record_import_alias(self, bound_name: str, imported_name: str) -> None:
+        if bound_name:
+            self.import_aliases[bound_name] = imported_name
+
+    def _is_protected_path(self, module_name: str | None) -> bool:
+        if not module_name:
+            return False
+        if module_name in self.PROTECTED_MODULES:
+            return True
+        return module_name.split(".", 1)[0] in self.PROTECTED_MODULES
+
+    def visit_Assign(self, node):
+        """Detect direct assignment to module attributes."""
+        for target in node.targets:
+            violation = self._check_assignment_target(target, node.lineno)
+            if violation:
+                self.violations.append(violation)
+        self.generic_visit(node)
+
+    def visit_AugAssign(self, node):
+        """Detect augmented assignment (+=, -=, etc.) to module attributes."""
+        violation = self._check_assignment_target(node.target, node.lineno)
+        if violation:
+            self.violations.append(violation)
+        self.generic_visit(node)
+
+    def visit_Subscript(self, node):
+        module_name = self._get_module_name(node.value)
+        if module_name == "sys.modules":
+            self.violations.append(
+                {
+                    "line": node.lineno,
+                    "type": "subscript",
+                    "module": "sys",
+                    "attribute": "modules",
+                    "code": "sys.modules[...]",
+                    "message": "Accessing sys.modules is not allowed in solver code.",
+                }
+            )
+        self.generic_visit(node)
+
+    def visit_Import(self, node):
+        for alias in node.names:
+            imported_name = alias.name or ""
+            bound_name = alias.asname or imported_name.split(".", 1)[0]
+            self._record_import_alias(bound_name, imported_name)
+
+            module_name = imported_name.split(".", 1)[0]
+            if module_name == "ctypes":
+                self.violations.append(
+                    {
+                        "line": node.lineno,
+                        "type": "import",
+                        "module": "ctypes",
+                        "attribute": "<module>",
+                        "code": "import ctypes",
+                        "message": "Importing ctypes is not allowed in solver code.",
+                    }
+                )
+        self.generic_visit(node)
+
+    def visit_ImportFrom(self, node):
+        module_name = (node.module or "").split(".", 1)[0]
+        for alias in node.names:
+            if alias.name == "*":
+                continue
+            full_name = f"{node.module}.{alias.name}" if node.module else alias.name
+            bound_name = alias.asname or alias.name
+            self._record_import_alias(bound_name, full_name)
+        if module_name == "ctypes":
+            self.violations.append(
+                {
+                    "line": node.lineno,
+                    "type": "import",
+                    "module": "ctypes",
+                    "attribute": "<module>",
+                    "code": f"from {node.module} import ...",
+                    "message": "Importing ctypes is not allowed in solver code.",
+                }
+            )
+        self.generic_visit(node)
+
+    def visit_Call(self, node):
+        """Detect calls that attempt runtime tampering or code injection."""
+        func_name = self._get_module_name(node.func)
+        if func_name in self.DISALLOWED_CALLS:
+            self.violations.append(
+                {
+                    "line": node.lineno,
+                    "type": "call",
+                    "module": func_name.split(".", 1)[0],
+                    "attribute": func_name.split(".", 1)[-1],
+                    "code": f"{func_name}(...)",
+                    "message": f"Calling {func_name} is not allowed in solver code.",
+                }
+            )
+
+        if isinstance(node.func, ast.Name) and node.func.id == "__import__" and node.args:
+            first_arg = self._get_string_value(node.args[0])
+            if first_arg and first_arg.split(".", 1)[0] == "ctypes":
+                self.violations.append(
+                    {
+                        "line": node.lineno,
+                        "type": "dynamic_import",
+                        "module": "ctypes",
+                        "attribute": "<module>",
+                        "code": "__import__('ctypes')",
+                        "message": "Dynamically importing ctypes is not allowed in solver code.",
+                    }
+                )
+
+        # Detect direct sys.modules access used for broad monkey-patching.
+        if func_name and func_name.startswith("sys.modules"):
+            self.violations.append(
+                {
+                    "line": node.lineno,
+                    "type": "call",
+                    "module": "sys",
+                    "attribute": "modules",
+                    "code": f"{func_name}()",
+                    "message": "Accessing sys.modules is not allowed in solver code.",
+                }
+            )
+
+        # Detect setattr() calls on protected modules.
+        if isinstance(node.func, ast.Name) and node.func.id == "setattr":
+            if len(node.args) >= 2:
+                # Check if first arg is a protected module
+                module_name = self._get_module_name(node.args[0])
+                if self._is_protected_path(module_name):
+                    attr_name = self._get_string_value(node.args[1])
+                    self.violations.append(
+                        {
+                            "line": node.lineno,
+                            "type": "setattr",
+                            "module": module_name,
+                            "attribute": attr_name or "<dynamic>",
+                            "code": f"setattr({module_name}, ...)",
+                        }
+                    )
+                attr_name = self._get_string_value(node.args[1])
+                if attr_name == "is_solution":
+                    self.violations.append(
+                        {
+                            "line": node.lineno,
+                            "type": "setattr",
+                            "module": module_name or "<dynamic>",
+                            "attribute": "is_solution",
+                            "code": "setattr(..., 'is_solution', ...)",
+                            "message": "Overriding is_solution at runtime is not allowed.",
+                        }
+                    )
+
+        # Also check for __setattr__ calls
+        elif isinstance(node.func, ast.Attribute) and node.func.attr == "__setattr__":
+            module_name = self._get_module_name(node.func.value)
+            if self._is_protected_path(module_name):
+                self.violations.append(
+                    {
+                        "line": node.lineno,
+                        "type": "setattr",
+                        "module": module_name,
+                        "attribute": "<unknown>",
+                        "code": f"{module_name}.__setattr__(...)",
+                    }
+                )
+
+        self.generic_visit(node)
+
+    def _check_assignment_target(self, target, lineno) -> dict | None:
+        """Check if assignment target is a protected module attribute."""
+        if isinstance(target, ast.Attribute):
+            module_name = self._get_module_name(target.value)
+            if target.attr == "is_solution":
+                return {
+                    "line": lineno,
+                    "type": "assignment",
+                    "module": module_name or "<dynamic>",
+                    "attribute": "is_solution",
+                    "code": f"{module_name or '<dynamic>'}.is_solution = ...",
+                    "message": "Overriding is_solution at runtime is not allowed.",
+                }
+            if self._is_protected_path(module_name):
+                full_name = f"{module_name}.{target.attr}"
+                return {
+                    "line": lineno,
+                    "type": "assignment",
+                    "module": module_name,
+                    "attribute": target.attr,
+                    "code": f"{full_name} = ...",
+                }
+
+        # Check for module.__dict__ assignments
+        elif isinstance(target, ast.Subscript) and isinstance(target.value, ast.Attribute):
+            module_name = self._get_module_name(target.value)
+            if module_name in self.PROTECTED_ATTRIBUTES:
+                if "." in module_name:
+                    base_module, attribute = module_name.split(".", 1)
+                else:
+                    base_module, attribute = module_name, "<unknown>"
+                return {
+                    "line": lineno,
+                    "type": "subscript_assignment",
+                    "module": base_module,
+                    "attribute": attribute,
+                    "code": f"{module_name}[...] = ...",
+                }
+            if target.value.attr == "__dict__":
+                module_name = self._get_module_name(target.value.value)
+                if self._is_protected_path(module_name):
+                    return {
+                        "line": lineno,
+                        "type": "dict_assignment",
+                        "module": module_name,
+                        "attribute": "<unknown>",
+                        "code": f"{module_name}.__dict__[...] = ...",
+                    }
+
+        return None
+
+    def _get_module_name(self, node) -> str | None:
+        """Extract module name from AST node."""
+        if isinstance(node, ast.Name):
+            return self.import_aliases.get(node.id, node.id)
+        elif isinstance(node, ast.Attribute):
+            base_name = self._get_module_name(node.value)
+            if base_name:
+                return f"{base_name}.{node.attr}"
+        return None
+
+    def _get_string_value(self, node) -> str | None:
+        """Extract string value from AST node if it's a constant string."""
+        if isinstance(node, ast.Constant) and isinstance(node.value, str):
+            return node.value
+        elif isinstance(node, ast.Str):  # Python 3.7 compatibility
+            return node.s
+        return None
+
+
+def validate_code(code: str, filename: str = "solver.py") -> list[dict]:
+    """
+    Validate code for tampering attempts.
+
+    Args:
+        code: The Python code to validate
+        filename: Name of the file (for error reporting)
+
+    Returns:
+        List of violation dictionaries, empty if code is clean
+    """
+    try:
+        tree = ast.parse(code, filename=filename)
+    except SyntaxError:
+        # Regular syntax errors should be handled normally
+        raise
+
+    detector = TamperingDetector()
+    detector.visit(tree)
+
+    return detector.violations
+
+
+def format_tampering_error(violations: list[dict], code_lines: list[str]) -> str:
+    """
+    Format tampering violations into a helpful error message.
+
+    Args:
+        violations: List of violation dictionaries
+        code_lines: Lines of the original code
+
+    Returns:
+        Formatted error message
+    """
+    if not violations:
+        return ""
+
+    msg_parts = ["Error: Code contains security violations"]
+
+    for v in violations:
+        line_num = v["line"]
+        line_content = code_lines[line_num - 1].strip() if line_num <= len(code_lines) else ""
+        violation_msg = v.get(
+            "message", f"Tampering with {v.get('module', '<unknown>')}.{v.get('attribute', '')}"
+        )
+
+        msg_parts.append(f"\nLine {line_num}: {line_content}")
+        msg_parts.append(f"  {violation_msg}")
+        msg_parts.append(f"  Detected: {v['code']}")
+
+    msg_parts.append(
+        "\nOnly algorithmic solver logic is allowed. Runtime tampering, dynamic code injection, and harness introspection are prohibited."
+    )
+    return "\n".join(msg_parts)
+
+
+def check_code_for_tampering(code: str, filename: str = "solver.py") -> str | None:
+    """
+    Check code for tampering and return error message if found.
+
+    Args:
+        code: The Python code to check
+        filename: Name of the file
+
+    Returns:
+        Error message string if tampering found, None if code is clean
+    """
+    violations = validate_code(code, filename)
+
+    if violations:
+        logger.warning(
+            "SECURITY_VIOLATION: detected %d tampering violation(s) in %s",
+            len(violations),
+            filename,
+        )
+        code_lines = code.split("\n")
+        return format_tampering_error(violations, code_lines)
+
+    return None
+
+
+_VALID_MODULE_NAME = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
+
+
+def _build_protected_filename_map() -> dict[str, str]:
+    protected = set()
+    for module in TamperingDetector.PROTECTED_MODULES:
+        base = module.split(".", 1)[0]
+        if _VALID_MODULE_NAME.match(base):
+            protected.add(base)
+    protected.update({"sitecustomize", "usercustomize"})
+    return {f"{name}.py": name for name in protected}
+
+
+_PROTECTED_FILENAME_MAP = _build_protected_filename_map()
+_PROTECTED_FILENAME_MAP_LOWER = {
+    name.lower(): module for name, module in _PROTECTED_FILENAME_MAP.items()
+}
+
+
+def check_protected_filename(filename: str) -> str | None:
+    name = Path(filename).name
+    module = _PROTECTED_FILENAME_MAP_LOWER.get(name.lower())
+    if module:
+        return (
+            f"That is not allowed: editing or creating '{name}' would shadow "
+            f"the protected module '{module}'."
+        )
+    return None

@@ -14,6 +14,9 @@ workspaces/
 wandb/
 ray_results/
 /tmp/
+tasks/algotune/vendor/AlgoTune/AlgoTuneTasks/**/*.jsonl
+tasks/algotune/vendor/AlgoTune/AlgoTuneTasks/**/_npy_data/
+tasks/algotune/vendor/AlgoTune/logs/
 
 # Local virtual environments
 .venv/

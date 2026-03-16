@@ -319,68 +319,101 @@ class Interpreter:
                 f"Execution time: {humanize.naturaldelta(exec_time)} seconds (time limit is {humanize.naturaldelta(self.timeout)})."
             )
 
-        # For kernel optimization tasks, run the evaluation directly (not as subprocess)
-        if self.task_type in ["kernel", "kernelbench"] and self.eval_cmd and e_cls_name is None:
+        # For speedup tasks, run the evaluation directly (not as subprocess).
+        if self.task_type in ["kernel", "kernelbench", "algotune"] and self.eval_cmd and e_cls_name is None:
             logger.info(f"Running evaluation for {self.task_type} task")
+            import sys
+            from pathlib import Path
 
-            # Save the generated code to optimize.py
-            optimize_path = self.working_dir / "optimize.py"
-            with open(optimize_path, 'w') as f:
-                f.write(code)
+            working_dir_path = Path(self.working_dir)
 
-            # Run evaluation directly by importing the function
-            try:
-                logger.debug(f"Running direct evaluation for task {self.task_id}")
+            if self.task_type == "algotune":
+                solver_path = self.working_dir / "solver.py"
+                with open(solver_path, "w") as f:
+                    f.write(code)
 
-                # Import the evaluation function
-                # The module should be available via Ray runtime_env
-                import sys
-                from pathlib import Path
+                try:
+                    logger.debug(f"Running AlgoTune evaluation for task {self.task_id}")
 
-                # Add task directories to path (relative to working directory)
-                working_dir_path = Path(self.working_dir)
-                kernelbench_path = working_dir_path.parent.parent / "tasks" / "kernelbench"
-                kb_library_path = working_dir_path.parent.parent / "tasks" / "kernel_bench" / "KernelBench"
+                    algotune_path = working_dir_path.parent.parent / "tasks" / "algotune"
+                    if algotune_path.exists():
+                        sys.path.insert(0, str(algotune_path))
 
-                if kernelbench_path.exists():
-                    sys.path.insert(0, str(kernelbench_path))
-                if kb_library_path.exists():
-                    sys.path.insert(0, str(kb_library_path))
+                    from evaluate_algotune import evaluate_task
 
-                from evaluate_gpu import evaluate_kernelbench_task
+                    eval_results = evaluate_task(
+                        task_name=self.task_id,
+                        solver_path=str(solver_path),
+                        n_problems=5,
+                        n_runs=3,
+                        seed=42,
+                        fast_mode=True,
+                    )
 
-                # Call the evaluation function directly
-                eval_results = evaluate_kernelbench_task(
-                    task_id=self.task_id,
-                    solution_path=str(optimize_path),
-                    device="cuda",
-                    num_correct_trials=5,
-                    num_perf_trials=100,
-                    measure_performance=True,
-                    verbose=True,
-                    build_dir=str(self.working_dir / "cuda_build_cache")
-                )
+                    output.append("\n=== AlgoTune Evaluation Output ===\n")
+                    output.append(f"Compiled: {'✓' if eval_results.get('compiled', False) else '✗'}\n")
+                    output.append(f"Correct: {'✓' if eval_results.get('correct', False) else '✗'}\n")
+                    output.append(f"Speedup: {eval_results.get('speedup', 0.0):.4f}\n")
 
-                # Append evaluation output to the execution output
-                output.append("\n=== Evaluation Output ===\n")
-                output.append(f"Compilation: {'✓' if eval_results.get('compiled', False) else '✗'}\n")
-                output.append(f"Correctness: {'✓' if eval_results.get('correct', False) else '✗'}\n")
-                output.append(f"Speedup: {eval_results.get('speedup', 0.0):.4f}\n")
+                    speedup_value = eval_results.get("speedup", 0.0)
+                    output.append(f"\nspeedup: {speedup_value:.4f}\n")
 
-                # Format the speedup output for AIDE to parse
-                speedup_value = eval_results.get('speedup', 0.0)
-                output.append(f"\nspeedup: {speedup_value:.4f}\n")
+                    if eval_results.get("error"):
+                        output.append(f"[Eval error]: {eval_results['error']}\n")
 
-                if eval_results.get('error'):
-                    output.append(f"[Eval error]: {eval_results['error']}\n")
+                    logger.info(f"AlgoTune evaluation complete - speedup: {speedup_value}")
+                except ImportError as e:
+                    output.append(f"[Eval error]: Failed to import AlgoTune evaluation module: {str(e)}")
+                    logger.error(f"Import error during AlgoTune evaluation: {e}")
+                except Exception as e:
+                    output.append(f"[Eval error]: Failed to run AlgoTune evaluation: {str(e)}")
+                    logger.error(f"AlgoTune evaluation failed: {e}")
+            else:
+                optimize_path = self.working_dir / "optimize.py"
+                with open(optimize_path, 'w') as f:
+                    f.write(code)
 
-                logger.info(f"Evaluation complete - speedup: {speedup_value}")
+                try:
+                    logger.debug(f"Running direct evaluation for task {self.task_id}")
 
-            except ImportError as e:
-                output.append(f"[Eval error]: Failed to import evaluation module: {str(e)}")
-                logger.error(f"Import error during evaluation: {e}")
-            except Exception as e:
-                output.append(f"[Eval error]: Failed to run evaluation: {str(e)}")
-                logger.error(f"Evaluation failed: {e}")
+                    kernelbench_path = working_dir_path.parent.parent / "tasks" / "kernelbench"
+                    kb_library_path = working_dir_path.parent.parent / "tasks" / "kernel_bench" / "KernelBench"
+
+                    if kernelbench_path.exists():
+                        sys.path.insert(0, str(kernelbench_path))
+                    if kb_library_path.exists():
+                        sys.path.insert(0, str(kb_library_path))
+
+                    from evaluate_gpu import evaluate_kernelbench_task
+
+                    eval_results = evaluate_kernelbench_task(
+                        task_id=self.task_id,
+                        solution_path=str(optimize_path),
+                        device="cuda",
+                        num_correct_trials=5,
+                        num_perf_trials=100,
+                        measure_performance=True,
+                        verbose=True,
+                        build_dir=str(self.working_dir / "cuda_build_cache")
+                    )
+
+                    output.append("\n=== Evaluation Output ===\n")
+                    output.append(f"Compilation: {'✓' if eval_results.get('compiled', False) else '✗'}\n")
+                    output.append(f"Correctness: {'✓' if eval_results.get('correct', False) else '✗'}\n")
+                    output.append(f"Speedup: {eval_results.get('speedup', 0.0):.4f}\n")
+
+                    speedup_value = eval_results.get('speedup', 0.0)
+                    output.append(f"\nspeedup: {speedup_value:.4f}\n")
+
+                    if eval_results.get('error'):
+                        output.append(f"[Eval error]: {eval_results['error']}\n")
+
+                    logger.info(f"Evaluation complete - speedup: {speedup_value}")
+                except ImportError as e:
+                    output.append(f"[Eval error]: Failed to import evaluation module: {str(e)}")
+                    logger.error(f"Import error during evaluation: {e}")
+                except Exception as e:
+                    output.append(f"[Eval error]: Failed to run evaluation: {str(e)}")
+                    logger.error(f"Evaluation failed: {e}")
 
         return ExecutionResult(output, exec_time, e_cls_name, exc_info, exc_stack)

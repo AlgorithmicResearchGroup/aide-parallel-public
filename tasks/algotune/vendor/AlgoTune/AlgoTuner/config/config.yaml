@@ -1,0 +1,226 @@
+global:
+  spend_limit: 1.0 # in USD
+  total_messages: 9999
+  max_messages_in_history: 5
+
+benchmark:
+  dev_runs: 2               
+  eval_runs: 10
+  baseline_timeout: 60000 # in milliseconds
+  manager_refresh_interval: 100
+  forkserver_restart_interval: 0 # Disable forkserver restart to avoid deadlocks
+  validation_pool:       
+    num_workers: 1       # Max number of parallel workers (1 = sequential, null = os.cpu_count())
+    maxtasksperchild: null # Disable worker recycling for debugging (was 10)
+    memory_limit_gb_per_worker: 14 # Increased for baseline algorithms (was 6GB)
+    disable_rlimit_as: false # Re-enabled for proper OOM detection and memory safety
+  tempdir_cleanup:
+    retries: 3          # Number of cleanup attempts
+    delays: [0.5, 1.0, 2.0]  # Delays between attempts in seconds
+  cache:
+    max_entries: 100      # Maximum cached arrays
+    max_memory_mb: 2048   # Maximum cache memory in MB
+    ttl_seconds: 900      # Time-to-live in seconds (15 min)
+
+dataset:
+  train_size: 100
+  test_size: 100
+
+models:
+  openrouter/openai/o4-mini:
+    api_key_env: "OPENROUTER_API_KEY"
+    temperature: 0.0
+    reasoning:
+      effort: "high"
+    include_reasoning: true
+    drop_params: true
+  openrouter/openai/o3:
+    api_key_env: "OPENROUTER_API_KEY"
+    temperature: 0.0
+    reasoning:
+      effort: "high"
+    include_reasoning: true
+    drop_params: true
+  openrouter/anthropic/claude-opus-4:
+    api_key_env: "OPENROUTER_API_KEY"
+    temperature: 0.0
+    reasoning:
+      effort: "high"
+    include_reasoning: true
+  openrouter/deepseek/deepseek-r1:
+    api_key_env: "OPENROUTER_API_KEY"
+    temperature: 0.0
+    # DeepSeek R1 with maximum reasoning enabled
+    reasoning:
+      effort: "high"
+    include_reasoning: true
+
+  openrouter/anthropic/claude-sonnet-4.5:
+    api_key_env: "OPENROUTER_API_KEY"
+    temperature: 0.0
+    reasoning:
+      effort: "high"
+    include_reasoning: true
+
+  openrouter/google/gemini-2.5-pro:
+    api_key_env: "OPENROUTER_API_KEY"
+    temperature: 0.0
+    # Gemini 2.5 Pro with MAXIMUM reasoning and context
+    reasoning:
+      effort: "high"
+    include_reasoning: true
+  openrouter/moonshotai/kimi-k2:
+    api_key_env: "OPENROUTER_API_KEY"
+    temperature: 0.0
+    drop_params: true
+    extra_body:
+      usage:
+        include: true
+
+  # --- Qwen / Qwen3 Coder 480B (thinking enabled) ---
+  openrouter/qwen/qwen3-coder:
+    api_key_env: "OPENROUTER_API_KEY"
+    temperature: 0.0
+    reasoning:
+      effort: "high"
+    usage:
+      include: true
+
+  openrouter/z-ai/glm-4.5:
+    api_key_env: "OPENROUTER_API_KEY"
+    temperature: 0.0
+    reasoning:
+      effort: "high"
+    include_reasoning: true
+    usage:
+      include: true
+  openrouter/z-ai/glm-4.7:
+    api_key_env: "OPENROUTER_API_KEY"
+    temperature: 0.0
+    reasoning:
+      effort: "high"
+    include_reasoning: true
+    usage:
+      include: true
+
+  openrouter/anthropic/claude-opus-4.1:
+    api_key_env: "OPENROUTER_API_KEY"
+    temperature: 0.0
+    reasoning:
+      effort: "high"
+    include_reasoning: true
+
+  openrouter/openai/gpt-oss-120b:
+    api_key_env: "OPENROUTER_API_KEY"
+    temperature: 0.0
+    drop_params: true
+    reasoning:
+      effort: "high"   
+    include_reasoning: true
+    usage:
+      include: true    
+
+  openrouter/openai/gpt-5:
+    api_key_env: "OPENROUTER_API_KEY"
+    temperature: 0.0
+    reasoning:
+      effort: "high"
+    include_reasoning: true
+
+  openrouter/openai/gpt-5-mini:
+    api_key_env: "OPENROUTER_API_KEY"
+    temperature: 0.0
+    reasoning:
+      effort: "high"
+    include_reasoning: true
+
+  openrouter/openai/gpt-5-pro:
+    api_key_env: "OPENROUTER_API_KEY"
+    temperature: 0.0
+    drop_params: false
+    reasoning:
+      effort: "medium"
+    include_reasoning: true
+    usage:
+      include: true
+
+  openrouter/minimax/minimax-m2.1:
+    api_key_env: "OPENROUTER_API_KEY"
+    temperature: 0.0
+    reasoning:
+      effort: "high"
+    include_reasoning: true
+    usage:
+      include: true
+
+  openrouter/google/gemini-3-pro-preview:
+    api_key_env: "OPENROUTER_API_KEY"
+    temperature: 0.0
+    reasoning:
+      effort: "high"
+    include_reasoning: true
+    usage:
+      include: true
+
+  openrouter/google/gemini-3.1-pro-preview:
+    api_key_env: "OPENROUTER_API_KEY"
+    temperature: 0.0
+    reasoning:
+      effort: "high"
+    include_reasoning: true
+    usage:
+      include: true
+
+  openrouter/google/gemini-3-flash-preview:
+    api_key_env: "OPENROUTER_API_KEY"
+    temperature: 0.0
+    reasoning:
+      effort: "high"
+    include_reasoning: true
+    usage:
+      include: true
+
+  openrouter/openai/gpt-5.2:
+    api_key_env: "OPENROUTER_API_KEY"
+    temperature: 0.0
+    reasoning:
+      effort: "high"
+    include_reasoning: true
+    drop_params: true
+
+  openrouter/openai/gpt-5.4:
+    api_key_env: "OPENROUTER_API_KEY"
+    temperature: 0.0
+    reasoning:
+      effort: "high"
+    include_reasoning: true
+    drop_params: true
+
+  openrouter/openai/gpt-5.4-xhigh:
+    model_name: "openrouter/openai/gpt-5.4"
+    api_key_env: "OPENROUTER_API_KEY"
+    temperature: 0.0
+    reasoning:
+      effort: "xhigh"
+    include_reasoning: true
+    drop_params: true
+
+  openrouter/anthropic/claude-opus-4.5:
+    api_key_env: "OPENROUTER_API_KEY"
+    temperature: 0.0
+    reasoning:
+      effort: "high"
+    include_reasoning: true
+    usage:
+      include: true
+
+  openrouter/anthropic/claude-opus-4.6:
+    api_key_env: "OPENROUTER_API_KEY"
+    temperature: 0.0
+    reasoning:
+      effort: "high"
+    include_reasoning: true
+    extra_body:
+      verbosity: "high"
+    usage:
+      include: true

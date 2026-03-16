@@ -1,0 +1,4 @@
+# Optional advanced benchmark dependencies for tasks/algotune.
+# Recommended environment: Python 3.10.
+# Install this file before `pip install -e ./aideml` in a shared environment.
+-e ./tasks/algotune/vendor/AlgoTune

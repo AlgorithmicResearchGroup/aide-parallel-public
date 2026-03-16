@@ -4,10 +4,13 @@ AIDE Parallel runs AIDE experiments locally or on a Ray cluster. The simplest fi
 
 ## Quick Start
 
+Use Python 3.10 or newer. `aideml` will not install on older interpreters.
+The commands below use `python3.12` as an example; replace it with any installed Python 3.10+ binary.
+
 Create a virtual environment and install the repo:
 
 ```bash
-python3 -m venv .venv
+python3.12 -m venv .venv
 source .venv/bin/activate
 python -m pip install --upgrade pip setuptools wheel
 python -m pip install -r requirements.txt
@@ -73,6 +76,29 @@ For Linux GPU nodes, install CUDA-specific PyTorch wheels separately, for exampl
 pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
 ```
 
+## AlgoTune
+
+AlgoTune is available as an optional advanced benchmark and is not part of the default first-run path.
+
+Use a separate Python 3.10 environment for it:
+
+```bash
+python3.10 -m venv .venv-algotune
+source .venv-algotune/bin/activate
+python -m pip install --upgrade pip setuptools wheel
+python -m pip install -r requirements.txt
+python -m pip install -r requirements-algotune.txt
+python -m pip install -e ./aideml
+```
+
+Then run a small local smoke test:
+
+```bash
+./cli/aide-run --local --task algotune --at-task kmeans --num-experiments 1 --num-iterations 1 --steps 1 --cpus-per-experiment 2
+```
+
+More details: [tasks/algotune/README.md](/Users/arg/Desktop/PUBLIC/aide_parallel/tasks/algotune/README.md)
+
 ## Optional Dependencies
 
 If you want notebooks, tracing, or extra benchmarking tools:
@@ -81,10 +107,18 @@ If you want notebooks, tracing, or extra benchmarking tools:
 python -m pip install -r requirements-optional.txt
 ```
 
+For the optional AlgoTune benchmark:
+
+```bash
+python -m pip install -r requirements-algotune.txt
+python -m pip install -e ./aideml
+```
+
 ## Main Commands
 
 - `./cli/aide-check`: validate the local install with a deterministic CPU run
 - `./cli/aide-run`: run AIDE experiments
+- `./cli/aide-run --task algotune --at-task <task>`: run an AlgoTune task locally or on Ray
 - `./cli/aide-cluster-up`: start a Ray cluster from env vars
 - `./cli/aide-cluster-down`: stop the Ray cluster
 - `./cli/run-kb-sequence quick`: run a preset KernelBench sequence

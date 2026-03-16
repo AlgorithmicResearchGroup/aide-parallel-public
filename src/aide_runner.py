@@ -38,6 +38,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(level
 logger = logging.getLogger(__name__)
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
+DEFAULT_ALGOTUNE_PATH = PROJECT_ROOT / "tasks" / "algotune" / "vendor" / "AlgoTune"
 load_dotenv(dotenv_path=PROJECT_ROOT / ".env")
 
 
@@ -205,8 +206,8 @@ class Experiment:
                     logger.info(f"Step {step}: Evaluation failed, logging with speedup=0.0")
 
                 # Log based on task type using global step
-                if self.task_type in ["kernel", "kernelbench"]:
-                    # For kernel/kernelbench task, metric is speedup (higher is better)
+                if self.task_type in ["kernel", "kernelbench", "algotune"]:
+                    # For speedup tasks, metric is speedup (higher is better)
                     wandb_logger.log_evaluation(
                         speedup=metric_value,
                         execution_time=best_node.exec_time if best_node.exec_time else 0.0,
@@ -248,8 +249,8 @@ class Experiment:
                 eval_status = "success"
             else:
                 # Failed evaluation
-                if self.task_type in ["kernel", "kernelbench"]:
-                    metric_value = 0.0  # Failed kernels get speedup of 0
+                if self.task_type in ["kernel", "kernelbench", "algotune"]:
+                    metric_value = 0.0  # Failed speedup tasks get speedup of 0
                 else:
                     metric_value = float('inf')  # Failed attention tasks get infinite loss
                 eval_status = "failed"
@@ -262,7 +263,7 @@ class Experiment:
                 "current_iteration": iteration,
             }
 
-            if self.task_type in ["kernel", "kernelbench"]:
+            if self.task_type in ["kernel", "kernelbench", "algotune"]:
                 iteration_summary["best_speedup_so_far"] = metric_value
             else:
                 iteration_summary["best_val_loss_so_far"] = metric_value
@@ -341,37 +342,60 @@ def run_experiments(
     steps_per_experiment: int = 2,
     task_type: str = "attention",
     gpu_fraction: float = 1.0,
+    cpus_per_experiment: int | None = None,
     wandb_project: str = None,
     iteration: int = 1,
     experiment_actors: list = None,
     task_id: str = None
 ) -> list[dict[str, Any]]:
-    """Launch Ray actors with GPU allocation, wait for all results, and return ranked outputs."""
+    """Launch Ray actors with GPU or CPU allocation, wait for all results, and return ranked outputs."""
 
     # Check available resources
     resources = get_cluster_resources()
-    logger.info(f"Cluster resources - Total GPUs: {resources['total_gpus']}, Available GPUs: {resources['available_gpus']}")
+    prefer_cpu = task_type == "algotune" or cpus_per_experiment is not None
+    has_gpus = resources["total_gpus"] > 0 and not prefer_cpu
+    if has_gpus:
+        logger.info(
+            "Cluster resources - Total GPUs: %s, Available GPUs: %s",
+            resources["total_gpus"],
+            resources["available_gpus"],
+        )
+        if resources["available_gpus"] < num_experiments * gpu_fraction:
+            logger.warning(
+                "Requested %s experiments with gpu_fraction=%s but only %s GPUs are currently available",
+                num_experiments,
+                gpu_fraction,
+                resources["available_gpus"],
+            )
+            logger.info("Experiments will queue and run as GPUs become available")
+    else:
+        logger.info(
+            "Cluster resources - Total CPUs: %s, Available CPUs: %s",
+            resources["total_cpus"],
+            resources["available_cpus"],
+        )
+        if resources["total_gpus"] > 0 and prefer_cpu:
+            logger.info("Scheduling experiments on CPU workers by task/resource preference.")
+        else:
+            logger.info("No GPUs detected; scheduling experiments on CPU workers.")
 
-    if resources['available_gpus'] < num_experiments:
-        logger.warning(f"Requested {num_experiments} experiments but only {resources['available_gpus']} GPUs available")
-        logger.info("Experiments will queue and run as GPUs become available")
-
-    actor_gpu_fraction = gpu_fraction if resources["total_gpus"] > 0 else 0
-    if actor_gpu_fraction == 0:
-        logger.info("No GPUs detected; scheduling experiments on CPU workers.")
+    actor_gpu_fraction = gpu_fraction if has_gpus else 0.0
 
     # Create or reuse actors with GPU requirements
     if experiment_actors is None:
-        # First iteration - create new actors
-        # Dynamically create Ray remote actor with specified GPU fraction
-        ExperimentRemote = ray.remote(num_gpus=actor_gpu_fraction)(Experiment)
-
-        logger.info(f"Creating {num_experiments} actors with {actor_gpu_fraction} GPU fraction each")
-        logger.info(f"Total GPU requirement: {num_experiments * actor_gpu_fraction:.1f} GPUs")
-        if actor_gpu_fraction > 0:
+        if has_gpus:
+            ExperimentRemote = ray.remote(num_gpus=actor_gpu_fraction)(Experiment)
+            logger.info(f"Creating {num_experiments} actors with {actor_gpu_fraction} GPU fraction each")
+            logger.info(f"Total GPU requirement: {num_experiments * actor_gpu_fraction:.1f} GPUs")
             logger.info(f"Experiments per GPU: {1/actor_gpu_fraction:.1f}")
         else:
-            logger.info("Experiments will run on CPU.")
+            actor_gpu_fraction = 0.0
+            if cpus_per_experiment is None:
+                total_cpus = max(1, int(resources["total_cpus"] or 1))
+                cpus_per_experiment = max(1, total_cpus // max(1, num_experiments))
+            ExperimentRemote = ray.remote(num_gpus=0, num_cpus=cpus_per_experiment)(Experiment)
+            logger.info(f"Creating {num_experiments} actors with {cpus_per_experiment} CPUs each")
+            logger.info(f"Total CPU requirement: {num_experiments * cpus_per_experiment}")
 
         actors = []
         for i in range(num_experiments):
@@ -451,6 +475,7 @@ def initialize_ray_cluster(head_node_ip: Optional[str] = None) -> None:
         "AIDE_PROJECT_ROOT": str(project_root),
         "PYTHONPATH": str(project_root),
         "KERNELBENCH_PATH": str(project_root / "tasks" / "kernel_bench" / "KernelBench"),
+        "ALGOTUNE_PATH": os.getenv("ALGOTUNE_PATH", str(DEFAULT_ALGOTUNE_PATH)),
     }
 
     # Create a comprehensive runtime_env
@@ -533,7 +558,12 @@ def main(
     goal: str,
     eval_metric: str,
     steps_per_experiment: int = 2,
-    head_node_ip: Optional[str] = None
+    head_node_ip: Optional[str] = None,
+    task_type: str = "attention",
+    task_id: str | None = None,
+    gpu_fraction: float = 1.0,
+    cpus_per_experiment: int | None = None,
+    wandb_project: str | None = None,
 ) -> None:
     """Main execution function with GPU-aware Ray cluster support."""
 
@@ -554,10 +584,11 @@ def main(
             feedback_model=feedback_model,
             num_experiments=num_experiments,
             steps_per_experiment=steps_per_experiment,
-            task_type=args.task,
-            gpu_fraction=args.gpu_fraction,
-            wandb_project=args.wandb_project,
-            task_id=args.kb_task if args.task == "kernelbench" else None,
+            task_type=task_type,
+            gpu_fraction=gpu_fraction,
+            cpus_per_experiment=cpus_per_experiment,
+            wandb_project=wandb_project,
+            task_id=task_id,
             iteration=1,
             experiment_actors=None  # Create new actors for first iteration
         )
@@ -602,10 +633,11 @@ def main(
                     feedback_model=feedback_model,
                     num_experiments=num_experiments,
                     steps_per_experiment=steps_per_experiment,
-                    task_type=args.task,
-                    gpu_fraction=args.gpu_fraction,
-                    wandb_project=args.wandb_project,
-                    task_id=args.kb_task if args.task == "kernelbench" else None,
+                    task_type=task_type,
+                    gpu_fraction=gpu_fraction,
+                    cpus_per_experiment=cpus_per_experiment,
+                    wandb_project=wandb_project,
+                    task_id=task_id,
                     iteration=iteration + 1,
                     experiment_actors=experiment_actors  # Reuse existing actors
                 )
@@ -671,7 +703,7 @@ if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser(description="Run AIDE experiments with Ray-based parallelization")
-    parser.add_argument("--task", type=str, default="attention", help="Task name (attention, kernel, or kernelbench)")
+    parser.add_argument("--task", type=str, default="attention", help="Task name (attention, kernel, kernelbench, or algotune)")
     parser.add_argument(
         "--head-node-ip",
         type=str,
@@ -684,6 +716,8 @@ if __name__ == "__main__":
     parser.add_argument("--local", action="store_true", help="Run locally instead of on cluster")
     parser.add_argument("--gpu-fraction", type=float, default=1.0,
                        help="Fraction of GPU per experiment (e.g., 0.5 for 2 experiments per GPU, 0.25 for 4, 0.1 for 10)")
+    parser.add_argument("--cpus-per-experiment", type=int, default=None,
+                       help="CPUs per experiment for CPU-only runs. Defaults to auto-calculated scheduling.")
     parser.add_argument("--wandb-project", type=str, default=None,
                        help="W&B project name (default: aide-{task}-h100)")
     parser.add_argument("--model", type=str, default=None,
@@ -692,6 +726,8 @@ if __name__ == "__main__":
                        help="Override feedback model from contract")
     parser.add_argument("--kb-task", type=str, default=None,
                        help="KernelBench task ID (e.g., 1_19, 3_28)")
+    parser.add_argument("--at-task", type=str, default=None,
+                       help="AlgoTune task name (e.g., kmeans, qr_factorization, svm)")
 
     args = parser.parse_args()
 
@@ -735,6 +771,37 @@ if __name__ == "__main__":
 
         logger.info(f"KernelBench task: {task_info['name']} (Level {task_info['level']})")
         logger.info(f"Task prepared with original code and examples")
+    elif args.task == "algotune":
+        if not args.at_task:
+            logger.error("--at-task is required for algotune tasks")
+            sys.exit(1)
+
+        sys.path.insert(0, str(data_dir))
+
+        from prepare_algotune_task import prepare_task
+        solver_path = data_dir / "solver.py"
+
+        logger.info(f"Preparing AlgoTune task {args.at_task}...")
+        prepare_task(args.at_task, str(solver_path))
+
+        from at_tasks import get_task_info_with_code
+        task_info = get_task_info_with_code(args.at_task)
+
+        contract["goal"] = task_info["goal"]
+        contract["eval"] = (
+            f"python ../input/evaluate_algotune.py --task {args.at_task} "
+            "--solution-path solver.py --n-problems 5 --n-runs 3 --fast"
+        )
+
+        if not args.steps:
+            contract["steps"] = task_info.get("suggested_steps", contract.get("steps", 4))
+
+        logger.info(
+            "AlgoTune task: %s (%s)",
+            task_info["name"],
+            task_info.get("category", "general"),
+        )
+        logger.info("Task prepared with description and reference implementation")
 
     logger.info(f"Task configuration: {contract}")
 
@@ -764,4 +831,9 @@ if __name__ == "__main__":
         eval_metric=contract["eval_metric"],
         steps_per_experiment=steps,
         head_node_ip=head_node_ip,
+        task_type=args.task,
+        task_id=args.kb_task if args.task == "kernelbench" else (args.at_task if args.task == "algotune" else None),
+        gpu_fraction=args.gpu_fraction,
+        cpus_per_experiment=args.cpus_per_experiment,
+        wandb_project=args.wandb_project,
     )

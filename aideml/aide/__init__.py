@@ -52,9 +52,9 @@ class Experiment:
             journal=self.journal,
             task_type=task_type,
         )
-        # Pass task-specific parameters to the interpreter for kernel tasks
+        # Pass task-specific parameters to the interpreter for speedup tasks.
         exec_config = OmegaConf.to_container(self.cfg.exec)
-        if task_type in ["kernel", "kernelbench"]:
+        if task_type in ["kernel", "kernelbench", "algotune"]:
             exec_config["task_type"] = task_type
             exec_config["eval_cmd"] = eval
             exec_config["task_id"] = task_id

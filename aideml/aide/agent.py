@@ -60,6 +60,8 @@ class Agent:
         self.data_preview: str | None = None
         self.task_type = task_type if task_type else "default"
         self.is_gpu_task = task_type in ["kernelbench", "kernel"]
+        self.is_algotune_task = task_type == "algotune"
+        self.is_speedup_task = task_type in ["kernelbench", "kernel", "algotune"]
 
     def search_policy(self) -> Node | None:
         """Select a node to work on (or None to draft a new node)."""
@@ -202,6 +204,28 @@ class Agent:
             )
         }
 
+    @property
+    def _prompt_impl_guideline_algotune(self):
+        return {
+            "Implementation guideline": [
+                "Create a class named exactly 'Solver'.",
+                "The class must define `def solve(self, problem, **kwargs)`.",
+                "Return the same output format as the reference implementation.",
+                "Focus on correctness first, then speedup.",
+                "Your response should contain a single markdown code block implementing Solver.",
+            ]
+        }
+
+    @property
+    def _prompt_resp_fmt_algotune(self):
+        return {
+            "Response format": (
+                "Respond with a brief optimization strategy in natural language (3-5 sentences), "
+                "followed by a single markdown code block that implements the Solver class. "
+                "Do not include headings or extra prose."
+            )
+        }
+
     def plan_and_code_query(self, prompt, retries=3) -> tuple[str, str]:
         """Generate a natural language plan + code in the same LLM call and split them apart."""
         completion_text = None
@@ -225,7 +249,19 @@ class Agent:
         return "", completion_text  # type: ignore
 
     def _draft(self) -> Node:
-        if self.is_gpu_task:
+        if self.is_algotune_task:
+            prompt: Any = {
+                "Introduction": (
+                    "You are optimizing a reference algorithm implementation for speed. "
+                    "Produce a valid Solver class that preserves outputs while improving runtime."
+                ),
+                "Task description": self.task_desc,
+                "Memory": self.journal.generate_summary(),
+                "Instructions": {},
+            }
+            prompt["Instructions"] |= self._prompt_resp_fmt_algotune
+            prompt["Instructions"] |= self._prompt_impl_guideline_algotune
+        elif self.is_gpu_task:
             # GPU optimization-specific prompt
             prompt: Any = {
                 "Introduction": (
@@ -278,14 +314,28 @@ class Agent:
             prompt["Instructions"] |= self._prompt_impl_guideline
             prompt["Instructions"] |= self._prompt_environment
 
-        if self.acfg.data_preview and not self.is_gpu_task:
+        if self.acfg.data_preview and not self.is_gpu_task and not self.is_algotune_task:
             prompt["Data Overview"] = self.data_preview
 
         plan, code = self.plan_and_code_query(prompt)
         return Node(plan=plan, code=code)
 
     def _improve(self, parent_node: Node) -> Node:
-        if self.is_gpu_task:
+        if self.is_algotune_task:
+            prompt: Any = {
+                "Introduction": (
+                    "You are refining a Solver implementation for better speed while preserving correctness."
+                ),
+                "Task description": self.task_desc,
+                "Memory": self.journal.generate_summary(),
+                "Instructions": {},
+            }
+            prompt["Previous solution"] = {
+                "Code": wrap_code(parent_node.code),
+            }
+            prompt["Instructions"] |= self._prompt_resp_fmt_algotune
+            prompt["Instructions"] |= self._prompt_impl_guideline_algotune
+        elif self.is_gpu_task:
             # GPU optimization-specific improvement prompt
             prompt: Any = {
                 "Introduction": (
@@ -352,7 +402,19 @@ class Agent:
         )
 
     def _debug(self, parent_node: Node) -> Node:
-        if self.is_gpu_task:
+        if self.is_algotune_task:
+            prompt: Any = {
+                "Introduction": (
+                    "Your previous Solver implementation failed. Fix the correctness or runtime issue and return a corrected Solver class."
+                ),
+                "Task description": self.task_desc,
+                "Previous (buggy) implementation": wrap_code(parent_node.code),
+                "Execution output": wrap_code(parent_node.term_out, lang=""),
+                "Instructions": {},
+            }
+            prompt["Instructions"] |= self._prompt_resp_fmt_algotune
+            prompt["Instructions"] |= self._prompt_impl_guideline_algotune
+        elif self.is_gpu_task:
             # GPU-specific debug prompt
             prompt: Any = {
                 "Introduction": (
@@ -435,7 +497,23 @@ class Agent:
 
         node.absorb_exec_result(exec_result)
 
-        if self.is_gpu_task:
+        if self.is_algotune_task:
+            prompt = {
+                "Introduction": (
+                    "You are evaluating an optimized algorithm implementation. "
+                    "Look for the speedup metric, correctness errors, or runtime failures."
+                ),
+                "Task description": self.task_desc,
+                "Implementation": wrap_code(node.code),
+                "Execution output": wrap_code(node.term_out, lang=""),
+                "Metric instructions": (
+                    "Look for 'speedup: X.XXXX' in the output. "
+                    "Speedup = Time(Reference) / Time(Solver). "
+                    "A speedup below 1.0 is slower than baseline but not a bug by itself. "
+                    "Only mark the solution as buggy when there is a syntax error, runtime error, or validation failure."
+                ),
+            }
+        elif self.is_gpu_task:
             # GPU-specific evaluation prompt
             prompt = {
                 "Introduction": (
@@ -487,7 +565,7 @@ class Agent:
             response = {
                 "is_bug": True,
                 "summary": f"Function call failed: {str(e)[:200]}",
-                "metric": 0.0 if self.is_gpu_task else None,
+                "metric": 0.0 if self.is_speedup_task else None,
                 "lower_is_better": False
             }
 
@@ -496,14 +574,14 @@ class Agent:
             response["metric"] = None
 
         # For GPU tasks, ensure lower_is_better is False (higher speedup is better)
-        if self.is_gpu_task and response["metric"] is not None:
+        if self.is_speedup_task and response["metric"] is not None:
             response["lower_is_better"] = False
 
         node.analysis = response["summary"]
 
         # For GPU tasks, treat slow performance (speedup < 1.0) as valid but not optimal
         # Only mark as buggy if there's an actual error, not just slow performance
-        if self.is_gpu_task:
+        if self.is_speedup_task:
             node.is_buggy = (
                 response["is_bug"]
                 or node.exc_type is not None

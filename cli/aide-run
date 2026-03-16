@@ -12,10 +12,12 @@ NUM_EXPERIMENTS=""
 NUM_ITERATIONS=""
 STEPS=""
 GPU_FRACTION=""
+CPUS_PER_EXPERIMENT=""
 WANDB_PROJECT=""
 MODEL="${AIDE_MODEL:-}"
 FEEDBACK_MODEL="${AIDE_FEEDBACK_MODEL:-}"
 KB_TASK=""
+AT_TASK=""
 LOCAL_MODE="false"
 
 while [[ $# -gt 0 ]]; do
@@ -34,6 +36,8 @@ while [[ $# -gt 0 ]]; do
       STEPS="$2"; shift 2 ;;
     --gpu-fraction)
       GPU_FRACTION="$2"; shift 2 ;;
+    --cpus-per-experiment)
+      CPUS_PER_EXPERIMENT="$2"; shift 2 ;;
     --wandb-project)
       WANDB_PROJECT="$2"; shift 2 ;;
     --model)
@@ -42,6 +46,8 @@ while [[ $# -gt 0 ]]; do
       FEEDBACK_MODEL="$2"; shift 2 ;;
     --kb-task)
       KB_TASK="$2"; shift 2 ;;
+    --at-task)
+      AT_TASK="$2"; shift 2 ;;
     --local)
       LOCAL_MODE="true"; shift ;;
     --help)
@@ -49,23 +55,26 @@ while [[ $# -gt 0 ]]; do
 Usage: ./cli/aide-run [OPTIONS]
 
 Options:
-  --task TASK              Task to run (attention, kernel, kernelbench)
+  --task TASK              Task to run (attention, kernel, kernelbench, algotune)
   --contract FILE          Contract filename inside tasks/<task>/
   --head-node-ip IP        Ray head-node IP (default: $AIDE_HEAD_NODE_IP)
   --num-experiments N      Override number of parallel experiments
   --num-iterations N       Override number of iterations
   --steps N                Override steps per experiment
   --gpu-fraction N         GPU fraction per experiment (0.5=2 per GPU)
+  --cpus-per-experiment N  CPUs per experiment in CPU mode
   --wandb-project NAME     W&B project name override
   --model NAME             Generation model override
   --feedback-model NAME    Feedback model override
   --kb-task ID             KernelBench task ID (required for kernelbench)
+  --at-task NAME           AlgoTune task name (required for algotune)
   --local                  Run locally (no remote Ray address)
   --help                   Show this message
 
 Examples:
   ./cli/aide-run --local --num-experiments 2 --steps 1
   ./cli/aide-run --task kernelbench --kb-task 1_19 --head-node-ip 10.0.0.5
+  ./cli/aide-run --local --task algotune --at-task kmeans --cpus-per-experiment 2
 USAGE
       exit 0 ;;
     *)
@@ -79,6 +88,11 @@ if [[ "$TASK" == "kernelbench" && -z "$KB_TASK" ]]; then
   exit 1
 fi
 
+if [[ "$TASK" == "algotune" && -z "$AT_TASK" ]]; then
+  echo "ERROR: --at-task is required for --task algotune"
+  exit 1
+fi
+
 if [[ -z "$CONTRACT_FILE" ]]; then
   if [[ -f "${REPO_ROOT}/tasks/$TASK/contract_gpu.yaml" ]]; then
     CONTRACT_FILE="contract_gpu.yaml"
@@ -87,12 +101,17 @@ if [[ -z "$CONTRACT_FILE" ]]; then
   fi
 fi
 
-if [[ ! -f "${REPO_ROOT}/tasks/$TASK/$CONTRACT_FILE" ]]; then
+SOURCE_CONTRACT="${REPO_ROOT}/tasks/$TASK/$CONTRACT_FILE"
+TARGET_CONTRACT="${REPO_ROOT}/tasks/$TASK/contract.yaml"
+
+if [[ ! -f "$SOURCE_CONTRACT" ]]; then
   echo "ERROR: Contract file not found: ${REPO_ROOT}/tasks/$TASK/$CONTRACT_FILE"
   exit 1
 fi
 
-cp "${REPO_ROOT}/tasks/$TASK/$CONTRACT_FILE" "${REPO_ROOT}/tasks/$TASK/contract.yaml"
+if [[ "$SOURCE_CONTRACT" != "$TARGET_CONTRACT" ]]; then
+  cp "$SOURCE_CONTRACT" "$TARGET_CONTRACT"
+fi
 
 echo "Using task=$TASK contract=$CONTRACT_FILE"
 
@@ -108,10 +127,12 @@ fi
 [[ -n "$NUM_ITERATIONS" ]] && CMD+=(--num-iterations "$NUM_ITERATIONS")
 [[ -n "$STEPS" ]] && CMD+=(--steps "$STEPS")
 [[ -n "$GPU_FRACTION" ]] && CMD+=(--gpu-fraction "$GPU_FRACTION")
+[[ -n "$CPUS_PER_EXPERIMENT" ]] && CMD+=(--cpus-per-experiment "$CPUS_PER_EXPERIMENT")
 [[ -n "$WANDB_PROJECT" ]] && CMD+=(--wandb-project "$WANDB_PROJECT")
 [[ -n "$MODEL" ]] && CMD+=(--model "$MODEL")
 [[ -n "$FEEDBACK_MODEL" ]] && CMD+=(--feedback-model "$FEEDBACK_MODEL")
 [[ -n "$KB_TASK" ]] && CMD+=(--kb-task "$KB_TASK")
+[[ -n "$AT_TASK" ]] && CMD+=(--at-task "$AT_TASK")
 
 if [[ "$LOCAL_MODE" != "true" && -n "$HEAD_NODE_IP" ]]; then
   echo "Checking Ray cluster at ${HEAD_NODE_IP}:6379 ..."

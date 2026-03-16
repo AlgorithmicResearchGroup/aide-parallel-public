@@ -327,7 +327,7 @@ def create_wandb_logger_for_experiment(
     # Choose logger based on task type
     task_type = config.get("task_type", "attention")
 
-    if task_type in ["kernel", "kernelbench"]:
+    if task_type in ["kernel", "kernelbench", "algotune"]:
         return KernelWandbLogger(
             run_name=experiment_name,
             gpu_id=gpu_id,
