@@ -1,0 +1,1242 @@
+2026-03-16 19:02:21,339	INFO worker.py:2023 -- Started a local Ray instance.
+[36m(Experiment pid=2104644)[0m No GPU available, running on CPU
+[36m(Experiment pid=2104644)[0m Attempting to load config from: /home/matt/Desktop/ray/aide-parallel-public/tasks/algotune/vendor/AlgoTune/AlgoTuner/config/config.yaml
+[36m(Experiment pid=2104644)[0m Successfully loaded config from: /home/matt/Desktop/ray/aide-parallel-public/tasks/algotune/vendor/AlgoTune/AlgoTuner/config/config.yaml
+[36m(Experiment pid=2104667)[0m No GPU available, running on CPU[32m [repeated 3x across cluster] (Ray deduplicates logs by default. Set RAY_DEDUP_LOGS=0 to disable log deduplication, or see https://docs.ray.io/en/master/ray-observability/user-guides/configure-logging.html#log-deduplication for more options.)[0m
+[36m(Experiment pid=2104573)[0m *** SIGSEGV received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702157 on cpu 42 ***
+[36m(Experiment pid=2104634)[0m Attempting to load config from: /home/matt/Desktop/ray/aide-parallel-public/tasks/algotune/vendor/AlgoTune/AlgoTuner/config/config.yaml[32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2104634)[0m Successfully loaded config from: /home/matt/Desktop/ray/aide-parallel-public/tasks/algotune/vendor/AlgoTune/AlgoTuner/config/config.yaml[32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2104634)[0m [failure_s
+[36m(Experiment pid=2104634)[0m ignal_handler.cc : 345] RAW: Signal 6 raised at PC=0x76234b49eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m [low_level_allo
+[36m(Experiment pid=2104573)[0m c.cc : 569] RAW: mmap error: 12
+2026-03-16 19:02:40,340	WARNING worker.py:1088 -- The driver may not be able to keep up with the stdout/stderr of the workers. To avoid forwarding logs to the driver, use 'ray.init(log_to_driver=False)'.
+2026-03-16 19:02:40,750	WARNING worker.py:1088 -- The driver may not be able to keep up with the stdout/stderr of the workers. To avoid forwarding logs to the driver, use 'ray.init(log_to_driver=False)'.
+[36m(Experiment pid=2104573)[0m *** SIGA
+[36m(Experiment pid=2104573)[0m BRT received at time=1773702160 on cpu 42 ***
+[36m(Experiment pid=2104667)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x72b374c9eb
+[36m(Experiment pid=2104667)[0m 2c while already in AbslFailureSignalHandler()
+2026-03-16 19:02:41,213	WARNING worker.py:1088 -- The driver may not be able to keep up with the stdout/stderr of the workers. To avoid forwarding logs to the driver, use 'ray.init(log_to_driver=False)'.
+2026-03-16 19:02:41,825	WARNING worker.py:1088 -- The driver may not be able to keep up with the stdout/stderr of the workers. To avoid forwarding logs to the driver, use 'ray.init(log_to_driver=False)'.
+2026-03-16 19:02:42,559	WARNING worker.py:1088 -- The driver may not be able to keep up with the stdout/stderr of the workers. To avoid forwarding logs to the driver, use 'ray.init(log_to_driver=False)'.
+[36m(Experiment pid=2104667)[0m *** SIGABRT received at time=1773702161 on c
+[36m(Experiment pid=2104667)[0m pu 9 ***
+[36m(Experiment pid=2104667)[0m *** SIGSEGV received at time=1773702158 on cpu 11 ***[32m [repeated 2x across cluster][0m
+[36m(Experiment pid=2104667)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12[32m [repeated 187867x across cluster][0m
+[36m(Experiment pid=2104667)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x72b374c9eb2c while already in AbslFailureSignalHandler()[32m [repeated 187865x across cluster][0m
+[36m(Experiment pid=2104667)[0m *** SIGABRT received at time=1773702162 on cpu 9 ***[32m [repeated 187866x across cluster][0m
+2026-03-16 19:02:43,511	WARNING worker.py:1088 -- The driver may not be able to keep up with the stdout/stderr of the workers. To avoid forwarding logs to the driver, use 'ray.init(log_to_driver=False)'.
+[36m(Experiment pid=2104573)[0m [failure_s
+[36m(Experiment pid=2104573)[0m ignal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+2026-03-16 19:02:44,748	WARNING worker.py:1088 -- The driver may not be able to keep up with the stdout/stderr of the workers. To avoid forwarding logs to the driver, use 'ray.init(log_to_driver=False)'.
+[36m(Experiment pid=2104667)[0m [failure_s
+[36m(Experiment pid=2104667)[0m ignal_handler.cc : 345] RAW: Signal 6 raised at PC=0x72b374c9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104667)[0m [fail
+[36m(Experiment pid=2104667)[0m ure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x72b374c9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104634)[0m [low_level_alloc.cc : 56
+[36m(Experiment pid=2104634)[0m 9] RAW: mmap error: 12
+[36m(Experiment pid=2104634)[0m *** SIGABRT r
+[36m(Experiment pid=2104634)[0m eceived at time=1773702165 on cpu 2 ***
+2026-03-16 19:02:47,873	WARNING worker.py:1088 -- The driver may not be able to keep up with the stdout/stderr of the workers. To avoid forwarding logs to the driver, use 'ray.init(log_to_driver=False)'.
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12[32m [repeated 195596x across cluster][0m
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()[32m [repeated 195595x across cluster][0m
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702166 on cpu 22 ***[32m [repeated 195595x across cluster][0m
+[36m(Experiment pid=2104667)[0m [failure_signal_handler.cc : 345] RAW: Sign
+[36m(Experiment pid=2104667)[0m al 6 raised at PC=0x72b374c9eb2c while already in AbslFailureSignalHandler()
+2026-03-16 19:02:50,102	WARNING worker.py:1088 -- The driver may not be able to keep up with the stdout/stderr of the workers. To avoid forwarding logs to the driver, use 'ray.init(log_to_driver=False)'.
+[36m(Experiment pid=2104667)[0m *** SIGABRT receive
+[36m(Experiment pid=2104667)[0m d at time=1773702168 on cpu 3 ***
+[36m(Experiment pid=2104667)[0m [low_level_all
+[36m(Experiment pid=2104667)[0m oc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104634)[0m *** SIGABRT received at time=1773702169 on 
+[36m(Experiment pid=2104634)[0m cpu 28 ***
+[36m(pid=gcs_server)[0m [2026-03-16 19:02:49,583 E 2099940 2099940] (gcs_server) gcs_server.cc:303: Failed to establish connection to the event+metrics exporter agent. Events and metrics will not be exported. Exporter agent status: RpcError: Running out of retries to initialize the metrics agent. rpc_code: 14
+[2026-03-16 19:02:52,886 E 2099757 2100631] core_worker_process.cc:837: Failed to establish connection to the metrics exporter agent. Metrics will not be exported. Exporter agent status: RpcError: Running out of retries to initialize the metrics agent. rpc_code: 14
+[36m(Experiment pid=2104667)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12[32m [repeated 196569x across cluster][0m
+[36m(Experiment pid=2104667)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x72b374c9eb2c while already in AbslFailureSignalHandler()[32m [repeated 196569x across cluster][0m
+[36m(Experiment pid=2104667)[0m *** SIGABRT received at time=1773702169 on cpu 3 ***[32m [repeated 196569x across cluster][0m
+2026-03-16 19:02:53,205	WARNING worker.py:1088 -- The driver may not be able to keep up with the stdout/stderr of the workers. To avoid forwarding logs to the driver, use 'ray.init(log_to_driver=False)'.
+[36m(Experiment pid=2104634)[0m [low_l
+[36m(Experiment pid=2104634)[0m evel_alloc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m *** SIGABRT received a
+[36m(Experiment pid=2104573)[0m t time=1773702171 on cpu 14 ***
+[36m(Experiment pid=2104634)[0m [low_level_al
+[36m(Experiment pid=2104634)[0m loc.cc : 569] RAW: mmap error: 12
+[33m(raylet)[0m [2026-03-16 19:02:51,312 E 2100538 2100538] (raylet) main.cc:979: Failed to establish connection to the metrics exporter agent. Metrics will not be exported. Exporter agent status: RpcError: Running out of retries to initialize the metrics agent. rpc_code: 14
+[36m(pid=2100633)[0m [2026-03-16 19:02:52,116 E 2100633 2100993] core_worker_process.cc:837: Failed to establish connection to the metrics exporter agent. Metrics will not be exported. Exporter agent status: RpcError: Running out of retries to initialize the metrics agent. rpc_code: 14
+[36m(Experiment pid=2104667)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x72b374c9
+[36m(Experiment pid=2104667)[0m eb2c while already in AbslFailureSignalHandler()
+2026-03-16 19:02:57,251	WARNING worker.py:1088 -- The driver may not be able to keep up with the stdout/stderr of the workers. To avoid forwarding logs to the driver, use 'ray.init(log_to_driver=False)'.
+[36m(Experiment pid=2104634)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12[32m [repeated 186135x across cluster][0m
+[36m(Experiment pid=2104634)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x76234b49eb2c while already in AbslFailureSignalHandler()[32m [repeated 186136x across cluster][0m
+[36m(Experiment pid=2104634)[0m *** SIGABRT received at time=1773702173 on cpu 36 ***[32m [repeated 186136x across cluster][0m
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSigna
+[36m(Experiment pid=2104573)[0m lHandler()
+[36m(Experiment pid=2104634)[0m *** SIGABRT received at time=1773702173 o
+[36m(Experiment pid=2104634)[0m n cpu 36 ***
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandle
+[36m(Experiment pid=2104573)[0m r()
+[36m(Experiment pid=2104634)[0m [low_level_al
+[36m(Experiment pid=2104634)[0m loc.cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104573)[0m *** 
+[36m(Experiment pid=2104573)[0m SIGABRT received at time=1773702175 on cpu 38 ***
+[36m(Experiment pid=2104634)[0m [2026-03-16 19:02:54,294 E 2104634 2107208] core_worker_process.cc:837: Failed to establish connection to the metrics exporter agent. Metrics will not be exported. Exporter agent status: RpcError: Running out of retries to initialize the metrics agent. rpc_code: 14[32m [repeated 19x across cluster][0m
+[36m(Experiment pid=2104667)[0m [low_level_alloc.cc : 5
+[36m(Experiment pid=2104667)[0m 69] RAW: mmap error: 12
+2026-03-16 19:03:02,381	WARNING worker.py:1088 -- The driver may not be able to keep up with the stdout/stderr of the workers. To avoid forwarding logs to the driver, use 'ray.init(log_to_driver=False)'.
+[36m(Experiment pid=2104667)[0m **
+[36m(Experiment pid=2104667)[0m * SIGABRT received at time=1773702177 on cpu 27 ***
+[36m(Experiment pid=2104634)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12[32m [repeated 197193x across cluster][0m
+[36m(Experiment pid=2104634)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x76234b49eb2c while already in AbslFailureSignalHandler()[32m [repeated 197193x across cluster][0m
+[36m(Experiment pid=2104634)[0m *** SIGABRT received at time=1773702177 on cpu 0 ***[32m [repeated 197190x across cluster][0m
+[36m(Experiment pid=2104573)[0m [low_level_alloc.
+[36m(Experiment pid=2104573)[0m cc : 569] RAW: mmap error: 12
+[36m(Experiment pid=2104667)[0m *** SIGAB
+[36m(Experiment pid=2104667)[0m RT received at time=1773702178 on cpu 27 ***
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 
+[36m(Experiment pid=2104573)[0m 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104667)[0m *** SIGABRT received at time=17
+[36m(Experiment pid=2104667)[0m 73702179 on cpu 27 ***
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12[32m [repeated 207615x across cluster][0m
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()[32m [repeated 207615x across cluster][0m
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702181 on cpu 14 ***[32m [repeated 207616x across cluster][0m
+[36m(Experiment pid=2104634)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x76234b49eb2c while already in Ab
+[36m(Experiment pid=2104634)[0m slFailureSignalHandler()
+[36m(Experiment pid=2104667)[0m *** SIGABRT received 
+[36m(Experiment pid=2104667)[0m at time=1773702183 on cpu 5 ***
+[36m(Experiment pid=2104667)[0m *** SIGABRT received at time=
+[36m(Experiment pid=2104667)[0m 1773702184 on cpu 5 ***
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=17737021
+[36m(Experiment pid=2104634)[0m [failure_signal_handler.cc : 345] RAW: Signa
+[36m(Experiment pid=2104634)[0m l 6 raised at PC=0x76234b49eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104634)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12[32m [repeated 231302x across cluster][0m
+[36m(Experiment pid=2104634)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x76234b49eb2c while already in AbslFailureSignalHandler()[32m [repeated 231300x across cluster][0m
+[36m(Experiment pid=2104634)[0m *** SIGABRT received at time=1773702186 on cpu 34 ***[32m [repeated 231299x across cluster][0m
+2026-03-16 19:03:15,165	WARNING worker.py:1088 -- The driver may not be able to keep up with the stdout/stderr of the workers. To avoid forwarding logs to the driver, use 'ray.init(log_to_driver=False)'.
+[36m(Experiment pid=2104573)[0m 85 on cpu 30 ***
+[36m(Experiment pid=2104573)[0m [failure_signal_han
+[36m(Experiment pid=2104573)[0m dler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104634)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x76234b
+[36m(Experiment pid=2104634)[0m 49eb2c while already in AbslFailureSignalHandler()
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12[32m [repeated 192472x across cluster][0m
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()[32m [repeated 192470x across cluster][0m
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702190 on cpu 30 ***[32m [repeated 192472x across cluster][0m
+[36m(Experiment pid=2104573)[0m *** S
+[36m(Experiment pid=2104573)[0m IGABRT received at time=1773702191 on cpu 30 ***
+[36m(Experiment pid=2104634)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x76234b49eb2c while already in AbslFailureSignalHan
+[36m(Experiment pid=2104634)[0m dler()
+[36m(Experiment pid=2104573)[0m [low_level_alloc.cc : 569] RAW: mmap error: 12[32m [repeated 118853x across cluster][0m
+[36m(Experiment pid=2104573)[0m [failure_signal_handler.cc : 345] RAW: Signal 6 raised at PC=0x79bee6e9eb2c while already in AbslFailureSignalHandler()[32m [repeated 118852x across cluster][0m
+[36m(Experiment pid=2104573)[0m *** SIGABRT received at time=1773702192 on cpu 30 ***[32m [repeated 118851x across cluster][0m
+Traceback (most recent call last):
+  File "/home/matt/Desktop/ray/aide-parallel-public/src/aide_runner.py", line 970, in <module>
+    result_payload = main(
+                     ^^^^^
+  File "/home/matt/Desktop/ray/aide-parallel-public/src/aide_runner.py", line 674, in main
+    ranked_results, experiment_actors = run_experiments(
+                                        ^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide-parallel-public/src/aide_runner.py", line 532, in run_experiments
+    result = ray.get(ref)
+             ^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/ray/_private/auto_init_hook.py", line 22, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/ray/_private/client_mode_hook.py", line 104, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/ray/_private/worker.py", line 2972, in get
+    values, debugger_breakpoint = worker.get_objects(
+                                  ^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/ray/_private/worker.py", line 1033, in get_objects
+    raise value
+ray.exceptions.ActorDiedError: The actor died unexpectedly before finishing this task.
+	class_name: Experiment
+	actor_id: 6b1aa9a8a4774702bf8cc14d01000000
+	pid: 2104644
+	namespace: d52f9646-9838-49e6-be92-692800e29486
+	ip: 192.168.0.105
+The actor is dead because its worker process has died. Worker exit type: SYSTEM_ERROR Worker exit detail: Worker exits unexpectedly. Worker exits with an exit code None. Traceback (most recent call last):
+  File "python/ray/_raylet.pyx", line 1715, in ray._raylet.execute_task
+  File "python/ray/_raylet.pyx", line 1826, in ray._raylet.execute_task
+  File "python/ray/_raylet.pyx", line 1722, in ray._raylet.execute_task
+  File "python/ray/_raylet.pyx", line 1665, in ray._raylet.execute_task.function_executor
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/ray/_private/function_manager.py", line 693, in actor_method_executor
+    return method(__ray_actor, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/ray/util/tracing/tracing_helper.py", line 461, in _resume_span
+    return method(self, *_args, **_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide-parallel-public/src/aide_runner.py", line 235, in run
+    exp.agent.step(exec_callback=exp.interpreter.run)
+  File "/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/agent.py", line 483, in step
+    result_node = self._draft()
+                  ^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/agent.py", line 320, in _draft
+    plan, code = self.plan_and_code_query(prompt)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/agent.py", line 233, in plan_and_code_query
+    completion_text = query(
+                      ^^^^^^
+  File "/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/backend/__init__.py", line 67, in query
+    output, req_time, in_tok_count, out_tok_count, info = query_func(
+                                                          ^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/backend/backend_openai.py", line 118, in query
+    response = backoff_create(
+               ^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/backoff/_sync.py", line 48, in retry
+    ret = target(*args, **kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/backend/utils.py", line 26, in backoff_create
+    return create_fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/openai/_utils/_utils.py", line 286, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 1189, in create
+    return self._post(
+           ^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/openai/_base_client.py", line 1259, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/openai/_base_client.py", line 968, in request
+    request = self._build_request(options, retries_taken=retries_taken)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/openai/_base_client.py", line 547, in _build_request
+    return self._client.build_request(  # pyright: ignore[reportUnknownMemberType]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/httpx/_client.py", line 378, in build_request
+    return Request(
+           ^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/httpx/_models.py", line 408, in __init__
+    headers, stream = encode_request(
+                      ^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/httpx/_content.py", line 216, in encode_request
+    return encode_json(json)
+           ^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/httpx/_content.py", line 179, in encode_json
+    ).encode("utf-8")
+      ^^^^^^^^^^^^^^^
+MemoryError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "python/ray/_raylet.pyx", line 2164, in ray._raylet.task_execution_handler
+  File "python/ray/_raylet.pyx", line 2023, in ray._raylet.execute_task_with_cancellation_handler
+  File "python/ray/_raylet.pyx", line 1667, in ray._raylet.execute_task
+  File "python/ray/_raylet.pyx", line 1668, in ray._raylet.execute_task
+  File "python/ray/_raylet.pyx", line 1917, in ray._raylet.execute_task
+  File "python/ray/_raylet.pyx", line 926, in ray._raylet.store_task_errors
+  File "python/ray/_raylet.pyx", line 4129, in ray._raylet.CoreWorker.store_task_outputs
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/ray/_private/serialization.py", line 722, in serialize
+    return self._serialize_to_msgpack(value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/ray/_private/serialization.py", line 644, in _serialize_to_msgpack
+    msgpack_data = MessagePackSerializer.dumps(value, _python_serializer)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "python/ray/includes/serialization.pxi", line 175, in ray._raylet.MessagePackSerializer.dumps
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/msgpack/__init__.py", line 36, in packb
+    return Packer(**kwargs).pack(o)
+           ^^^^^^^^^^^^^^^^
+  File "msgpack/_packer.pyx", line 118, in msgpack._cmsgpack.Packer.__cinit__
+MemoryError: Unable to allocate internal buffer.
+An unexpected internal error occurred while the worker was executing a task.

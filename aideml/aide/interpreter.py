@@ -1,9 +1,8 @@
 """
 Python interpreter for executing code snippets and capturing their output.
-Supports:
+    Supports:
 - captures stdout and stderr
 - captures exceptions and stack traces
-- limits execution time
 """
 
 import logging
@@ -22,6 +21,7 @@ import humanize
 from dataclasses_json import DataClassJsonMixin
 
 logger = logging.getLogger("aide")
+STRICT_ALGOTUNE_MODE = "benchmark_strict"
 
 
 @dataclass
@@ -93,19 +93,22 @@ class Interpreter:
     def __init__(
         self,
         working_dir: Path | str,
-        timeout: int = 3600,
+        timeout: int | None = None,
         format_tb_ipython: bool = False,
         agent_file_name: str = "runfile.py",
         task_type: str = None,
         eval_cmd: str = None,
         task_id: str = None,
+        algotune_n_problems: int | None = None,
+        algotune_n_runs: int | None = None,
+        algotune_mode: str = STRICT_ALGOTUNE_MODE,
     ):
         """
         Simulates a standalone Python REPL with an execution time limit.
 
         Args:
             working_dir (Path | str): working directory of the agent
-            timeout (int, optional): Timeout for each code execution step. Defaults to 3600.
+            timeout (int | None, optional): Optional timeout for each code execution step. Defaults to None.
             format_tb_ipython (bool, optional): Whether to use IPython or default python REPL formatting for exceptions. Defaults to False.
             agent_file_name (str, optional): The name for the agent's code file. Defaults to "runfile.py".
             task_type (str, optional): Type of task (e.g., "kernel", "kernelbench"). Defaults to None.
@@ -117,6 +120,9 @@ class Interpreter:
         self.task_type = task_type
         self.eval_cmd = eval_cmd
         self.task_id = task_id
+        self.algotune_n_problems = None
+        self.algotune_n_runs = None
+        self.algotune_mode = STRICT_ALGOTUNE_MODE
         assert (
             self.working_dir.exists()
         ), f"Working directory {self.working_dir} does not exist"
@@ -241,14 +247,17 @@ class Interpreter:
         self.code_inq.put(code)
 
         # wait for child to actually start execution (we don't want interrupt child setup)
-        try:
-            state = self.event_outq.get(timeout=10)
-        except queue.Empty:
-            msg = "REPL child process failed to start execution"
-            logger.critical(msg)
-            while not self.result_outq.empty():
-                logger.error(f"REPL output queue dump: {self.result_outq.get()}")
-            raise RuntimeError(msg) from None
+        while True:
+            try:
+                state = self.event_outq.get(timeout=1)
+                break
+            except queue.Empty:
+                if self.process is None or not self.process.is_alive():
+                    msg = "REPL child process failed to start execution"
+                    logger.critical(msg)
+                    while not self.result_outq.empty():
+                        logger.error(f"REPL output queue dump: {self.result_outq.get()}")
+                    raise RuntimeError(msg) from None
         assert state[0] == "state:ready", state
         start_time = time.time()
 
@@ -299,14 +308,14 @@ class Interpreter:
         start_collect = time.time()
         while not self.result_outq.empty() or not output or output[-1] != "<|EOF|>":
             try:
-                # Add 5-second timeout for output collection
-                if time.time() - start_collect > 5:
-                    logger.warning("Output collection timed out")
-                    break
                 output.append(self.result_outq.get(timeout=1))
             except queue.Empty:
+                if self.process is None or not self.process.is_alive():
+                    if self.result_outq.empty():
+                        break
                 continue
-        output.pop()  # remove the EOF marker
+        if output and output[-1] == "<|EOF|>":
+            output.pop()  # remove the EOF marker
 
         e_cls_name, exc_info, exc_stack = state[1:]
 
@@ -315,9 +324,14 @@ class Interpreter:
                 f"TimeoutError: Execution exceeded the time limit of {humanize.naturaldelta(self.timeout)}"
             )
         else:
-            output.append(
-                f"Execution time: {humanize.naturaldelta(exec_time)} seconds (time limit is {humanize.naturaldelta(self.timeout)})."
-            )
+            if self.timeout is not None:
+                output.append(
+                    f"Execution time: {humanize.naturaldelta(exec_time)} seconds (time limit is {humanize.naturaldelta(self.timeout)})."
+                )
+            else:
+                output.append(
+                    f"Execution time: {humanize.naturaldelta(exec_time)} seconds."
+                )
 
         # For speedup tasks, run the evaluation directly (not as subprocess).
         if self.task_type in ["kernel", "kernelbench", "algotune"] and self.eval_cmd and e_cls_name is None:
@@ -344,13 +358,15 @@ class Interpreter:
                     eval_results = evaluate_task(
                         task_name=self.task_id,
                         solver_path=str(solver_path),
-                        n_problems=5,
-                        n_runs=3,
-                        seed=42,
-                        fast_mode=True,
+                        split="train",
                     )
 
                     output.append("\n=== AlgoTune Evaluation Output ===\n")
+                    output.append(
+                        "Eval config: "
+                        f"mode={self.algotune_mode}, "
+                        "split=train\n"
+                    )
                     output.append(f"Compiled: {'✓' if eval_results.get('compiled', False) else '✗'}\n")
                     output.append(f"Correct: {'✓' if eval_results.get('correct', False) else '✗'}\n")
                     output.append(f"Speedup: {eval_results.get('speedup', 0.0):.4f}\n")

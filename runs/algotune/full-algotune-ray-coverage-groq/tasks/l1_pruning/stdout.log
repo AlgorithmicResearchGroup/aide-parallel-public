@@ -1,0 +1,264 @@
+Using task=algotune contract=contract.yaml
+Executing: python /home/matt/Desktop/ray/aide-parallel-public/src/aide_runner.py --task algotune --local --num-experiments 4 --num-iterations 1 --steps 4 --cpus-per-experiment 2 --model llama-3.3-70b-versatile --feedback-model llama-3.3-70b-versatile --at-task l1_pruning --at-n-problems 5 --at-n-runs 3 --result-json /home/matt/Desktop/ray/aide-parallel-public/runs/algotune/full-algotune-ray-coverage-groq/tasks/l1_pruning/result.json --at-fast
+
+🚀 EXPERIMENTS STARTED: 4 agents running in parallel
+   Running on CPU workers
+   Task: algotune | Steps per experiment: 4
+   Waiting for all experiments to complete...
+
+[36m(Experiment pid=2160672)[0m [search policy] drafting new node (not enough drafts)
+[36m(Experiment pid=2160672)[0m Agent is generating code, parent node type: <class 'NoneType'>
+[36m(Experiment pid=2160671)[0m [19:07:22] WARNING  CODE_DIR not set when initializing DaCe   dace_config.py:104
+[36m(Experiment pid=2160671)[0m                     for process 2160671                                         
+[36m(Experiment pid=2160674)[0m            ERROR    [isolated_benchmark] Task         isolated_benchmark.py:2463
+[36m(Experiment pid=2160674)[0m                     'l1_pruning' failed with                                    
+[36m(Experiment pid=2160674)[0m                     non-retryable error:                                        
+[36m(Experiment pid=2160674)[0m            ERROR    Problem 0: Solver benchmark failed: evaluate_algotune.py:508
+[36m(Experiment pid=2160674)[0m                     Non-retryable error:                                        
+[36m(Experiment pid=2160674)[0m Agent is parsing execution results for node 2ab9af8741214c3a992befe77e543576
+[36m(Experiment pid=2160674)[0m            INFO     Backing off backoff_create(...) for 1.2s      _common.py:105
+[36m(Experiment pid=2160674)[0m                     (False)                                                     
+[36m(Experiment pid=2160671)[0m [search policy] drafting new node (not enough drafts)[32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2160671)[0m Agent is generating code, parent node type: <class 'NoneType'>[32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2160671)[0m [19:07:23] WARNING  [isolated_benchmark] Run 1/3      isolated_benchmark.py:1425
+[36m(Experiment pid=2160671)[0m                     failed: ValueError:                                         
+[36m(Experiment pid=2160671)[0m                     CACHE_PROTECTION_VIOLATION:                                 
+[36m(Experiment pid=2160671)[0m                     Warmup and timed problems are                               
+[36m(Experiment pid=2160671)[0m                     identical in function                                       
+[36m(Experiment pid=2160671)[0m                     'validate_problem_isolation' at                             
+[36m(Experiment pid=2160671)[0m                     line 818 in isolated_benchmark.py                           
+[36m(Experiment pid=2160671)[0m                     (system code)                                               
+[36m(Experiment pid=2160671)[0m [19:07:24] WARNING  [isolated_benchmark] Run 2/3      isolated_benchmark.py:1425
+[36m(Experiment pid=2160671)[0m                     failed: ValueError:                                         
+[36m(Experiment pid=2160671)[0m                     CACHE_PROTECTION_VIOLATION:                                 
+[36m(Experiment pid=2160671)[0m                     Warmup and timed problems are                               
+[36m(Experiment pid=2160671)[0m                     identical in function                                       
+[36m(Experiment pid=2160671)[0m                     'validate_problem_isolation' at                             
+[36m(Experiment pid=2160671)[0m                     line 818 in isolated_benchmark.py                           
+[36m(Experiment pid=2160671)[0m                     (system code)                                               
+[36m(Experiment pid=2160672)[0m            ERROR    Unexpected error cleaning up temporary  robust_tempdir.py:98
+[36m(Experiment pid=2160672)[0m                     directory: [Errno 12] Cannot allocate                       
+[36m(Experiment pid=2160672)[0m                     memory: '/tmp/tmp9upcnjd4'                                  
+[36m(Experiment pid=2160671)[0m            WARNING  [isolated_benchmark] Returning    isolated_benchmark.py:1565
+[36m(Experiment pid=2160671)[0m                     failure result: {'success':                                 
+[36m(Experiment pid=2160671)[0m                     False, 'error': "ValueError:                                
+[36m(Experiment pid=2160671)[0m                     (system code)",                                             
+[36m(Experiment pid=2160671)[0m                     'timeout_occurred': False,                                  
+[36m(Experiment pid=2160671)[0m                     'error_type': 'execution_error',                            
+[36m(Experiment pid=2160671)[0m                     'runs': 3, 'num_errors': 3,                                 
+[36m(Experiment pid=2160671)[0m                     'num_timeouts': 0}                                          
+[36m(Experiment pid=2160671)[0m                     ValueError:                                                 
+[36m(Experiment pid=2160671)[0m                     CACHE_PROTECTION_VIOLATION: Warmup                          
+[36m(Experiment pid=2160671)[0m                     and timed problems are identical in                         
+[36m(Experiment pid=2160671)[0m                     function                                                    
+[36m(Experiment pid=2160671)[0m            ERROR    Function call failed:                           agent.py:564
+[33m(raylet)[0m Traceback (most recent call last):
+  File "python/ray/_raylet.pyx", line 1715, in ray._raylet.execute_task
+  File "python/ray/_raylet.pyx", line 1826, in ray._raylet.execute_task
+  File "python/ray/_raylet.pyx", line 1722, in ray._raylet.execute_task
+  File "python/ray/_raylet.pyx", line 1665, in ray._raylet.execute_task.function_executor
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/ray/_private/function_manager.py", line 693, in actor_method_executor
+    return method(__ray_actor, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/ray/util/tracing/tracing_helper.py", line 461, in _resume_span
+    return method(self, *_args, **_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide-parallel-public/src/aide_runner.py", line 235, in run
+    exp.agent.step(exec_callback=exp.interpreter.run)
+  File "/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/agent.py", line 483, in step
+    result_node = self._draft()
+                  ^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/agent.py", line 320, in _draft
+    plan, code = self.plan_and_code_query(prompt)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/agent.py", line 233, in plan_and_code_query
+    completion_text = query(
+                      ^^^^^^
+  File "/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/backend/__init__.py", line 67, in query
+    output, req_time, in_tok_count, out_tok_count, info = query_func(
+                                                          ^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/backend/backend_openai.py", line 118, in query
+    response = backoff_create(
+               ^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/backoff/_sync.py", line 48, in retry
+    ret = target(*args, **kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/backend/utils.py", line 26, in backoff_create
+    return create_fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/openai/_utils/_utils.py", line 286, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 1189, in create
+    return self._post(
+           ^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/openai/_base_client.py", line 1259, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/openai/_base_client.py", line 968, in request
+    request = self._build_request(options, retries_taken=retries_taken)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/openai/_base_client.py", line 547, in _build_request
+    return self._client.build_request(  # pyright: ignore[reportUnknownMemberType]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/httpx/_client.py", line 378, in build_request
+    return Request(
+           ^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/httpx/_models.py", line 408, in __init__
+    headers, stream = encode_request(
+                      ^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/httpx/_content.py", line 216, in encode_request
+    return encode_json(json)
+           ^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/httpx/_content.py", line 177, in encode_json
+    body = json_dumps(
+           ^^^^^^^^^^^
+  File "/usr/lib/python3.12/json/__init__.py", line 238, in dumps
+    **kw).encode(obj)
+          ^^^^^^^^^^^
+  File "/usr/lib/python3.12/json/encoder.py", line 200, in encode
+    chunks = self.iterencode(o, _one_shot=True)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/json/encoder.py", line 258, in iterencode
+    return _iterencode(o, 0)
+           ^^^^^^^^^^^^^^^^^
+MemoryError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "python/ray/_raylet.pyx", line 2164, in ray._raylet.task_execution_handler
+  File "python/ray/_raylet.pyx", line 2023, in ray._raylet.execute_task_with_cancellation_handler
+  File "python/ray/_raylet.pyx", line 1667, in ray._raylet.execute_task
+  File "python/ray/_raylet.pyx", line 1668, in ray._raylet.execute_task
+  File "python/ray/_raylet.pyx", line 1917, in ray._raylet.execute_task
+  File "python/ray/_raylet.pyx", line 926, in ray._raylet.store_task_errors
+  File "python/ray/_raylet.pyx", line 4129, in ray._raylet.CoreWorker.store_task_outputs
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/ray/_private/serialization.py", line 722, in serialize
+    return self._serialize_to_msgpack(value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/ray/_private/serialization.py", line 644, in _serialize_to_msgpack
+    msgpack_data = MessagePackSerializer.dumps(value, _python_serializer)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "python/ray/includes/serialization.pxi", line 175, in ray._raylet.MessagePackSerializer.dumps
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/msgpack/__init__.py", line 36, in packb
+    return Packer(**kwargs).pack(o)
+           ^^^^^^^^^^^^^^^^
+  File "msgpack/_packer.pyx", line 118, in msgpack._cmsgpack.Packer.__cinit__
+MemoryError: Unable to allocate internal buffer.
+An unexpected internal error occurred while the worker was executing a task.
+[33m(raylet)[0m A worker died or was killed while executing a task by an unexpected system error. To troubleshoot the problem, check the logs for the dead worker. Lease ID: 3b000000c2cb54957382bc827f1504808f82786b94ca609e08c26917467e63d2 Worker ID: 885ef6f8044bee474ba249580efe68069b2b5b7d8b629427d9ec31f3 Node ID: 7140b5df7149f05811f7a9a18750317797dbb80285fb0b04bdefef49 Worker IP address: 192.168.0.105 Worker port: 42461 Worker PID: 2160671 Worker exit type: SYSTEM_ERROR Worker exit detail: Worker exits unexpectedly. Worker exits with an exit code None. Traceback (most recent call last):
+  File "python/ray/_raylet.pyx", line 1715, in ray._raylet.execute_task
+  File "python/ray/_raylet.pyx", line 1826, in ray._raylet.execute_task
+  File "python/ray/_raylet.pyx", line 1722, in ray._raylet.execute_task
+  File "python/ray/_raylet.pyx", line 1665, in ray._raylet.execute_task.function_executor
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/ray/_private/function_manager.py", line 693, in actor_method_executor
+    return method(__ray_actor, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/ray/util/tracing/tracing_helper.py", line 461, in _resume_span
+    return method(self, *_args, **_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide-parallel-public/src/aide_runner.py", line 235, in run
+    exp.agent.step(exec_callback=exp.interpreter.run)
+  File "/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/agent.py", line 483, in step
+    result_node = self._draft()
+                  ^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/agent.py", line 320, in _draft
+    plan, code = self.plan_and_code_query(prompt)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/agent.py", line 233, in plan_and_code_query
+    completion_text = query(
+                      ^^^^^^
+  File "/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/backend/__init__.py", line 67, in query
+    output, req_time, in_tok_count, out_tok_count, info = query_func(
+                                                          ^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/backend/backend_openai.py", line 118, in query
+    response = backoff_create(
+               ^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/backoff/_sync.py", line 48, in retry
+    ret = target(*args, **kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/backend/utils.py", line 26, in backoff_create
+    return create_fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/openai/_utils/_utils.py", line 286, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 1189, in create
+    return self._post(
+           ^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/openai/_base_client.py", line 1259, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/openai/_base_client.py", line 968, in request
+    request = self._build_request(options, retries_taken=retries_taken)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/openai/_base_client.py", line 547, in _build_request
+    return self._client.build_request(  # pyright: ignore[reportUnknownMemberType]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/httpx/_client.py", line 378, in build_request
+    return Request(
+           ^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/httpx/_models.py", line 408, in __init__
+    headers, stream = encode_request(
+                      ^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/httpx/_content.py", line 216, in encode_request
+    return encode_json(json)
+           ^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/httpx/_content.py", line 177, in encode_json
+    body = json_dumps(
+           ^^^^^^^^^^^
+  File "/usr/lib/python3.12/json/__init__.py", line 238, in dumps
+    **kw).encode(obj)
+          ^^^^^^^^^^^
+  File "/usr/lib/python3.12/json/encoder.py", line 200, in encode
+    chunks = self.iterencode(o, _one_shot=True)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/json/encoder.py", line 258, in iterencode
+    return _iterencode(o, 0)
+           ^^^^^^^^^^^^^^^^^
+MemoryError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "python/ray/_raylet.pyx", line 2164, in ray._raylet.task_execution_handler
+  File "python/ray/_raylet.pyx", line 2023, in ray._raylet.execute_task_with_cancellation_handler
+  File "python/ray/_raylet.pyx", line 1667, in ray._raylet.execute_task
+  File "python/ray/_raylet.pyx", line 1668, in ray._raylet.execute_task
+  File "python/ray/_raylet.pyx", line 1917, in ray._raylet.execute_task
+  File "python/ray/_raylet.pyx", line 926, in ray._raylet.store_task_errors
+  File "python/ray/_raylet.pyx", line 4129, in ray._raylet.CoreWorker.store_task_outputs
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/ray/_private/serialization.py", line 722, in serialize
+    return self._serialize_to_msgpack(value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/ray/_private/serialization.py", line 644, in _serialize_to_msgpack
+    msgpack_data = MessagePackSerializer.dumps(value, _python_serializer)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "python/ray/includes/serialization.pxi", line 175, in ray._raylet.MessagePackSerializer.dumps
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/msgpack/__init__.py", line 36, in packb
+    return Packer(**kwargs).pack(o)
+           ^^^^^^^^^^^^^^^^
+  File "msgpack/_packer.pyx", line 118, in msgpack._cmsgpack.Packer.__cinit__
+MemoryError: Unable to allocate internal buffer.
+An unexpected internal error occurred while the worker was executing a task.
+[36m(Experiment pid=2160672)[0m [19:07:23] WARNING  CODE_DIR not set when initializing DaCe   dace_config.py:104[32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2160672)[0m                     for process 2160672                                         [32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2160675)[0m            ERROR    [isolated_benchmark] Task         isolated_benchmark.py:2463
+[36m(Experiment pid=2160675)[0m                     'l1_pruning' failed with                                    
+[36m(Experiment pid=2160675)[0m                     non-retryable error:                                        
+[36m(Experiment pid=2160671)[0m            ERROR    Problem 0: Solver benchmark failed: evaluate_algotune.py:508[32m [repeated 2x across cluster][0m
+[36m(Experiment pid=2160675)[0m                     Non-retryable error:                                        
+[36m(Experiment pid=2160671)[0m Agent is parsing execution results for node 88e9de3d9e2a496e934b415e264b2674[32m [repeated 2x across cluster][0m
+[36m(Experiment pid=2160675)[0m [19:07:24] INFO     Backing off backoff_create(...) for 5.8s      _common.py:105[32m [repeated 5x across cluster][0m
+[36m(Experiment pid=2160675)[0m                     (False)                                                     [32m [repeated 5x across cluster][0m
+[36m(Experiment pid=2160671)[0m [search policy] drafting new node (not enough drafts)
+[36m(Experiment pid=2160671)[0m Agent is generating code, parent node type: <class 'NoneType'>
+[36m(Experiment pid=2160671)[0m [19:07:25] WARNING  [isolated_benchmark] Run 3/3      isolated_benchmark.py:1425[32m [repeated 2x across cluster][0m
+[36m(Experiment pid=2160671)[0m                     failed: ValueError:                                         [32m [repeated 2x across cluster][0m
+[36m(Experiment pid=2160671)[0m                     CACHE_PROTECTION_VIOLATION:                                 [32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2160671)[0m                     Warmup and timed problems are                               [32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2160671)[0m                     identical in function                                       [32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2160671)[0m                     'validate_problem_isolation' at                             [32m [repeated 4x across cluster][0m
+[36m(Experiment pid=2160671)[0m                     line 818 in isolated_benchmark.py                           [32m [repeated 4x across cluster][0m
+[36m(Experiment pid=2160671)[0m                     (system code)                                               [32m [repeated 3x across cluster][0m

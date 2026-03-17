@@ -1,0 +1,56 @@
+2026-03-16 19:04:08,536	INFO worker.py:2023 -- Started a local Ray instance.
+[36m(Experiment pid=2142069)[0m No GPU available, running on CPU
+[36m(Experiment pid=2142059)[0m Attempting to load config from: /home/matt/Desktop/ray/aide-parallel-public/tasks/algotune/vendor/AlgoTune/AlgoTuner/config/config.yaml
+[36m(Experiment pid=2142059)[0m Successfully loaded config from: /home/matt/Desktop/ray/aide-parallel-public/tasks/algotune/vendor/AlgoTune/AlgoTuner/config/config.yaml
+[36m(Experiment pid=2142057)[0m No GPU available, running on CPU[32m [repeated 3x across cluster] (Ray deduplicates logs by default. Set RAY_DEDUP_LOGS=0 to disable log deduplication, or see https://docs.ray.io/en/master/ray-observability/user-guides/configure-logging.html#log-deduplication for more options.)[0m
+[36m(Experiment pid=2142087)[0m Attempting to load config from: /home/matt/Desktop/ray/aide-parallel-public/tasks/algotune/vendor/AlgoTune/AlgoTuner/config/config.yaml[32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2142087)[0m Successfully loaded config from: /home/matt/Desktop/ray/aide-parallel-public/tasks/algotune/vendor/AlgoTune/AlgoTuner/config/config.yaml[32m [repeated 3x across cluster][0m
+Traceback (most recent call last):
+  File "/home/matt/Desktop/ray/aide-parallel-public/src/aide_runner.py", line 970, in <module>
+    result_payload = main(
+                     ^^^^^
+  File "/home/matt/Desktop/ray/aide-parallel-public/src/aide_runner.py", line 674, in main
+    ranked_results, experiment_actors = run_experiments(
+                                        ^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide-parallel-public/src/aide_runner.py", line 532, in run_experiments
+    result = ray.get(ref)
+             ^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/ray/_private/auto_init_hook.py", line 22, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/ray/_private/client_mode_hook.py", line 104, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/ray/_private/worker.py", line 2972, in get
+    values, debugger_breakpoint = worker.get_objects(
+                                  ^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/ray/_private/worker.py", line 1031, in get_objects
+    raise value.as_instanceof_cause()
+ray.exceptions.RayTaskError(OSError): [36mray::Experiment.run()[39m (pid=2142059, ip=192.168.0.105, actor_id=1d7e67127f8f64e4dbd77e4301000000, repr=<aide_runner.Experiment object at 0x7170205e73b0>)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide-parallel-public/src/aide_runner.py", line 235, in run
+    exp.agent.step(exec_callback=exp.interpreter.run)
+  File "/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/agent.py", line 491, in step
+    exec_result=exec_callback(result_node.code, True),
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/interpreter.py", line 240, in run
+    self.create_process()
+  File "/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/interpreter.py", line 191, in create_process
+    self.code_inq, self.result_outq, self.event_outq = Queue(), Queue(), Queue()
+                                                       ^^^^^^^
+  File "/usr/lib/python3.12/multiprocessing/context.py", line 103, in Queue
+    return Queue(maxsize, ctx=self.get_context())
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/multiprocessing/queues.py", line 43, in __init__
+    self._rlock = ctx.Lock()
+                  ^^^^^^^^^^
+  File "/usr/lib/python3.12/multiprocessing/context.py", line 68, in Lock
+    return Lock(ctx=self.get_context())
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/multiprocessing/synchronize.py", line 169, in __init__
+    SemLock.__init__(self, SEMAPHORE, 1, 1, ctx=ctx)
+  File "/usr/lib/python3.12/multiprocessing/synchronize.py", line 57, in __init__
+    sl = self._semlock = _multiprocessing.SemLock(
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 12] Cannot allocate memory

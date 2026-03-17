@@ -1,0 +1,50 @@
+Using task=algotune contract=contract.yaml
+Executing: python /home/matt/Desktop/ray/aide-parallel-public/src/aide_runner.py --task algotune --local --num-experiments 4 --num-iterations 1 --steps 4 --cpus-per-experiment 2 --model llama-3.3-70b-versatile --feedback-model llama-3.3-70b-versatile --at-task cvar_projection --at-n-problems 5 --at-n-runs 3 --result-json /home/matt/Desktop/ray/aide-parallel-public/runs/algotune/full-algotune-ray-coverage-groq/tasks/cvar_projection/result.json --at-fast
+
+🚀 EXPERIMENTS STARTED: 4 agents running in parallel
+   Running on CPU workers
+   Task: algotune | Steps per experiment: 4
+   Waiting for all experiments to complete...
+
+[36m(Experiment pid=2106485)[0m [search policy] drafting new node (not enough drafts)
+[36m(Experiment pid=2106485)[0m Agent is generating code, parent node type: <class 'NoneType'>
+[36m(Experiment pid=2106485)[0m Agent is parsing execution results for node 236e0395d6b2432ab7d9822d19265d84
+[36m(Experiment pid=2106480)[0m [search policy] drafting new node (not enough drafts)[32m [repeated 7x across cluster] (Ray deduplicates logs by default. Set RAY_DEDUP_LOGS=0 to disable log deduplication, or see https://docs.ray.io/en/master/ray-observability/user-guides/configure-logging.html#log-deduplication for more options.)[0m
+[36m(Experiment pid=2106480)[0m Agent is generating code, parent node type: <class 'NoneType'>[32m [repeated 7x across cluster][0m
+[36m(Experiment pid=2106485)[0m Agent is parsing execution results for node e15934de2f6a4326b83fec6ee580c2ef[32m [repeated 8x across cluster][0m
+[36m(Experiment pid=2106480)[0m [search policy] drafting new node (not enough drafts)[32m [repeated 8x across cluster][0m
+[36m(Experiment pid=2106480)[0m Agent is generating code, parent node type: <class 'NoneType'>[32m [repeated 8x across cluster][0m
+[19:02:42] ✅ [1/4] Experiment 0 done | GPU None | Metric: None
+[36m(Experiment pid=2106479)[0m 
+[36m(Experiment pid=2106479)[0m ============================================================
+[36m(Experiment pid=2106479)[0m ✅ EXPERIMENT 0 COMPLETED at 19:02:42
+[36m(Experiment pid=2106479)[0m    Task: algotune
+[36m(Experiment pid=2106479)[0m    GPU: CPU (ID: None)
+[36m(Experiment pid=2106479)[0m    Final Metric: None
+[36m(Experiment pid=2106479)[0m    Total Steps: 4
+[36m(Experiment pid=2106479)[0m ============================================================
+[36m(Experiment pid=2106479)[0m 
+[19:02:42] ✅ [2/4] Experiment 3 done | GPU None | Metric: None
+[36m(Experiment pid=2106485)[0m 
+[36m(Experiment pid=2106485)[0m 
+[19:02:43] ✅ [3/4] Experiment 1 done | GPU None | Metric: None
+[36m(Experiment pid=2106480)[0m 
+[36m(Experiment pid=2106480)[0m 
+[19:02:43] ✅ [4/4] Experiment 2 done | GPU None | Metric: None
+
+🎉 ALL 4 EXPERIMENTS COMPLETED!
+[19:02:43] WARNING  No valid metric was produced. The         aide_runner.py:779
+                    environment ran successfully, but the                       
+                    selected model did not generate an                          
+                    evaluable solution. Try a stronger model,                   
+                    more steps, or run ./cli/aide-check to                      
+                    verify setup.                                               
+[36m(Experiment pid=2106481)[0m 
+[36m(Experiment pid=2106481)[0m 
+[36m(Experiment pid=2106480)[0m Agent is parsing execution results for node 4faa5a9a1be54660a5f0e75562f4c40c[32m [repeated 7x across cluster][0m
+[36m(Experiment pid=2106481)[0m ============================================================[32m [repeated 6x across cluster][0m
+[36m(Experiment pid=2106481)[0m ✅ EXPERIMENT 2 COMPLETED at 19:02:43[32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2106481)[0m    Task: algotune[32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2106481)[0m    GPU: CPU (ID: None)[32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2106481)[0m    Final Metric: None[32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2106481)[0m    Total Steps: 4[32m [repeated 3x across cluster][0m

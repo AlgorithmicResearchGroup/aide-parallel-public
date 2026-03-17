@@ -1,0 +1,28 @@
+{
+  "command": [
+    "/home/matt/Desktop/ray/aide-parallel-public/cli/aide-run",
+    "--task",
+    "algotune",
+    "--at-task",
+    "quantile_regression",
+    "--num-experiments",
+    "4",
+    "--num-iterations",
+    "1",
+    "--steps",
+    "4",
+    "--cpus-per-experiment",
+    "2",
+    "--at-n-problems",
+    "5",
+    "--at-n-runs",
+    "3",
+    "--result-json",
+    "/home/matt/Desktop/ray/aide-parallel-public/runs/algotune/full-algotune-ray-coverage/tasks/quantile_regression/result.json",
+    "--at-fast"
+  ],
+  "config_hash": "0010885eb93b",
+  "error": "aide-run exited with code 1 without producing result.json",
+  "returncode": 1,
+  "status": "failed"
+}

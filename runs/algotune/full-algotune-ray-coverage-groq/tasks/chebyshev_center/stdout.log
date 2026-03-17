@@ -1,0 +1,88 @@
+Using task=algotune contract=contract.yaml
+Executing: python /home/matt/Desktop/ray/aide-parallel-public/src/aide_runner.py --task algotune --local --num-experiments 4 --num-iterations 1 --steps 4 --cpus-per-experiment 2 --model llama-3.3-70b-versatile --feedback-model llama-3.3-70b-versatile --at-task chebyshev_center --at-n-problems 5 --at-n-runs 3 --result-json /home/matt/Desktop/ray/aide-parallel-public/runs/algotune/full-algotune-ray-coverage-groq/tasks/chebyshev_center/result.json --at-fast
+
+🚀 EXPERIMENTS STARTED: 4 agents running in parallel
+   Running on CPU workers
+   Task: algotune | Steps per experiment: 4
+   Waiting for all experiments to complete...
+
+[36m(Experiment pid=2076727)[0m [search policy] drafting new node (not enough drafts)
+[36m(Experiment pid=2076727)[0m Agent is generating code, parent node type: <class 'NoneType'>
+[36m(Experiment pid=2076727)[0m Agent is parsing execution results for node 082316518b764679a81aaf8ed1784f92
+[36m(Experiment pid=2076701)[0m [19:00:42] WARNING  CODE_DIR not set when initializing DaCe   dace_config.py:104
+[36m(Experiment pid=2076701)[0m                     for process 2076701                                         
+[36m(Experiment pid=2076702)[0m [search policy] drafting new node (not enough drafts)[32m [repeated 5x across cluster][0m
+[36m(Experiment pid=2076702)[0m Agent is generating code, parent node type: <class 'NoneType'>[32m [repeated 5x across cluster][0m
+[36m(Experiment pid=2076701)[0m            ERROR    Failed to load task: cannot import  evaluate_algotune.py:449
+[36m(Experiment pid=2076701)[0m                     name 'eye_array' from                                       
+[36m(Experiment pid=2076701)[0m                     'scipy.sparse'                                              
+[36m(Experiment pid=2076701)[0m                     (/home/matt/Desktop/ray/aide_parall                         
+[36m(Experiment pid=2076701)[0m                     el/venv-algotune/lib/python3.12/sit                         
+[36m(Experiment pid=2076701)[0m                     e-packages/scipy/sparse/__init__.py                         
+[36m(Experiment pid=2076701)[0m                     )                                                           
+[36m(Experiment pid=2076728)[0m                     el/venv-algotune/lib/python3.12/sit                         
+[36m(Experiment pid=2076728)[0m [19:00:44] INFO     Backing off backoff_create(...) for 0.9s      _common.py:105
+[36m(Experiment pid=2076728)[0m                     (False)                                                     
+[36m(Experiment pid=2076727)[0m Agent is parsing execution results for node bc587e5970bb49ae9594a38cf62da3f9[32m [repeated 8x across cluster][0m
+[36m(Experiment pid=2076728)[0m [19:00:42] WARNING  CODE_DIR not set when initializing DaCe   dace_config.py:104
+[36m(Experiment pid=2076728)[0m                     for process 2076728                                         
+[36m(Experiment pid=2076702)[0m [search policy] drafting new node (not enough drafts)[32m [repeated 6x across cluster][0m
+[36m(Experiment pid=2076702)[0m Agent is generating code, parent node type: <class 'NoneType'>[32m [repeated 6x across cluster][0m
+[36m(Experiment pid=2076728)[0m            ERROR    Failed to load task: cannot import  evaluate_algotune.py:449
+[36m(Experiment pid=2076728)[0m                     name 'eye_array' from                                       
+[36m(Experiment pid=2076728)[0m                     'scipy.sparse'                                              
+[36m(Experiment pid=2076728)[0m                     (/home/matt/Desktop/ray/aide_parall                         
+[36m(Experiment pid=2076728)[0m                     e-packages/scipy/sparse/__init__.py                         
+[36m(Experiment pid=2076728)[0m                     )                                                           
+[36m(Experiment pid=2076702)[0m [19:00:48] INFO     Backing off backoff_create(...) for 1.3s      _common.py:105[32m [repeated 8x across cluster][0m
+[36m(Experiment pid=2076702)[0m                     (False)                                                     [32m [repeated 8x across cluster][0m
+[36m(Experiment pid=2076701)[0m Agent is parsing execution results for node f152b9c35f404d25a71092683dfd8ed4[32m [repeated 4x across cluster][0m
+[19:00:50] ✅ [1/4] Experiment 1 done | GPU None | Metric: None
+[36m(Experiment pid=2076701)[0m 
+[36m(Experiment pid=2076701)[0m ============================================================
+[36m(Experiment pid=2076701)[0m ✅ EXPERIMENT 1 COMPLETED at 19:00:50
+[36m(Experiment pid=2076701)[0m    Task: algotune
+[36m(Experiment pid=2076701)[0m    GPU: CPU (ID: None)
+[36m(Experiment pid=2076701)[0m    Final Metric: None
+[36m(Experiment pid=2076701)[0m    Total Steps: 4
+[36m(Experiment pid=2076701)[0m ============================================================
+[36m(Experiment pid=2076701)[0m 
+[36m(Experiment pid=2076728)[0m [search policy] drafting new node (not enough drafts)[32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2076728)[0m Agent is generating code, parent node type: <class 'NoneType'>[32m [repeated 3x across cluster][0m
+[19:00:54] ✅ [2/4] Experiment 2 done | GPU None | Metric: None
+[36m(Experiment pid=2076702)[0m 
+[36m(Experiment pid=2076702)[0m 
+[19:00:54] ✅ [3/4] Experiment 0 done | GPU None | Metric: None
+[36m(Experiment pid=2076727)[0m 
+[36m(Experiment pid=2076727)[0m 
+[36m(Experiment pid=2076728)[0m [19:00:54] INFO     Backing off backoff_create(...) for 1.0s      _common.py:105[32m [repeated 5x across cluster][0m
+[36m(Experiment pid=2076728)[0m                     (False)                                                     [32m [repeated 5x across cluster][0m
+[36m(Experiment pid=2076728)[0m Agent is parsing execution results for node ee95e6d7943343bfaae8823cffc2cd9c[32m [repeated 2x across cluster][0m
+[36m(Experiment pid=2076727)[0m ============================================================[32m [repeated 4x across cluster][0m
+[36m(Experiment pid=2076727)[0m ✅ EXPERIMENT 0 COMPLETED at 19:00:54[32m [repeated 2x across cluster][0m
+[36m(Experiment pid=2076727)[0m    Task: algotune[32m [repeated 2x across cluster][0m
+[36m(Experiment pid=2076727)[0m    GPU: CPU (ID: None)[32m [repeated 2x across cluster][0m
+[36m(Experiment pid=2076727)[0m    Final Metric: None[32m [repeated 2x across cluster][0m
+[36m(Experiment pid=2076727)[0m    Total Steps: 4[32m [repeated 2x across cluster][0m
+[36m(Experiment pid=2076728)[0m 
+[36m(Experiment pid=2076728)[0m 
+[36m(Experiment pid=2076728)[0m [search policy] drafting new node (not enough drafts)
+[36m(Experiment pid=2076728)[0m Agent is generating code, parent node type: <class 'NoneType'>
+[19:00:59] ✅ [4/4] Experiment 3 done | GPU None | Metric: None
+
+🎉 ALL 4 EXPERIMENTS COMPLETED!
+[19:00:59] WARNING  No valid metric was produced. The         aide_runner.py:779
+                    environment ran successfully, but the                       
+                    selected model did not generate an                          
+                    evaluable solution. Try a stronger model,                   
+                    more steps, or run ./cli/aide-check to                      
+                    verify setup.                                               
+[36m(Experiment pid=2076728)[0m [19:00:57] INFO     Backing off backoff_create(...) for 0.8s      _common.py:105
+[36m(Experiment pid=2076728)[0m                     (False)                                                     
+[36m(Experiment pid=2076728)[0m Agent is parsing execution results for node 1a121eeb4f0c4e5c831b2e6db9c940b0
+[36m(Experiment pid=2076728)[0m ============================================================[32m [repeated 2x across cluster][0m
+[36m(Experiment pid=2076728)[0m ✅ EXPERIMENT 3 COMPLETED at 19:00:59
+[36m(Experiment pid=2076728)[0m    Task: algotune
+[36m(Experiment pid=2076728)[0m    GPU: CPU (ID: None)
+[36m(Experiment pid=2076728)[0m    Final Metric: None
+[36m(Experiment pid=2076728)[0m    Total Steps: 4

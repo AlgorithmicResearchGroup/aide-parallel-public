@@ -1,0 +1,67 @@
+2026-03-16 18:47:40,884	INFO worker.py:2023 -- Started a local Ray instance.
+[36m(Experiment pid=1973170)[0m No GPU available, running on CPU
+[36m(Experiment pid=1973172)[0m No GPU available, running on CPU[32m [repeated 3x across cluster][0m
+Traceback (most recent call last):
+  File "/home/matt/Desktop/ray/aide-parallel-public/src/aide_runner.py", line 970, in <module>
+    result_payload = main(
+                     ^^^^^
+  File "/home/matt/Desktop/ray/aide-parallel-public/src/aide_runner.py", line 674, in main
+    ranked_results, experiment_actors = run_experiments(
+                                        ^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide-parallel-public/src/aide_runner.py", line 532, in run_experiments
+    result = ray.get(ref)
+             ^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/ray/_private/auto_init_hook.py", line 22, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/ray/_private/client_mode_hook.py", line 104, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/ray/_private/worker.py", line 2972, in get
+    values, debugger_breakpoint = worker.get_objects(
+                                  ^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/ray/_private/worker.py", line 1033, in get_objects
+    raise value
+ray.exceptions.UnserializableException: Failed to deserialize exception. Refer to https://docs.ray.io/en/latest/ray-core/objects/serialization.html#custom-serializers-for-exceptions for more information.
+Original exception:
+ray.exceptions.RayTaskError: [36mray::Experiment.run()[39m (pid=1973170, ip=192.168.0.105, actor_id=29952b25f430e73f121e110401000000, repr=<aide_runner.Experiment object at 0x736385e671d0>)
+               ^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/backoff/_sync.py", line 48, in retry
+    ret = target(*args, **kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/backend/utils.py", line 26, in backoff_create
+    return create_fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/openai/resources/responses/responses.py", line 859, in create
+    return self._post(
+           ^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/openai/_base_client.py", line 1259, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/openai/_base_client.py", line 1047, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.AuthenticationError: Error code: 401 - {'error': {'message': 'Invalid API Key', 'type': 'invalid_request_error', 'code': 'invalid_api_key'}}
+
+During handling of the above exception, another exception occurred:
+
+[36mray::Experiment.run()[39m (pid=1973170, ip=192.168.0.105, actor_id=29952b25f430e73f121e110401000000, repr=<aide_runner.Experiment object at 0x736385e671d0>)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide-parallel-public/src/aide_runner.py", line 235, in run
+    exp.agent.step(exec_callback=exp.interpreter.run)
+  File "/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/agent.py", line 483, in step
+    result_node = self._draft()
+                  ^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/agent.py", line 320, in _draft
+    plan, code = self.plan_and_code_query(prompt)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/agent.py", line 233, in plan_and_code_query
+    completion_text = query(
+                      ^^^^^^
+  File "/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/backend/__init__.py", line 67, in query
+    output, req_time, in_tok_count, out_tok_count, info = query_func(
+                                                          ^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/backend/backend_openai.py", line 136, in query
+    raise OpenAIAPIError(error_message, status_code=status_code, error_type="APIStatusError")
+aide.backend.backend_openai.OpenAIAPIError: Error code: 401 - {'error': {'message': 'Invalid API Key', 'type': 'invalid_request_error', 'code': 'invalid_api_key'}}
+

@@ -1,7 +1,13 @@
 import json
+import logging
+import os
 import re
 
 import black
+
+logger = logging.getLogger("aide")
+
+MAX_CODE_FORMAT_CHARS = int(os.getenv("AIDE_MAX_CODE_FORMAT_CHARS", "200000"))
 
 
 def wrap_code(code: str, lang="python") -> str:
@@ -85,7 +91,19 @@ def extract_text_up_to_code(s):
 
 def format_code(code) -> str:
     """Format Python code using Black."""
+    if not code:
+        return code
+
+    if len(code) > MAX_CODE_FORMAT_CHARS:
+        logger.warning(
+            "Skipping Black formatting for large code block (%s chars > %s chars).",
+            len(code),
+            MAX_CODE_FORMAT_CHARS,
+        )
+        return code
+
     try:
         return black.format_str(code, mode=black.FileMode())
-    except black.parsing.InvalidInput:  # type: ignore
+    except (black.parsing.InvalidInput, MemoryError, OSError, RecursionError):  # type: ignore
+        logger.warning("Black formatting failed; returning unformatted code.", exc_info=True)
         return code

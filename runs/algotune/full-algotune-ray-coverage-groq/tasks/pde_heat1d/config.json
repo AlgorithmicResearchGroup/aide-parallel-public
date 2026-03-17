@@ -1,0 +1,21 @@
+{
+  "at_fast": true,
+  "at_n_problems": 5,
+  "at_n_runs": 3,
+  "attempts_per_task": 4,
+  "campaign_id": "full-algotune-ray-coverage-groq",
+  "category": "differential_equation",
+  "config_hash": "5ea05f911cf3",
+  "cpus_per_experiment": 2,
+  "feedback_model": "llama-3.3-70b-versatile",
+  "head_node_ip": null,
+  "local": true,
+  "max_concurrent_tasks": 4,
+  "model": "llama-3.3-70b-versatile",
+  "num_experiments": 4,
+  "num_iterations": 1,
+  "profile": "coverage",
+  "steps": 4,
+  "task_name": "pde_heat1d",
+  "wandb_project": null
+}

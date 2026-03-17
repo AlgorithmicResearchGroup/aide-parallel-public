@@ -1,0 +1,2 @@
+Using task=algotune contract=contract.yaml
+Executing: python /home/matt/Desktop/ray/aide-parallel-public/src/aide_runner.py --task algotune --num-experiments 4 --num-iterations 1 --steps 4 --cpus-per-experiment 2 --model gpt-4.1-mini --feedback-model gpt-4.1-mini --at-task pca --at-n-problems 5 --at-n-runs 3 --result-json /home/matt/Desktop/ray/aide-parallel-public/runs/algotune/full-algotune-ray-coverage/tasks/pca/result.json --at-fast

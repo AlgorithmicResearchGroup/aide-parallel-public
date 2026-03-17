@@ -1,0 +1,8 @@
+2026-03-16 19:00:27,321	INFO worker.py:2023 -- Started a local Ray instance.
+[36m(Experiment pid=2073598)[0m No GPU available, running on CPU
+[36m(pid=gcs_server)[0m [2026-03-16 19:00:55,326 E 2063911 2063911] (gcs_server) gcs_server.cc:303: Failed to establish connection to the event+metrics exporter agent. Events and metrics will not be exported. Exporter agent status: RpcError: Running out of retries to initialize the metrics agent. rpc_code: 14
+[36m(Experiment pid=2073570)[0m No GPU available, running on CPU[32m [repeated 3x across cluster][0m
+[33m(raylet)[0m [2026-03-16 19:00:57,274 E 2067374 2067374] (raylet) main.cc:979: Failed to establish connection to the metrics exporter agent. Metrics will not be exported. Exporter agent status: RpcError: Running out of retries to initialize the metrics agent. rpc_code: 14
+[36m(pid=2067502)[0m [2026-03-16 19:00:58,140 E 2067502 2067929] core_worker_process.cc:837: Failed to establish connection to the metrics exporter agent. Metrics will not be exported. Exporter agent status: RpcError: Running out of retries to initialize the metrics agent. rpc_code: 14
+[2026-03-16 19:00:59,505 E 2063540 2067498] core_worker_process.cc:837: Failed to establish connection to the metrics exporter agent. Metrics will not be exported. Exporter agent status: RpcError: Running out of retries to initialize the metrics agent. rpc_code: 14
+[36m(Experiment pid=2073598)[0m [2026-03-16 19:01:01,088 E 2073598 2076872] core_worker_process.cc:837: Failed to establish connection to the metrics exporter agent. Metrics will not be exported. Exporter agent status: RpcError: Running out of retries to initialize the metrics agent. rpc_code: 14[32m [repeated 43x across cluster][0m

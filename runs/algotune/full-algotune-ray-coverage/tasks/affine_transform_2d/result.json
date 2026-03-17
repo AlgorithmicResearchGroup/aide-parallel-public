@@ -1,0 +1,30 @@
+{
+  "command": [
+    "/home/matt/Desktop/ray/aide-parallel-public/cli/aide-run",
+    "--task",
+    "algotune",
+    "--at-task",
+    "affine_transform_2d",
+    "--num-experiments",
+    "4",
+    "--num-iterations",
+    "1",
+    "--steps",
+    "4",
+    "--cpus-per-experiment",
+    "2",
+    "--at-n-problems",
+    "5",
+    "--at-n-runs",
+    "3",
+    "--result-json",
+    "/home/matt/Desktop/ray/aide-parallel-public/runs/algotune/full-algotune-ray-coverage/tasks/affine_transform_2d/result.json",
+    "--at-fast"
+  ],
+  "config_hash": "76a36ceac0ff",
+  "error": "Failed to deserialize exception. Refer to https://docs.ray.io/en/latest/ray-core/objects/serialization.html#custom-serializers-for-exceptions for more information.\nOriginal exception:\nray.exceptions.RayTaskError: \u001b[36mray::Experiment.run()\u001b[39m (pid=1965488, ip=192.168.0.105, actor_id=4d821949c29e7eacb5465dd101000000, repr=<aide_runner.Experiment object at 0x7d6886c674a0>)\n               ^^^^^^^^^^^^^^^\n  File \"/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/backoff/_sync.py\", line 48, in retry\n    ret = target(*args, **kwargs)\n          ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/backend/utils.py\", line 26, in backoff_create\n    return create_fn(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/openai/resources/responses/responses.py\", line 859, in create\n    return self._post(\n           ^^^^^^^^^^^\n  File \"/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/openai/_base_client.py\", line 1259, in post\n    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))\n                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/openai/_base_client.py\", line 1047, in request\n    raise self._make_status_error_from_response(err.response) from None\nopenai.AuthenticationError: Error code: 401 - {'error': {'message': 'Invalid API Key', 'type': 'invalid_request_error', 'code': 'invalid_api_key'}}\n\nDuring handling of the above exception, another exception occurred:\n\n\u001b[36mray::Experiment.run()\u001b[39m (pid=1965488, ip=192.168.0.105, actor_id=4d821949c29e7eacb5465dd101000000, repr=<aide_runner.Experiment object at 0x7d6886c674a0>)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/matt/Desktop/ray/aide-parallel-public/src/aide_runner.py\", line 235, in run\n    exp.agent.step(exec_callback=exp.interpreter.run)\n  File \"/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/agent.py\", line 483, in step\n    result_node = self._draft()\n                  ^^^^^^^^^^^^^\n  File \"/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/agent.py\", line 320, in _draft\n    plan, code = self.plan_and_code_query(prompt)\n                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/agent.py\", line 233, in plan_and_code_query\n    completion_text = query(\n                      ^^^^^^\n  File \"/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/backend/__init__.py\", line 67, in query\n    output, req_time, in_tok_count, out_tok_count, info = query_func(\n                                                          ^^^^^^^^^^^\n  File \"/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/backend/backend_openai.py\", line 136, in query\n    raise OpenAIAPIError(error_message, status_code=status_code, error_type=\"APIStatusError\")\naide.backend.backend_openai.OpenAIAPIError: Error code: 401 - {'error': {'message': 'Invalid API Key', 'type': 'invalid_request_error', 'code': 'invalid_api_key'}}\n",
+  "returncode": 1,
+  "status": "failed",
+  "task_id": "affine_transform_2d",
+  "task_type": "algotune"
+}

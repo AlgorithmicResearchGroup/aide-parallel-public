@@ -13,11 +13,12 @@ NUM_ITERATIONS=""
 STEPS=""
 GPU_FRACTION=""
 CPUS_PER_EXPERIMENT=""
-WANDB_PROJECT=""
+TRACKING_EXPERIMENT=""
 MODEL="${AIDE_MODEL:-}"
 FEEDBACK_MODEL="${AIDE_FEEDBACK_MODEL:-}"
 KB_TASK=""
 AT_TASK=""
+RESULT_JSON=""
 LOCAL_MODE="false"
 
 while [[ $# -gt 0 ]]; do
@@ -38,8 +39,8 @@ while [[ $# -gt 0 ]]; do
       GPU_FRACTION="$2"; shift 2 ;;
     --cpus-per-experiment)
       CPUS_PER_EXPERIMENT="$2"; shift 2 ;;
-    --wandb-project)
-      WANDB_PROJECT="$2"; shift 2 ;;
+    --tracking-experiment|--wandb-project)
+      TRACKING_EXPERIMENT="$2"; shift 2 ;;
     --model)
       MODEL="$2"; shift 2 ;;
     --feedback-model)
@@ -48,6 +49,11 @@ while [[ $# -gt 0 ]]; do
       KB_TASK="$2"; shift 2 ;;
     --at-task)
       AT_TASK="$2"; shift 2 ;;
+    --at-n-problems|--at-n-runs|--at-mode|--at-fast|--no-at-fast)
+      echo "ERROR: Repo-owned non-strict AlgoTune options have been removed. This repo now runs AlgoTune only in publication-grade strict mode."
+      exit 1 ;;
+    --result-json)
+      RESULT_JSON="$2"; shift 2 ;;
     --local)
       LOCAL_MODE="true"; shift ;;
     --help)
@@ -63,11 +69,12 @@ Options:
   --steps N                Override steps per experiment
   --gpu-fraction N         GPU fraction per experiment (0.5=2 per GPU)
   --cpus-per-experiment N  CPUs per experiment in CPU mode
-  --wandb-project NAME     W&B project name override
+  --tracking-experiment N  MLflow experiment name override
   --model NAME             Generation model override
   --feedback-model NAME    Feedback model override
   --kb-task ID             KernelBench task ID (required for kernelbench)
   --at-task NAME           AlgoTune task name (required for algotune)
+  --result-json FILE       Write final run metadata to FILE
   --local                  Run locally (no remote Ray address)
   --help                   Show this message
 
@@ -128,11 +135,12 @@ fi
 [[ -n "$STEPS" ]] && CMD+=(--steps "$STEPS")
 [[ -n "$GPU_FRACTION" ]] && CMD+=(--gpu-fraction "$GPU_FRACTION")
 [[ -n "$CPUS_PER_EXPERIMENT" ]] && CMD+=(--cpus-per-experiment "$CPUS_PER_EXPERIMENT")
-[[ -n "$WANDB_PROJECT" ]] && CMD+=(--wandb-project "$WANDB_PROJECT")
+[[ -n "$TRACKING_EXPERIMENT" ]] && CMD+=(--tracking-experiment "$TRACKING_EXPERIMENT")
 [[ -n "$MODEL" ]] && CMD+=(--model "$MODEL")
 [[ -n "$FEEDBACK_MODEL" ]] && CMD+=(--feedback-model "$FEEDBACK_MODEL")
 [[ -n "$KB_TASK" ]] && CMD+=(--kb-task "$KB_TASK")
 [[ -n "$AT_TASK" ]] && CMD+=(--at-task "$AT_TASK")
+[[ -n "$RESULT_JSON" ]] && CMD+=(--result-json "$RESULT_JSON")
 
 if [[ "$LOCAL_MODE" != "true" && -n "$HEAD_NODE_IP" ]]; then
   echo "Checking Ray cluster at ${HEAD_NODE_IP}:6379 ..."

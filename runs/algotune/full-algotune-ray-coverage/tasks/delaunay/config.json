@@ -1,0 +1,19 @@
+{
+  "at_fast": true,
+  "at_n_problems": 5,
+  "at_n_runs": 3,
+  "campaign_id": "full-algotune-ray-coverage",
+  "category": "computational_geometry",
+  "config_hash": "dfd481dbed91",
+  "cpus_per_experiment": 2,
+  "feedback_model": null,
+  "head_node_ip": null,
+  "local": false,
+  "model": null,
+  "num_experiments": 4,
+  "num_iterations": 1,
+  "profile": "coverage",
+  "steps": 4,
+  "task_name": "delaunay",
+  "wandb_project": null
+}

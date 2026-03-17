@@ -1,0 +1,64 @@
+2026-03-16 19:00:47,892	INFO worker.py:1837 -- Connecting to existing Ray cluster at address: 192.168.0.105:64600...
+2026-03-16 19:00:47,906	INFO worker.py:2023 -- Connected to Ray cluster.
+[36m(Experiment pid=2078657)[0m No GPU available, running on CPU
+[36m(pid=gcs_server)[0m [2026-03-16 19:00:54,260 E 2063607 2063607] (gcs_server) gcs_server.cc:303: Failed to establish connection to the event+metrics exporter agent. Events and metrics will not be exported. Exporter agent status: RpcError: Running out of retries to initialize the metrics agent. rpc_code: 14
+[36m(Experiment pid=2078660)[0m Attempting to load config from: /home/matt/Desktop/ray/aide-parallel-public/tasks/algotune/vendor/AlgoTune/AlgoTuner/config/config.yaml
+[36m(Experiment pid=2078660)[0m Successfully loaded config from: /home/matt/Desktop/ray/aide-parallel-public/tasks/algotune/vendor/AlgoTune/AlgoTuner/config/config.yaml
+[33m(raylet)[0m [2026-03-16 19:00:55,868 E 2064342 2064342] (raylet) main.cc:979: Failed to establish connection to the metrics exporter agent. Metrics will not be exported. Exporter agent status: RpcError: Running out of retries to initialize the metrics agent. rpc_code: 14
+[36m(Experiment pid=2078656)[0m No GPU available, running on CPU[32m [repeated 3x across cluster] (Ray deduplicates logs by default. Set RAY_DEDUP_LOGS=0 to disable log deduplication, or see https://docs.ray.io/en/master/ray-observability/user-guides/configure-logging.html#log-deduplication for more options.)[0m
+[36m(pid=2064470)[0m [2026-03-16 19:00:56,623 E 2064470 2064727] core_worker_process.cc:837: Failed to establish connection to the metrics exporter agent. Metrics will not be exported. Exporter agent status: RpcError: Running out of retries to initialize the metrics agent. rpc_code: 14
+[36m(Experiment pid=2078660)[0m Attempting to load config from: /home/matt/Desktop/ray/aide-parallel-public/tasks/algotune/vendor/AlgoTune/AlgoTuner/config/config.yaml[32m [repeated 7x across cluster][0m
+[36m(Experiment pid=2078659)[0m Successfully loaded config from: /home/matt/Desktop/ray/aide-parallel-public/tasks/algotune/vendor/AlgoTune/AlgoTuner/config/config.yaml[32m [repeated 6x across cluster][0m
+[36m(pid=2064510)[0m [2026-03-16 19:00:56,860 E 2064510 2066509] core_worker_process.cc:837: Failed to establish connection to the metrics exporter agent. Metrics will not be exported. Exporter agent status: RpcError: Running out of retries to initialize the metrics agent. rpc_code: 14[32m [repeated 31x across cluster][0m
+[36m(Experiment pid=2078659)[0m OpenBLAS: malloc failed in dsyrk_thread_LT
+[36m(Experiment pid=2078656)[0m Attempting to load config from: /home/matt/Desktop/ray/aide-parallel-public/tasks/algotune/vendor/AlgoTune/AlgoTuner/config/config.yaml[32m [repeated 7x across cluster][0m
+[36m(Experiment pid=2078656)[0m Successfully loaded config from: /home/matt/Desktop/ray/aide-parallel-public/tasks/algotune/vendor/AlgoTune/AlgoTuner/config/config.yaml[32m [repeated 8x across cluster][0m
+Traceback (most recent call last):
+  File "/home/matt/Desktop/ray/aide-parallel-public/src/aide_runner.py", line 970, in <module>
+    result_payload = main(
+                     ^^^^^
+  File "/home/matt/Desktop/ray/aide-parallel-public/src/aide_runner.py", line 674, in main
+    ranked_results, experiment_actors = run_experiments(
+                                        ^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide-parallel-public/src/aide_runner.py", line 532, in run_experiments
+    result = ray.get(ref)
+             ^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/ray/_private/auto_init_hook.py", line 22, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/ray/_private/client_mode_hook.py", line 104, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/ray/_private/worker.py", line 2972, in get
+    values, debugger_breakpoint = worker.get_objects(
+                                  ^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/ray/_private/worker.py", line 1031, in get_objects
+    raise value.as_instanceof_cause()
+ray.exceptions.RayTaskError(OSError): [36mray::Experiment.run()[39m (pid=2078657, ip=192.168.0.105, actor_id=b910686e525872790f82aa1d02000000, repr=<aide_runner.Experiment object at 0x739fed1bf320>)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide-parallel-public/src/aide_runner.py", line 235, in run
+    exp.agent.step(exec_callback=exp.interpreter.run)
+  File "/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/agent.py", line 491, in step
+    exec_result=exec_callback(result_node.code, True),
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/interpreter.py", line 240, in run
+    self.create_process()
+  File "/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/interpreter.py", line 191, in create_process
+    self.code_inq, self.result_outq, self.event_outq = Queue(), Queue(), Queue()
+                                                       ^^^^^^^
+  File "/usr/lib/python3.12/multiprocessing/context.py", line 103, in Queue
+    return Queue(maxsize, ctx=self.get_context())
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/multiprocessing/queues.py", line 43, in __init__
+    self._rlock = ctx.Lock()
+                  ^^^^^^^^^^
+  File "/usr/lib/python3.12/multiprocessing/context.py", line 68, in Lock
+    return Lock(ctx=self.get_context())
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/multiprocessing/synchronize.py", line 169, in __init__
+    SemLock.__init__(self, SEMAPHORE, 1, 1, ctx=ctx)
+  File "/usr/lib/python3.12/multiprocessing/synchronize.py", line 57, in __init__
+    sl = self._semlock = _multiprocessing.SemLock(
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 12] Cannot allocate memory

@@ -1,0 +1,9 @@
+2026-03-16 19:00:29,525	INFO worker.py:2023 -- Started a local Ray instance.
+[36m(Experiment pid=2076727)[0m No GPU available, running on CPU
+[36m(Experiment pid=2076701)[0m Attempting to load config from: /home/matt/Desktop/ray/aide-parallel-public/tasks/algotune/vendor/AlgoTune/AlgoTuner/config/config.yaml
+[36m(Experiment pid=2076701)[0m Successfully loaded config from: /home/matt/Desktop/ray/aide-parallel-public/tasks/algotune/vendor/AlgoTune/AlgoTuner/config/config.yaml
+[36m(Experiment pid=2076702)[0m No GPU available, running on CPU[32m [repeated 3x across cluster] (Ray deduplicates logs by default. Set RAY_DEDUP_LOGS=0 to disable log deduplication, or see https://docs.ray.io/en/master/ray-observability/user-guides/configure-logging.html#log-deduplication for more options.)[0m
+[36m(pid=gcs_server)[0m [2026-03-16 19:00:56,756 E 2064208 2064208] (gcs_server) gcs_server.cc:303: Failed to establish connection to the event+metrics exporter agent. Events and metrics will not be exported. Exporter agent status: RpcError: Running out of retries to initialize the metrics agent. rpc_code: 14
+[36m(Experiment pid=2076728)[0m Attempting to load config from: /home/matt/Desktop/ray/aide-parallel-public/tasks/algotune/vendor/AlgoTune/AlgoTuner/config/config.yaml
+[36m(Experiment pid=2076728)[0m Successfully loaded config from: /home/matt/Desktop/ray/aide-parallel-public/tasks/algotune/vendor/AlgoTune/AlgoTuner/config/config.yaml
+[33m(raylet)[0m [2026-03-16 19:00:59,496 E 2072314 2072314] (raylet) main.cc:979: Failed to establish connection to the metrics exporter agent. Metrics will not be exported. Exporter agent status: RpcError: Running out of retries to initialize the metrics agent. rpc_code: 14

@@ -14,6 +14,9 @@ from .utils.config import (
 )
 
 
+STRICT_ALGOTUNE_MODE = "benchmark_strict"
+
+
 @dataclass
 class Solution:
     code: str
@@ -21,7 +24,17 @@ class Solution:
 
 
 class Experiment:
-    def __init__(self, data_dir: str, goal: str, eval: str | None = None, task_type: str | None = None, task_id: str | None = None):
+    def __init__(
+        self,
+        data_dir: str,
+        goal: str,
+        eval: str | None = None,
+        task_type: str | None = None,
+        task_id: str | None = None,
+        algotune_n_problems: int | None = None,
+        algotune_n_runs: int | None = None,
+        algotune_mode: str | None = None,
+    ):
         """Initialize a new experiment run.
 
         Args:
@@ -58,6 +71,10 @@ class Experiment:
             exec_config["task_type"] = task_type
             exec_config["eval_cmd"] = eval
             exec_config["task_id"] = task_id
+            if task_type == "algotune":
+                exec_config["algotune_n_problems"] = None
+                exec_config["algotune_n_runs"] = None
+                exec_config["algotune_mode"] = STRICT_ALGOTUNE_MODE
 
         self.interpreter = Interpreter(
             self.cfg.workspace_dir,

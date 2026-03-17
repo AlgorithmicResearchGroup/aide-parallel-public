@@ -13,7 +13,7 @@ echo ""
 # Default settings
 GPU_FRACTION=${GPU_FRACTION:-0.5}
 NUM_EXPERIMENTS=${NUM_EXPERIMENTS:-16}
-WANDB_PROJECT=${WANDB_PROJECT:-"aide-kernelbench"}
+TRACKING_EXPERIMENT=${TRACKING_EXPERIMENT:-"aide-kernelbench"}
 MODEL=${MODEL:-"gpt-4"}
 
 # Parse arguments
@@ -35,7 +35,7 @@ if [ "$1" = "--help" ]; then
     echo "Environment variables:"
     echo "  GPU_FRACTION     - GPU fraction per experiment (default: 0.5)"
     echo "  NUM_EXPERIMENTS  - Number of parallel experiments (default: 16)"
-    echo "  WANDB_PROJECT    - W&B project name (default: aide-kernelbench)"
+    echo "  TRACKING_EXPERIMENT - MLflow experiment name (default: aide-kernelbench)"
     echo "  MODEL            - Model to use (default: gpt-4)"
     echo ""
     exit 0
@@ -105,7 +105,7 @@ esac
 echo "Settings:"
 echo "  GPU Fraction: $GPU_FRACTION"
 echo "  Experiments: $NUM_EXPERIMENTS"
-echo "  W&B Project: $WANDB_PROJECT"
+echo "  Tracking Experiment: $TRACKING_EXPERIMENT"
 echo "  Model: $MODEL"
 echo ""
 
@@ -135,7 +135,7 @@ for i in "${!TASKS[@]}"; do
         --kb-task "$task" \
         --num-experiments "$NUM_EXPERIMENTS" \
         --gpu-fraction "$GPU_FRACTION" \
-        --wandb-project "$WANDB_PROJECT" \
+        --tracking-experiment "$TRACKING_EXPERIMENT" \
         --model "$MODEL" \
         --steps "$steps" 2>&1 | tee -a "$RESULTS_FILE"
 

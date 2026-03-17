@@ -1,0 +1,125 @@
+Using task=algotune contract=contract.yaml
+Executing: python /home/matt/Desktop/ray/aide-parallel-public/src/aide_runner.py --task algotune --local --num-experiments 4 --num-iterations 1 --steps 4 --cpus-per-experiment 2 --model llama-3.3-70b-versatile --feedback-model llama-3.3-70b-versatile --at-task cumulative_simpson_1d --at-n-problems 5 --at-n-runs 3 --result-json /home/matt/Desktop/ray/aide-parallel-public/runs/algotune/full-algotune-ray-coverage-groq/tasks/cumulative_simpson_1d/result.json --at-fast
+
+🚀 EXPERIMENTS STARTED: 4 agents running in parallel
+   Running on CPU workers
+   Task: algotune | Steps per experiment: 4
+   Waiting for all experiments to complete...
+
+[36m(Experiment pid=2097401)[0m [search policy] drafting new node (not enough drafts)
+[36m(Experiment pid=2097401)[0m Agent is generating code, parent node type: <class 'NoneType'>
+[36m(Experiment pid=2097400)[0m [19:02:10] WARNING  CODE_DIR not set when initializing DaCe   dace_config.py:104
+[36m(Experiment pid=2097400)[0m                     for process 2097400                                         
+[36m(Experiment pid=2097400)[0m            ERROR    Failed to load task: cannot import  evaluate_algotune.py:449
+[36m(Experiment pid=2097400)[0m                     name 'cumulative_simpson' from                              
+[36m(Experiment pid=2097400)[0m                     'scipy.integrate'                                           
+[36m(Experiment pid=2097400)[0m                     (/home/matt/Desktop/ray/aide_parall                         
+[36m(Experiment pid=2097400)[0m                     el/venv-algotune/lib/python3.12/sit                         
+[36m(Experiment pid=2097400)[0m                     e-packages/scipy/integrate/__init__                         
+[36m(Experiment pid=2097400)[0m                     .py)                                                        
+[36m(Experiment pid=2097400)[0m Agent is parsing execution results for node 97ab9734714448d9a102ade2da7d0dc8
+[36m(Experiment pid=2097398)[0m [search policy] drafting new node (not enough drafts)[32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2097398)[0m Agent is generating code, parent node type: <class 'NoneType'>[32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2097399)[0m                     el/venv-algotune/lib/python3.12/sit                         
+[36m(Experiment pid=2097398)[0m                     el/venv-algotune/lib/python3.12/sit                         
+[36m(Experiment pid=2097401)[0m                     el/venv-algotune/lib/python3.12/sit                         
+[36m(Experiment pid=2097398)[0m                     el/venv-algotune/lib/python3.12/sit                         
+[36m(Experiment pid=2097400)[0m                     el/venv-algotune/lib/python3.12/sit                         
+[36m(Experiment pid=2097399)[0m                     el/venv-algotune/lib/python3.12/sit                         
+[36m(Experiment pid=2097401)[0m                     el/venv-algotune/lib/python3.12/sit                         
+[36m(Experiment pid=2097398)[0m                     el/venv-algotune/lib/python3.12/sit                         
+[36m(Experiment pid=2097400)[0m                     el/venv-algotune/lib/python3.12/sit                         
+[36m(Experiment pid=2097401)[0m [19:02:10] WARNING  CODE_DIR not set when initializing DaCe   dace_config.py:104[32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2097401)[0m                     for process 2097401                                         [32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2097400)[0m [19:02:15] ERROR    Failed to load task: cannot import  evaluate_algotune.py:449[32m [repeated 9x across cluster][0m
+[36m(Experiment pid=2097400)[0m                     name 'cumulative_simpson' from                              [32m [repeated 9x across cluster][0m
+[36m(Experiment pid=2097400)[0m                     'scipy.integrate'                                           [32m [repeated 9x across cluster][0m
+[36m(Experiment pid=2097400)[0m                     (/home/matt/Desktop/ray/aide_parall                         [32m [repeated 9x across cluster][0m
+[36m(Experiment pid=2097400)[0m                     e-packages/scipy/integrate/__init__                         [32m [repeated 9x across cluster][0m
+[36m(Experiment pid=2097400)[0m                     .py)                                                        [32m [repeated 9x across cluster][0m
+[36m(Experiment pid=2097399)[0m Agent is parsing execution results for node a9fdfac6b9dc40688248ccee201abe53[32m [repeated 11x across cluster][0m
+[36m(Experiment pid=2097398)[0m [search policy] drafting new node (not enough drafts)[32m [repeated 10x across cluster][0m
+[36m(Experiment pid=2097398)[0m Agent is generating code, parent node type: <class 'NoneType'>[32m [repeated 10x across cluster][0m
+[36m(Experiment pid=2097401)[0m                     el/venv-algotune/lib/python3.12/sit                         
+[36m(Experiment pid=2097399)[0m                     el/venv-algotune/lib/python3.12/sit                         
+[19:02:16] ✅ [1/4] Experiment 3 done | GPU None | Metric: None
+[36m(Experiment pid=2097401)[0m 
+[36m(Experiment pid=2097401)[0m ============================================================
+[36m(Experiment pid=2097401)[0m ✅ EXPERIMENT 3 COMPLETED at 19:02:16
+[36m(Experiment pid=2097401)[0m    Task: algotune
+[36m(Experiment pid=2097401)[0m    GPU: CPU (ID: None)
+[36m(Experiment pid=2097401)[0m    Final Metric: None
+[36m(Experiment pid=2097401)[0m    Total Steps: 4
+[36m(Experiment pid=2097401)[0m ============================================================
+[36m(Experiment pid=2097401)[0m 
+[19:02:17] ✅ [2/4] Experiment 1 done | GPU None | Metric: None
+[36m(Experiment pid=2097398)[0m 
+[36m(Experiment pid=2097398)[0m 
+[19:02:17] ✅ [3/4] Experiment 0 done | GPU None | Metric: None
+[19:02:17] ✅ [4/4] Experiment 2 done | GPU None | Metric: None
+
+🎉 ALL 4 EXPERIMENTS COMPLETED!
+[19:02:17] WARNING  No valid metric was produced. The         aide_runner.py:779
+                    environment ran successfully, but the                       
+                    selected model did not generate an                          
+                    evaluable solution. Try a stronger model,                   
+                    more steps, or run ./cli/aide-check to                      
+                    verify setup.                                               
+[36m(Experiment pid=2097400)[0m 
+[36m(Experiment pid=2097400)[0m 
+[36m(Experiment pid=2097399)[0m [19:02:17] ERROR    OpenAI API error (status 400): Error   backend_openai.py:135
+[36m(Experiment pid=2097399)[0m                     code: 400 - {'error': {'message':                           
+[36m(Experiment pid=2097399)[0m                     "Failed to call a function. Please                          
+[36m(Experiment pid=2097399)[0m                     adjust your prompt. See                                     
+[36m(Experiment pid=2097399)[0m                     'failed_generation' for more                                
+[36m(Experiment pid=2097399)[0m                     details.", 'type':                                          
+[36m(Experiment pid=2097399)[0m                     'invalid_request_error', 'code':                            
+[36m(Experiment pid=2097399)[0m                     'tool_use_failed',                                          
+[36m(Experiment pid=2097399)[0m                     'failed_generation':                                        
+[36m(Experiment pid=2097399)[0m                     '<function=submit_review>{"is_bug":                         
+[36m(Experiment pid=2097399)[0m                     true, "lower_is_better": false,                             
+[36m(Experiment pid=2097399)[0m                     "metric": null, "summary": "The                             
+[36m(Experiment pid=2097399)[0m                     solution contains a bug as indicated                        
+[36m(Experiment pid=2097399)[0m                     by the execution output. The error                          
+[36m(Experiment pid=2097399)[0m                     message \'Failed to load task: cannot                       
+[36m(Experiment pid=2097399)[0m                     import name \\\'cumulative_simpson\\\'                      
+[36m(Experiment pid=2097399)[0m                     from \\\'scipy.integrate\\\'\'                              
+[36m(Experiment pid=2097399)[0m                     suggests that there is an issue with                        
+[36m(Experiment pid=2097399)[0m                     importing the necessary function from                       
+[36m(Experiment pid=2097399)[0m                     scipy.integrate. This could be due to                       
+[36m(Experiment pid=2097399)[0m                     a version mismatch or an incorrect                          
+[36m(Experiment pid=2097399)[0m                     import statement."}</function>'}}                           
+[36m(Experiment pid=2097399)[0m            ERROR    Function call failed: Error code: 400 -         agent.py:564
+[36m(Experiment pid=2097399)[0m                     {'error': {'message': "Failed to call a                     
+[36m(Experiment pid=2097399)[0m                     function. Please adjust your prompt. See                    
+[36m(Experiment pid=2097399)[0m                     'failed_generation' for more details.", 'type':             
+[36m(Experiment pid=2097399)[0m                     'invalid_request_error', 'code':                            
+[36m(Experiment pid=2097399)[0m                     'tool_use_failed', 'failed_generation':                     
+[36m(Experiment pid=2097399)[0m                     '<function=submit_review>{"is_bug": true,                   
+[36m(Experiment pid=2097399)[0m                     "lower_is_better": false, "metric": null,                   
+[36m(Experiment pid=2097399)[0m                     "summary": "The solution contains a bug as                  
+[36m(Experiment pid=2097399)[0m                     indicated by the execution output. The error                
+[36m(Experiment pid=2097399)[0m                     message \'Failed to load task: cannot import                
+[36m(Experiment pid=2097399)[0m                     name \\\'cumulative_simpson\\\' from                        
+[36m(Experiment pid=2097399)[0m                     \\\'scipy.integrate\\\'\' suggests that there               
+[36m(Experiment pid=2097399)[0m                     is an issue with importing the necessary                    
+[36m(Experiment pid=2097399)[0m                     function from scipy.integrate. This could be                
+[36m(Experiment pid=2097399)[0m                     due to a version mismatch or an incorrect                   
+[36m(Experiment pid=2097399)[0m                     import statement."}</function>'}}                           
+[36m(Experiment pid=2097399)[0m 
+[36m(Experiment pid=2097399)[0m 
+[36m(Experiment pid=2097399)[0m [19:02:16] ERROR    Failed to load task: cannot import  evaluate_algotune.py:449[32m [repeated 2x across cluster][0m
+[36m(Experiment pid=2097399)[0m                     name 'cumulative_simpson' from                              [32m [repeated 2x across cluster][0m
+[36m(Experiment pid=2097399)[0m                     'scipy.integrate'                                           [32m [repeated 2x across cluster][0m
+[36m(Experiment pid=2097399)[0m                     (/home/matt/Desktop/ray/aide_parall                         [32m [repeated 2x across cluster][0m
+[36m(Experiment pid=2097399)[0m                     e-packages/scipy/integrate/__init__                         [32m [repeated 2x across cluster][0m
+[36m(Experiment pid=2097399)[0m                     .py)                                                        [32m [repeated 2x across cluster][0m
+[36m(Experiment pid=2097400)[0m Agent is parsing execution results for node 1177e3661a114951b020ef44acd6902d[32m [repeated 4x across cluster][0m
+[36m(Experiment pid=2097399)[0m [search policy] drafting new node (not enough drafts)[32m [repeated 2x across cluster][0m
+[36m(Experiment pid=2097399)[0m Agent is generating code, parent node type: <class 'NoneType'>[32m [repeated 2x across cluster][0m
+[36m(Experiment pid=2097399)[0m ============================================================[32m [repeated 6x across cluster][0m
+[36m(Experiment pid=2097399)[0m ✅ EXPERIMENT 2 COMPLETED at 19:02:17[32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2097399)[0m    Task: algotune[32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2097399)[0m    GPU: CPU (ID: None)[32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2097399)[0m    Final Metric: None[32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2097399)[0m    Total Steps: 4[32m [repeated 3x across cluster][0m

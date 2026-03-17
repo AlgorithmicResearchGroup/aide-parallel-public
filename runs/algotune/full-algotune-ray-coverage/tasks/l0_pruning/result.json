@@ -1,0 +1,28 @@
+{
+  "command": [
+    "/home/matt/Desktop/ray/aide-parallel-public/cli/aide-run",
+    "--task",
+    "algotune",
+    "--at-task",
+    "l0_pruning",
+    "--num-experiments",
+    "4",
+    "--num-iterations",
+    "1",
+    "--steps",
+    "4",
+    "--cpus-per-experiment",
+    "2",
+    "--at-n-problems",
+    "5",
+    "--at-n-runs",
+    "3",
+    "--result-json",
+    "/home/matt/Desktop/ray/aide-parallel-public/runs/algotune/full-algotune-ray-coverage/tasks/l0_pruning/result.json",
+    "--at-fast"
+  ],
+  "config_hash": "a37b15d527e0",
+  "error": "aide-run exited with code 1 without producing result.json",
+  "returncode": 1,
+  "status": "failed"
+}

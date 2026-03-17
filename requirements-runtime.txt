@@ -7,4 +7,6 @@ python-dotenv
 tqdm
 numpy
 torch
-wandb
+mlflow
+databricks-sdk<0.73.0
+litellm

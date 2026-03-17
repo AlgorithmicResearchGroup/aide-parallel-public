@@ -1,0 +1,53 @@
+Using task=algotune contract=contract.yaml
+Executing: python /home/matt/Desktop/ray/aide-parallel-public/src/aide_runner.py --task algotune --local --num-experiments 4 --num-iterations 1 --steps 4 --cpus-per-experiment 2 --model llama-3.3-70b-versatile --feedback-model llama-3.3-70b-versatile --at-task kalman_filter --at-n-problems 5 --at-n-runs 3 --result-json /home/matt/Desktop/ray/aide-parallel-public/runs/algotune/full-algotune-ray-coverage-groq/tasks/kalman_filter/result.json --at-fast
+
+🚀 EXPERIMENTS STARTED: 4 agents running in parallel
+   Running on CPU workers
+   Task: algotune | Steps per experiment: 4
+   Waiting for all experiments to complete...
+
+[36m(Experiment pid=2154234)[0m [search policy] drafting new node (not enough drafts)
+[36m(Experiment pid=2154234)[0m Agent is generating code, parent node type: <class 'NoneType'>
+[36m(Experiment pid=2154234)[0m Agent is parsing execution results for node 4de7ed0f8e2a4cc5abc1ba1a3d725bc9
+[36m(Experiment pid=2154233)[0m [search policy] drafting new node (not enough drafts)[32m [repeated 6x across cluster] (Ray deduplicates logs by default. Set RAY_DEDUP_LOGS=0 to disable log deduplication, or see https://docs.ray.io/en/master/ray-observability/user-guides/configure-logging.html#log-deduplication for more options.)[0m
+[36m(Experiment pid=2154233)[0m Agent is generating code, parent node type: <class 'NoneType'>[32m [repeated 6x across cluster][0m
+[36m(Experiment pid=2154236)[0m Agent is parsing execution results for node 49fa3017183b4dfda874984114fca139[32m [repeated 7x across cluster][0m
+[36m(Experiment pid=2154234)[0m [search policy] drafting new node (not enough drafts)[32m [repeated 6x across cluster][0m
+[36m(Experiment pid=2154234)[0m Agent is generating code, parent node type: <class 'NoneType'>[32m [repeated 6x across cluster][0m
+[36m(Experiment pid=2154235)[0m Agent is parsing execution results for node 345e0d755f2945f99acdd8c0e8360516[32m [repeated 6x across cluster][0m
+[19:05:26] ✅ [1/4] Experiment 1 done | GPU None | Metric: None
+[36m(Experiment pid=2154234)[0m 
+[36m(Experiment pid=2154234)[0m ============================================================
+[36m(Experiment pid=2154234)[0m ✅ EXPERIMENT 1 COMPLETED at 19:05:26
+[36m(Experiment pid=2154234)[0m    Task: algotune
+[36m(Experiment pid=2154234)[0m    GPU: CPU (ID: None)
+[36m(Experiment pid=2154234)[0m    Final Metric: None
+[36m(Experiment pid=2154234)[0m    Total Steps: 4
+[36m(Experiment pid=2154234)[0m ============================================================
+[36m(Experiment pid=2154234)[0m 
+[19:05:27] ✅ [2/4] Experiment 0 done | GPU None | Metric: None
+[36m(Experiment pid=2154235)[0m 
+[36m(Experiment pid=2154235)[0m 
+[19:05:27] ✅ [3/4] Experiment 2 done | GPU None | Metric: None
+[36m(Experiment pid=2154233)[0m 
+[36m(Experiment pid=2154233)[0m 
+[19:05:27] ✅ [4/4] Experiment 3 done | GPU None | Metric: None
+
+🎉 ALL 4 EXPERIMENTS COMPLETED!
+[19:05:27] WARNING  No valid metric was produced. The         aide_runner.py:779
+                    environment ran successfully, but the                       
+                    selected model did not generate an                          
+                    evaluable solution. Try a stronger model,                   
+                    more steps, or run ./cli/aide-check to                      
+                    verify setup.                                               
+[36m(Experiment pid=2154236)[0m 
+[36m(Experiment pid=2154236)[0m 
+[36m(Experiment pid=2154233)[0m [search policy] drafting new node (not enough drafts)[32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2154233)[0m Agent is generating code, parent node type: <class 'NoneType'>[32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2154236)[0m Agent is parsing execution results for node 763fec63760b4ab5aac7e66cd22d8cd3[32m [repeated 2x across cluster][0m
+[36m(Experiment pid=2154236)[0m ============================================================[32m [repeated 6x across cluster][0m
+[36m(Experiment pid=2154236)[0m ✅ EXPERIMENT 3 COMPLETED at 19:05:27[32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2154236)[0m    Task: algotune[32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2154236)[0m    GPU: CPU (ID: None)[32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2154236)[0m    Final Metric: None[32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2154236)[0m    Total Steps: 4[32m [repeated 3x across cluster][0m

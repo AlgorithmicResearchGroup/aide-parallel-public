@@ -1,0 +1,20 @@
+Using task=algotune contract=contract.yaml
+Executing: python /home/matt/Desktop/ray/aide-parallel-public/src/aide_runner.py --task algotune --local --num-experiments 4 --num-iterations 1 --steps 4 --cpus-per-experiment 2 --model llama-3.3-70b-versatile --feedback-model llama-3.3-70b-versatile --at-task gzip_compression --at-n-problems 5 --at-n-runs 3 --result-json /home/matt/Desktop/ray/aide-parallel-public/runs/algotune/full-algotune-ray-coverage-groq/tasks/gzip_compression/result.json --at-fast
+
+🚀 EXPERIMENTS STARTED: 4 agents running in parallel
+   Running on CPU workers
+   Task: algotune | Steps per experiment: 4
+   Waiting for all experiments to complete...
+
+[36m(Experiment pid=2152344)[0m [search policy] drafting new node (not enough drafts)
+[36m(Experiment pid=2152344)[0m Agent is generating code, parent node type: <class 'NoneType'>
+[36m(Experiment pid=2152344)[0m [19:04:57] WARNING  CODE_DIR not set when initializing DaCe   dace_config.py:104
+[36m(Experiment pid=2152344)[0m                     for process 2152344                                         
+[36m(Experiment pid=2152346)[0m [search policy] drafting new node (not enough drafts)[32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2152346)[0m Agent is generating code, parent node type: <class 'NoneType'>[32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2152346)[0m Agent is parsing execution results for node 87a3e747d98f467c99c31933f1ed476d
+[36m(Experiment pid=2152345)[0m [19:04:58] WARNING  CODE_DIR not set when initializing DaCe   dace_config.py:104[32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2152345)[0m                     for process 2152345                                         [32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2152345)[0m [search policy] drafting new node (not enough drafts)[32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2152345)[0m Agent is generating code, parent node type: <class 'NoneType'>[32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2152347)[0m Agent is parsing execution results for node 2a3b236519da476ca7653753af4b993d[32m [repeated 3x across cluster][0m

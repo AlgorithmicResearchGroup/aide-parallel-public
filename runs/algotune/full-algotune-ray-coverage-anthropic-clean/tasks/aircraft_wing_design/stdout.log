@@ -1,0 +1,128 @@
+Using task=algotune contract=contract.yaml
+Executing: python /home/matt/Desktop/ray/aide-parallel-public/src/aide_runner.py --task algotune --local --num-experiments 4 --num-iterations 1 --steps 4 --cpus-per-experiment 2 --model claude-sonnet-4-20250514 --feedback-model claude-sonnet-4-20250514 --at-task aircraft_wing_design --at-n-problems 5 --at-n-runs 3 --result-json /home/matt/Desktop/ray/aide-parallel-public/runs/algotune/full-algotune-ray-coverage-anthropic-clean/tasks/aircraft_wing_design/result.json --at-fast
+
+🚀 EXPERIMENTS STARTED: 4 agents running in parallel
+   Running on CPU workers
+   Task: algotune | Steps per experiment: 4
+   Waiting for all experiments to complete...
+
+[36m(Experiment pid=2016558)[0m [search policy] drafting new node (not enough drafts)
+[36m(Experiment pid=2016558)[0m Agent is generating code, parent node type: <class 'NoneType'>
+[36m(Experiment pid=2016559)[0m Agent is parsing execution results for node a1dcefe02da74dae87ec5071df7050d8
+[36m(Experiment pid=2016560)[0m [search policy] drafting new node (not enough drafts)[32m [repeated 3x across cluster] (Ray deduplicates logs by default. Set RAY_DEDUP_LOGS=0 to disable log deduplication, or see https://docs.ray.io/en/master/ray-observability/user-guides/configure-logging.html#log-deduplication for more options.)[0m
+[36m(Experiment pid=2016560)[0m Agent is generating code, parent node type: <class 'NoneType'>[32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2016558)[0m Agent is parsing execution results for node 6436016d48f8475c9676f8af2c163e34[32m [repeated 2x across cluster][0m
+[36m(Experiment pid=2016560)[0m [search policy] drafting new node (not enough drafts)[32m [repeated 2x across cluster][0m
+[36m(Experiment pid=2016560)[0m Agent is generating code, parent node type: <class 'NoneType'>[32m [repeated 2x across cluster][0m
+[36m(Experiment pid=2016561)[0m [18:52:24] WARNING  CODE_DIR not set when initializing DaCe   dace_config.py:104
+[36m(Experiment pid=2016561)[0m                     for process 2016561                                         
+[36m(Experiment pid=2016561)[0m            ERROR    Failed to load task: cannot import  evaluate_algotune.py:449
+[36m(Experiment pid=2016561)[0m                     name 'eye_array' from                                       
+[36m(Experiment pid=2016561)[0m                     'scipy.sparse'                                              
+[36m(Experiment pid=2016561)[0m                     (/home/matt/Desktop/ray/aide_parall                         
+[36m(Experiment pid=2016561)[0m                     el/venv-algotune/lib/python3.12/sit                         
+[36m(Experiment pid=2016561)[0m                     e-packages/scipy/sparse/__init__.py                         
+[36m(Experiment pid=2016561)[0m                     )                                                           
+[36m(Experiment pid=2016561)[0m Agent is parsing execution results for node ce03d673530f48418f34e2012ea98529
+[36m(Experiment pid=2016558)[0m [search policy] drafting new node (not enough drafts)
+[36m(Experiment pid=2016558)[0m Agent is generating code, parent node type: <class 'NoneType'>
+[36m(Experiment pid=2016561)[0m [search policy] drafting new node (not enough drafts)
+[36m(Experiment pid=2016561)[0m Agent is generating code, parent node type: <class 'NoneType'>
+[36m(Experiment pid=2016560)[0m Agent is parsing execution results for node 259c6f03e8534728a30321472325aeaf
+[36m(Experiment pid=2016560)[0m [search policy] drafting new node (not enough drafts)
+[36m(Experiment pid=2016560)[0m Agent is generating code, parent node type: <class 'NoneType'>
+[36m(Experiment pid=2016559)[0m [search policy] drafting new node (not enough drafts)
+[36m(Experiment pid=2016559)[0m Agent is generating code, parent node type: <class 'NoneType'>
+[36m(Experiment pid=2016558)[0m Agent is parsing execution results for node 2f888b6e5b9943d2bd15acd96a1a194d[32m [repeated 2x across cluster][0m
+[36m(Experiment pid=2016558)[0m [search policy] drafting new node (not enough drafts)
+[36m(Experiment pid=2016558)[0m Agent is generating code, parent node type: <class 'NoneType'>
+[36m(Experiment pid=2016560)[0m Agent is parsing execution results for node 86de5f237c64429ba228dd6f583e9409
+[36m(Experiment pid=2016561)[0m Agent is parsing execution results for node bf42d5bd639242b6895cbe8776a045a5
+[36m(Experiment pid=2016560)[0m [search policy] drafting new node (not enough drafts)
+[36m(Experiment pid=2016560)[0m Agent is generating code, parent node type: <class 'NoneType'>
+[36m(Experiment pid=2016558)[0m Agent is parsing execution results for node 30003464d46748e0a87b68c7f2a1cad9
+[36m(Experiment pid=2016558)[0m [search policy] drafting new node (not enough drafts)[32m [repeated 2x across cluster][0m
+[36m(Experiment pid=2016558)[0m Agent is generating code, parent node type: <class 'NoneType'>[32m [repeated 2x across cluster][0m
+[36m(Experiment pid=2016559)[0m [18:53:21] WARNING  CODE_DIR not set when initializing DaCe   dace_config.py:104
+[36m(Experiment pid=2016559)[0m                     for process 2016559                                         
+[36m(Experiment pid=2016559)[0m            ERROR    Failed to load task: cannot import  evaluate_algotune.py:449
+[36m(Experiment pid=2016559)[0m                     name 'eye_array' from                                       
+[36m(Experiment pid=2016559)[0m                     'scipy.sparse'                                              
+[36m(Experiment pid=2016559)[0m                     (/home/matt/Desktop/ray/aide_parall                         
+[36m(Experiment pid=2016559)[0m                     el/venv-algotune/lib/python3.12/sit                         
+[36m(Experiment pid=2016559)[0m                     e-packages/scipy/sparse/__init__.py                         
+[36m(Experiment pid=2016559)[0m                     )                                                           
+[36m(Experiment pid=2016559)[0m Agent is parsing execution results for node 9c39feff2e004514b4d874388ce32ab0
+[36m(Experiment pid=2016559)[0m [search policy] drafting new node (not enough drafts)
+[36m(Experiment pid=2016559)[0m Agent is generating code, parent node type: <class 'NoneType'>
+[36m(Experiment pid=2016561)[0m Agent is parsing execution results for node 74d4f2a49a964064920ad210920d6ac0
+[36m(Experiment pid=2016560)[0m [18:53:37] WARNING  CODE_DIR not set when initializing DaCe   dace_config.py:104
+[36m(Experiment pid=2016560)[0m                     for process 2016560                                         
+[36m(Experiment pid=2016560)[0m            ERROR    Failed to load task: cannot import  evaluate_algotune.py:449
+[36m(Experiment pid=2016560)[0m                     name 'eye_array' from                                       
+[36m(Experiment pid=2016560)[0m                     'scipy.sparse'                                              
+[36m(Experiment pid=2016560)[0m                     (/home/matt/Desktop/ray/aide_parall                         
+[36m(Experiment pid=2016560)[0m                     el/venv-algotune/lib/python3.12/sit                         
+[36m(Experiment pid=2016560)[0m                     e-packages/scipy/sparse/__init__.py                         
+[36m(Experiment pid=2016560)[0m                     )                                                           
+[36m(Experiment pid=2016560)[0m Agent is parsing execution results for node 3d9d91a10d6e433f8b8ec30251e56b4c
+[36m(Experiment pid=2016561)[0m [search policy] drafting new node (not enough drafts)
+[36m(Experiment pid=2016561)[0m Agent is generating code, parent node type: <class 'NoneType'>
+[18:53:41] ✅ [1/4] Experiment 3 done | GPU None | Metric: None
+[36m(Experiment pid=2016560)[0m 
+[36m(Experiment pid=2016560)[0m ============================================================
+[36m(Experiment pid=2016560)[0m ✅ EXPERIMENT 3 COMPLETED at 18:53:41
+[36m(Experiment pid=2016560)[0m    Task: algotune
+[36m(Experiment pid=2016560)[0m    GPU: CPU (ID: None)
+[36m(Experiment pid=2016560)[0m    Final Metric: None
+[36m(Experiment pid=2016560)[0m    Total Steps: 4
+[36m(Experiment pid=2016560)[0m ============================================================
+[36m(Experiment pid=2016560)[0m 
+[36m(Experiment pid=2016558)[0m                     el/venv-algotune/lib/python3.12/sit                         
+[18:53:47] ✅ [2/4] Experiment 0 done | GPU None | Metric: None
+[36m(Experiment pid=2016558)[0m 
+[36m(Experiment pid=2016558)[0m 
+[36m(Experiment pid=2016558)[0m [18:53:42] WARNING  CODE_DIR not set when initializing DaCe   dace_config.py:104
+[36m(Experiment pid=2016558)[0m                     for process 2016558                                         
+[36m(Experiment pid=2016558)[0m            ERROR    Failed to load task: cannot import  evaluate_algotune.py:449
+[36m(Experiment pid=2016558)[0m                     name 'eye_array' from                                       
+[36m(Experiment pid=2016558)[0m                     'scipy.sparse'                                              
+[36m(Experiment pid=2016558)[0m                     (/home/matt/Desktop/ray/aide_parall                         
+[36m(Experiment pid=2016558)[0m                     e-packages/scipy/sparse/__init__.py                         
+[36m(Experiment pid=2016558)[0m                     )                                                           
+[36m(Experiment pid=2016558)[0m Agent is parsing execution results for node d281b68a9cd44445b0689c59304e9d3c
+[36m(Experiment pid=2016558)[0m ============================================================[32m [repeated 2x across cluster][0m
+[36m(Experiment pid=2016558)[0m ✅ EXPERIMENT 0 COMPLETED at 18:53:47
+[36m(Experiment pid=2016558)[0m    Task: algotune
+[36m(Experiment pid=2016558)[0m    GPU: CPU (ID: None)
+[36m(Experiment pid=2016558)[0m    Final Metric: None
+[36m(Experiment pid=2016558)[0m    Total Steps: 4
+[36m(Experiment pid=2016559)[0m Agent is parsing execution results for node 76b4082e5da64f5ab96fb9c6f0c391fe
+[18:53:59] ✅ [3/4] Experiment 2 done | GPU None | Metric: None
+[36m(Experiment pid=2016559)[0m 
+[36m(Experiment pid=2016559)[0m ============================================================
+[36m(Experiment pid=2016559)[0m ✅ EXPERIMENT 2 COMPLETED at 18:53:59
+[36m(Experiment pid=2016559)[0m    Task: algotune
+[36m(Experiment pid=2016559)[0m    GPU: CPU (ID: None)
+[36m(Experiment pid=2016559)[0m    Final Metric: None
+[36m(Experiment pid=2016559)[0m    Total Steps: 4
+[36m(Experiment pid=2016559)[0m ============================================================
+[36m(Experiment pid=2016559)[0m 
+[18:54:02] ✅ [4/4] Experiment 1 done | GPU None | Metric: None
+
+🎉 ALL 4 EXPERIMENTS COMPLETED!
+[18:54:02] WARNING  No valid metric was produced. The         aide_runner.py:779
+                    environment ran successfully, but the                       
+                    selected model did not generate an                          
+                    evaluable solution. Try a stronger model,                   
+                    more steps, or run ./cli/aide-check to                      
+                    verify setup.                                               
+[36m(Experiment pid=2016561)[0m 
+[36m(Experiment pid=2016561)[0m 
+[36m(Experiment pid=2016561)[0m Agent is parsing execution results for node 6b3cb25789f84af5b6bf8c12eb483eae
+[36m(Experiment pid=2016561)[0m ============================================================[32m [repeated 2x across cluster][0m
+[36m(Experiment pid=2016561)[0m ✅ EXPERIMENT 1 COMPLETED at 18:54:02
+[36m(Experiment pid=2016561)[0m    Task: algotune
+[36m(Experiment pid=2016561)[0m    GPU: CPU (ID: None)
+[36m(Experiment pid=2016561)[0m    Final Metric: None
+[36m(Experiment pid=2016561)[0m    Total Steps: 4

@@ -15,6 +15,23 @@ except ImportError:
 ALGOTUNE_ROOT = ensure_algotune_on_path()
 ALGOTUNE_TASKS_DIR = resolve_algotune_tasks_dir()
 
+TASK_RUNTIME_REQUIREMENTS: dict[str, list[tuple[str, str, str]]] = {
+    "cumulative_simpson_1d": [
+        ("scipy.integrate", "cumulative_simpson", "requires scipy.integrate.cumulative_simpson"),
+    ],
+    "cumulative_simpson_multid": [
+        ("scipy.integrate", "cumulative_simpson", "requires scipy.integrate.cumulative_simpson"),
+    ],
+    "dijkstra_from_indices": [
+        ("scipy.sparse", "random_array", "requires scipy.sparse.random_array"),
+    ],
+    "shortest_path_dijkstra": [
+        ("scipy.sparse", "random_array", "requires scipy.sparse.random_array"),
+    ],
+}
+
+_TASK_COMPATIBILITY_CACHE: dict[str, dict[str, Any]] = {}
+
 
 def get_all_tasks() -> List[str]:
     """List available AlgoTune task names."""
@@ -117,6 +134,45 @@ def load_task_class(task_name: str):
             return obj()
 
     raise ValueError(f"Could not find Task class for: {task_name}")
+
+
+def check_task_runtime_compatibility(task_name: str) -> Dict[str, Any]:
+    cached = _TASK_COMPATIBILITY_CACHE.get(task_name)
+    if cached is not None:
+        return cached
+
+    if task_name in TASK_RUNTIME_REQUIREMENTS:
+        for module_name, attr_name, reason in TASK_RUNTIME_REQUIREMENTS[task_name]:
+            try:
+                module = __import__(module_name, fromlist=[attr_name])
+            except Exception as exc:
+                result = {
+                    "compatible": False,
+                    "reason": f"{reason}: failed to import {module_name} ({exc})",
+                }
+                _TASK_COMPATIBILITY_CACHE[task_name] = result
+                return result
+            if not hasattr(module, attr_name):
+                result = {
+                    "compatible": False,
+                    "reason": f"{reason}: {module_name}.{attr_name} is unavailable",
+                }
+                _TASK_COMPATIBILITY_CACHE[task_name] = result
+                return result
+
+    try:
+        load_task_class(task_name)
+    except Exception as exc:
+        result = {
+            "compatible": False,
+            "reason": f"task import failed: {exc}",
+        }
+        _TASK_COMPATIBILITY_CACHE[task_name] = result
+        return result
+
+    result = {"compatible": True, "reason": None}
+    _TASK_COMPATIBILITY_CACHE[task_name] = result
+    return result
 
 
 if __name__ == "__main__":

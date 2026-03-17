@@ -1,0 +1,14 @@
+Using task=algotune contract=contract.yaml
+Executing: python /home/matt/Desktop/ray/aide-parallel-public/src/aide_runner.py --task algotune --local --num-experiments 4 --num-iterations 1 --steps 4 --cpus-per-experiment 2 --model llama-3.3-70b-versatile --feedback-model llama-3.3-70b-versatile --at-task feedback_controller_design --at-n-problems 5 --at-n-runs 3 --result-json /home/matt/Desktop/ray/aide-parallel-public/runs/algotune/full-algotune-ray-coverage-groq/tasks/feedback_controller_design/result.json --at-fast
+
+🚀 EXPERIMENTS STARTED: 4 agents running in parallel
+   Running on CPU workers
+   Task: algotune | Steps per experiment: 4
+   Waiting for all experiments to complete...
+
+[36m(Experiment pid=2120709)[0m [search policy] drafting new node (not enough drafts)
+[36m(Experiment pid=2120709)[0m Agent is generating code, parent node type: <class 'NoneType'>
+[36m(Experiment pid=2120727)[0m Agent is parsing execution results for node 8c4924bba24e46e7a550016e1f00c27d
+[36m(Experiment pid=2120705)[0m [search policy] drafting new node (not enough drafts)[32m [repeated 7x across cluster] (Ray deduplicates logs by default. Set RAY_DEDUP_LOGS=0 to disable log deduplication, or see https://docs.ray.io/en/master/ray-observability/user-guides/configure-logging.html#log-deduplication for more options.)[0m
+[36m(Experiment pid=2120705)[0m Agent is generating code, parent node type: <class 'NoneType'>[32m [repeated 7x across cluster][0m
+[36m(Experiment pid=2120709)[0m Agent is parsing execution results for node 88aaa38a39e04d13bcd825aa05df21de[32m [repeated 6x across cluster][0m

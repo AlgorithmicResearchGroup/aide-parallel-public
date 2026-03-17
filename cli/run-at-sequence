@@ -1,0 +1,575 @@
+#!/usr/bin/env python3
+"""Run resumable AlgoTune task sweeps."""
+
+from __future__ import annotations
+
+import argparse
+import json
+import shutil
+import subprocess
+import sys
+import time
+from datetime import datetime
+from pathlib import Path
+from typing import Any
+
+
+SCRIPT_DIR = Path(__file__).resolve().parent
+REPO_ROOT = SCRIPT_DIR.parent
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
+from src.algotune_sweep import (  # noqa: E402
+    PROFILE_DEFAULTS,
+    compute_config_hash,
+    default_campaign_id,
+    load_manifest_records,
+    reconcile_campaign_runs_in_mlflow,
+    sync_campaign_summary_to_mlflow,
+    write_campaign_summary,
+)
+from tasks.algotune.at_tasks import get_all_tasks, get_task_info  # noqa: E402
+from tasks.algotune.strict_benchmark import STRICT_MODE_NAME, validate_benchmark_environment  # noqa: E402
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Run a resumable AlgoTune campaign")
+    parser.add_argument(
+        "tasks",
+        nargs="*",
+        help="Task names to run, or 'all' for the full inventory (default: all)",
+    )
+    parser.add_argument(
+        "--category",
+        action="append",
+        default=[],
+        help="Restrict to one or more AlgoTune categories",
+    )
+    parser.add_argument(
+        "--profile",
+        choices=sorted(PROFILE_DEFAULTS),
+        default="coverage",
+        help="Sweep profile to use",
+    )
+    parser.add_argument("--campaign-id", default=None, help="Campaign identifier")
+    parser.add_argument(
+        "--output-dir",
+        default=None,
+        help="Campaign output directory (default: runs/algotune/<campaign-id>)",
+    )
+    parser.add_argument("--local", action="store_true", help="Run locally")
+    parser.add_argument("--head-node-ip", default=None, help="Ray head node IP override")
+    parser.add_argument(
+        "--attempts-per-task",
+        type=int,
+        default=None,
+        help="Number of AIDE experiment attempts to run for each task",
+    )
+    parser.add_argument("--num-experiments", type=int, default=None)
+    parser.add_argument("--num-iterations", type=int, default=None)
+    parser.add_argument("--steps", type=int, default=None)
+    parser.add_argument("--cpus-per-experiment", type=int, default=None)
+    parser.add_argument(
+        "--max-concurrent-tasks",
+        type=int,
+        default=1,
+        help="Maximum number of AlgoTune tasks to run at the same time",
+    )
+    parser.add_argument("--model", default=None)
+    parser.add_argument("--feedback-model", default=None)
+    parser.add_argument(
+        "--tracking-experiment",
+        dest="tracking_experiment",
+        default=None,
+        help="MLflow experiment name override",
+    )
+    parser.add_argument("--wandb-project", dest="tracking_experiment", help=argparse.SUPPRESS)
+    parser.add_argument("--resume", dest="resume", action="store_true", default=True)
+    parser.add_argument("--no-resume", dest="resume", action="store_false")
+    parser.add_argument("--rerun", action="store_true", help="Re-run tasks even if completed")
+    parser.add_argument(
+        "--failed-only",
+        action="store_true",
+        help="Only execute tasks whose latest matching result failed",
+    )
+    parser.add_argument("--shard-index", type=int, default=0)
+    parser.add_argument("--num-shards", type=int, default=1)
+    return parser.parse_args()
+
+
+def resolve_task_selection(args: argparse.Namespace) -> list[str]:
+    all_tasks = sorted(get_all_tasks())
+    available = set(all_tasks)
+
+    requested = args.tasks or ["all"]
+    if "all" in requested:
+        selected = all_tasks
+    else:
+        unknown = sorted(set(requested) - available)
+        if unknown:
+            raise SystemExit(f"Unknown AlgoTune tasks: {', '.join(unknown)}")
+        selected = sorted(dict.fromkeys(requested))
+
+    if args.category:
+        allowed_categories = set(args.category)
+        selected = [
+            task for task in selected
+            if get_task_info(task).get("category") in allowed_categories
+        ]
+
+    if args.num_shards < 1:
+        raise SystemExit("--num-shards must be >= 1")
+    if args.shard_index < 0 or args.shard_index >= args.num_shards:
+        raise SystemExit("--shard-index must be in [0, --num-shards)")
+
+    return [
+        task for idx, task in enumerate(selected)
+        if idx % args.num_shards == args.shard_index
+    ]
+
+
+def effective_run_config(args: argparse.Namespace) -> dict[str, Any]:
+    defaults = PROFILE_DEFAULTS[args.profile]
+    attempts_per_task = (
+        args.attempts_per_task
+        or args.num_experiments
+        or defaults["num_experiments"]
+    )
+    return {
+        "profile": args.profile,
+        "at_mode": STRICT_MODE_NAME,
+        "local": args.local,
+        "head_node_ip": args.head_node_ip,
+        "attempts_per_task": attempts_per_task,
+        "num_experiments": attempts_per_task,
+        "num_iterations": args.num_iterations or defaults["num_iterations"],
+        "steps": args.steps or defaults["steps"],
+        "cpus_per_experiment": args.cpus_per_experiment or defaults["cpus_per_experiment"],
+        "max_concurrent_tasks": args.max_concurrent_tasks,
+        "model": args.model,
+        "feedback_model": args.feedback_model,
+        "tracking_experiment": args.tracking_experiment,
+    }
+
+
+def append_manifest(manifest_path: Path, record: dict[str, Any]) -> None:
+    manifest_path.parent.mkdir(parents=True, exist_ok=True)
+    with manifest_path.open("a", encoding="utf-8") as handle:
+        handle.write(json.dumps(record, sort_keys=True) + "\n")
+
+
+def read_existing_result(task_dir: Path) -> dict[str, Any] | None:
+    result_path = task_dir / "result.json"
+    if not result_path.exists():
+        return None
+    return json.loads(result_path.read_text(encoding="utf-8"))
+
+
+def should_skip_task(
+    args: argparse.Namespace,
+    task_name: str,
+    task_dir: Path,
+    config_hash: str,
+) -> tuple[bool, str | None, dict[str, Any] | None]:
+    existing = read_existing_result(task_dir)
+    if not args.resume or args.rerun:
+        return False, None, existing
+    if not existing or existing.get("config_hash") != config_hash:
+        if args.failed_only:
+            return True, "failed-only requested but no matching failed result exists", existing
+        return False, None, existing
+
+    status = existing.get("status")
+    if args.failed_only:
+        if status == "failed":
+            return False, None, existing
+        return True, f"failed-only requested and latest status is {status}", existing
+
+    if status in {"succeeded", "failed"}:
+        return True, f"matching {status} result already exists", existing
+    return False, None, existing
+
+
+def build_command(
+    task_name: str,
+    result_path: Path,
+    config: dict[str, Any],
+) -> list[str]:
+    command = [
+        str(REPO_ROOT / "cli" / "aide-run"),
+        "--task", "algotune",
+        "--at-task", task_name,
+        "--num-experiments", str(config["num_experiments"]),
+        "--num-iterations", str(config["num_iterations"]),
+        "--steps", str(config["steps"]),
+        "--cpus-per-experiment", str(config["cpus_per_experiment"]),
+        "--result-json", str(result_path),
+    ]
+    if config["local"]:
+        command.append("--local")
+    elif config.get("head_node_ip"):
+        command.extend(["--head-node-ip", str(config["head_node_ip"])])
+    if config.get("model"):
+        command.extend(["--model", str(config["model"])])
+    if config.get("feedback_model"):
+        command.extend(["--feedback-model", str(config["feedback_model"])])
+    if config.get("tracking_experiment"):
+        command.extend(["--tracking-experiment", str(config["tracking_experiment"])])
+    return command
+
+
+def create_manifest_record(
+    campaign_id: str,
+    task_name: str,
+    category: str,
+    config_hash: str,
+    artifact_dir: Path,
+    attempt: int,
+    started_at: str,
+    status: str,
+    finished_at: str,
+    result: dict[str, Any] | None,
+    failure_reason: str | None,
+) -> dict[str, Any]:
+    best_result = result.get("best_result", {}) if result else {}
+    search_result = result.get("search_result", best_result) if result else {}
+    final_result = result.get("final_result", {}) if result else {}
+    at_mode = result.get("at_mode", STRICT_MODE_NAME) if result else STRICT_MODE_NAME
+    report_result = final_result if final_result else best_result
+    return {
+        "campaign_id": campaign_id,
+        "task_name": task_name,
+        "category": category,
+        "status": status,
+        "attempt": attempt,
+        "started_at": started_at,
+        "finished_at": finished_at,
+        "best_metric": report_result.get("valid_metric"),
+        "correct": report_result.get("correct"),
+        "compiled": report_result.get("compiled"),
+        "at_mode": at_mode,
+        "non_reportable": False,
+        "report_phase": "final_test" if final_result else "search",
+        "search_metric": search_result.get("valid_metric"),
+        "search_status": search_result.get("status"),
+        "final_metric": final_result.get("valid_metric"),
+        "final_status": final_result.get("status"),
+        "correct_train": search_result.get("correct"),
+        "correct_test": final_result.get("correct"),
+        "failure_reason": failure_reason or (result.get("error") if result else None),
+        "artifact_dir": str(artifact_dir),
+        "config_hash": config_hash,
+        "resume_key": f"{task_name}:{config_hash}",
+    }
+
+
+def prepare_task_context(
+    args: argparse.Namespace,
+    campaign_id: str,
+    index: int,
+    total_tasks: int,
+    task_name: str,
+    campaign_dir: Path,
+    tasks_dir: Path,
+    existing_records: list[dict[str, Any]],
+    config: dict[str, Any],
+) -> dict[str, Any]:
+    task_info = get_task_info(task_name)
+    category = task_info.get("category", "general")
+    task_dir = tasks_dir / task_name
+    task_dir.mkdir(parents=True, exist_ok=True)
+
+    task_config = {
+        "campaign_id": campaign_id,
+        "task_name": task_name,
+        "category": category,
+        **config,
+    }
+    config_hash = compute_config_hash(task_config)
+    (task_dir / "config.json").write_text(
+        json.dumps({**task_config, "config_hash": config_hash}, indent=2, sort_keys=True),
+        encoding="utf-8",
+    )
+
+    skip, skip_reason, existing_result = should_skip_task(args, task_name, task_dir, config_hash)
+    attempt = sum(1 for record in existing_records if record.get("task_name") == task_name) + 1
+
+    return {
+        "index": index,
+        "total": total_tasks,
+        "task_name": task_name,
+        "category": category,
+        "task_dir": task_dir,
+        "config_hash": config_hash,
+        "attempt": attempt,
+        "skip": skip,
+        "skip_reason": skip_reason,
+        "existing_result": existing_result,
+        "started_at": None,
+        "result_path": task_dir / "result.json",
+        "stdout_path": task_dir / "stdout.log",
+        "stderr_path": task_dir / "stderr.log",
+        "command": build_command(task_name, task_dir / "result.json", config),
+        "stdout_handle": None,
+        "stderr_handle": None,
+        "process": None,
+        "started_monotonic": None,
+        "timed_out": False,
+    }
+
+
+def finalize_task(
+    campaign_id: str,
+    context: dict[str, Any],
+    existing_records: list[dict[str, Any]],
+    manifest_path: Path,
+) -> dict[str, Any]:
+    result_path = context["result_path"]
+    result_payload: dict[str, Any]
+    if result_path.exists():
+        result_payload = json.loads(result_path.read_text(encoding="utf-8"))
+    else:
+        returncode = context["process"].returncode if context.get("process") is not None else None
+        result_payload = {
+            "status": "failed",
+            "error": f"aide-run exited with code {returncode} without producing result.json",
+        }
+        result_path.write_text(json.dumps(result_payload, indent=2, sort_keys=True), encoding="utf-8")
+
+    result_payload["config_hash"] = context["config_hash"]
+    result_payload["command"] = context["command"]
+    result_payload["returncode"] = context["process"].returncode if context.get("process") is not None else None
+    result_path.write_text(json.dumps(result_payload, indent=2, sort_keys=True), encoding="utf-8")
+
+    best_solution_path = result_payload.get("best_result", {}).get("best_solution_path")
+    if best_solution_path and Path(best_solution_path).exists():
+        shutil.copyfile(best_solution_path, context["task_dir"] / "best_solver.py")
+
+    status = result_payload.get("status", "failed")
+    if context.get("process") is not None and context["process"].returncode != 0 and status != "succeeded":
+        status = "failed"
+    if result_payload.get("task_type") == "algotune" and result_payload.get("at_mode") == STRICT_MODE_NAME:
+        report_result = result_payload.get("final_result") or result_payload.get("best_result", {})
+    else:
+        report_result = result_payload.get("best_result", {})
+    failure_reason = (
+        result_payload.get("error")
+        or report_result.get("error")
+        or result_payload.get("best_result", {}).get("error")
+    )
+    record = create_manifest_record(
+        campaign_id=campaign_id,
+        task_name=context["task_name"],
+        category=context["category"],
+        config_hash=context["config_hash"],
+        artifact_dir=context["task_dir"],
+        attempt=context["attempt"],
+        started_at=context["started_at"],
+        status=status,
+        finished_at=datetime.now().isoformat(),
+        result=result_payload,
+        failure_reason=failure_reason,
+    )
+    append_manifest(manifest_path, record)
+    existing_records.append(record)
+    print(
+        f"  -> {status} | metric={record.get('best_metric')} | "
+        f"reason={record.get('failure_reason') or 'n/a'}"
+    )
+    return record
+
+
+def main() -> int:
+    args = parse_args()
+    selected_tasks = resolve_task_selection(args)
+    config = effective_run_config(args)
+    env_validation = validate_benchmark_environment(check_all_tasks=True)
+    if not env_validation["ok"]:
+        raise SystemExit(
+            "AlgoTune strict benchmark environment validation failed: "
+            + "; ".join(env_validation["errors"])
+        )
+    if config["max_concurrent_tasks"] < 1:
+        raise SystemExit("--max-concurrent-tasks must be >= 1")
+
+    campaign_id = args.campaign_id or default_campaign_id(args.profile, config.get("model"))
+    campaign_dir = Path(args.output_dir) if args.output_dir else REPO_ROOT / "runs" / "algotune" / campaign_id
+    tasks_dir = campaign_dir / "tasks"
+    manifest_path = campaign_dir / "manifest.jsonl"
+    campaign_dir.mkdir(parents=True, exist_ok=True)
+    tasks_dir.mkdir(parents=True, exist_ok=True)
+
+    campaign_config = {
+        "campaign_id": campaign_id,
+        "profile": args.profile,
+        "selected_task_count": len(selected_tasks),
+        "selected_tasks": selected_tasks,
+        "task_categories": {task: get_task_info(task).get("category") for task in selected_tasks},
+        "config": config,
+        "shard_index": args.shard_index,
+        "num_shards": args.num_shards,
+        "created_at": datetime.now().isoformat(),
+    }
+    (campaign_dir / "campaign_config.json").write_text(
+        json.dumps(campaign_config, indent=2, sort_keys=True),
+        encoding="utf-8",
+    )
+    write_campaign_summary(campaign_dir)
+    reconcile_campaign_runs_in_mlflow(
+        campaign_dir,
+        tracking_experiment=config.get("tracking_experiment"),
+        finalize_incomplete=True,
+    )
+    sync_campaign_summary_to_mlflow(
+        campaign_dir,
+        tracking_experiment=config.get("tracking_experiment"),
+    )
+
+    existing_records = load_manifest_records(manifest_path)
+    print(f"Campaign: {campaign_id}")
+    print(f"Profile: {args.profile}")
+    print(f"AlgoTune mode: {STRICT_MODE_NAME}")
+    print(f"Selected tasks: {len(selected_tasks)}")
+    print(f"Output dir: {campaign_dir}")
+    print(
+        "Concurrency: "
+        f"{config['max_concurrent_tasks']} task(s) in parallel, "
+        f"{config['attempts_per_task']} attempt(s) per task"
+    )
+
+    task_queue = [
+        prepare_task_context(
+            args=args,
+            campaign_id=campaign_id,
+            index=index,
+            total_tasks=len(selected_tasks),
+            task_name=task_name,
+            campaign_dir=campaign_dir,
+            tasks_dir=tasks_dir,
+            existing_records=existing_records,
+            config=config,
+        )
+        for index, task_name in enumerate(selected_tasks, start=1)
+    ]
+
+    active_tasks: list[dict[str, Any]] = []
+
+    def start_task(context: dict[str, Any]) -> None:
+        context["started_at"] = datetime.now().isoformat()
+        context["started_monotonic"] = time.monotonic()
+        print(
+            f"[{context['index']}/{context['total']}] Running "
+            f"{context['task_name']} ({context['category']})"
+        )
+        context["stdout_handle"] = context["stdout_path"].open("w", encoding="utf-8")
+        context["stderr_handle"] = context["stderr_path"].open("w", encoding="utf-8")
+        context["process"] = subprocess.Popen(
+            context["command"],
+            cwd=str(REPO_ROOT),
+            stdout=context["stdout_handle"],
+            stderr=context["stderr_handle"],
+            text=True,
+        )
+        active_tasks.append(context)
+
+    try:
+        while task_queue or active_tasks:
+            while task_queue and len(active_tasks) < config["max_concurrent_tasks"]:
+                context = task_queue.pop(0)
+                if context["skip"]:
+                    print(
+                        f"[{context['index']}/{context['total']}] Skipping "
+                        f"{context['task_name']}: {context['skip_reason']}"
+                    )
+                    record = create_manifest_record(
+                        campaign_id=campaign_id,
+                        task_name=context["task_name"],
+                        category=context["category"],
+                        config_hash=context["config_hash"],
+                        artifact_dir=context["task_dir"],
+                        attempt=context["attempt"],
+                        started_at=datetime.now().isoformat(),
+                        status="skipped",
+                        finished_at=datetime.now().isoformat(),
+                        result=context["existing_result"],
+                        failure_reason=context["skip_reason"],
+                    )
+                    append_manifest(manifest_path, record)
+                    existing_records.append(record)
+                    write_campaign_summary(campaign_dir)
+                    reconcile_campaign_runs_in_mlflow(
+                        campaign_dir,
+                        tracking_experiment=config.get("tracking_experiment"),
+                        finalize_incomplete=False,
+                    )
+                    sync_campaign_summary_to_mlflow(
+                        campaign_dir,
+                        tracking_experiment=config.get("tracking_experiment"),
+                    )
+                    continue
+                start_task(context)
+
+            finished_contexts = [
+                context for context in active_tasks
+                if context["process"].poll() is not None or context["result_path"].exists()
+            ]
+            for context in finished_contexts:
+                if context["process"].poll() is None:
+                    try:
+                        context["process"].terminate()
+                        context["process"].wait(timeout=10)
+                    except subprocess.TimeoutExpired:
+                        context["process"].kill()
+                        context["process"].wait(timeout=10)
+                if context["stdout_handle"] is not None:
+                    context["stdout_handle"].close()
+                if context["stderr_handle"] is not None:
+                    context["stderr_handle"].close()
+                finalize_task(
+                    campaign_id=campaign_id,
+                    context=context,
+                    existing_records=existing_records,
+                    manifest_path=manifest_path,
+                )
+                write_campaign_summary(campaign_dir)
+                reconcile_campaign_runs_in_mlflow(
+                    campaign_dir,
+                    tracking_experiment=config.get("tracking_experiment"),
+                    finalize_incomplete=False,
+                )
+                sync_campaign_summary_to_mlflow(
+                    campaign_dir,
+                    tracking_experiment=config.get("tracking_experiment"),
+                )
+                active_tasks.remove(context)
+
+            if active_tasks and not finished_contexts:
+                time.sleep(1)
+    except KeyboardInterrupt:
+        for context in active_tasks:
+            if context.get("process") is not None and context["process"].poll() is None:
+                context["process"].terminate()
+        raise
+
+    summary = write_campaign_summary(campaign_dir)
+    reconcile_campaign_runs_in_mlflow(
+        campaign_dir,
+        tracking_experiment=config.get("tracking_experiment"),
+        finalize_incomplete=True,
+    )
+    sync_campaign_summary_to_mlflow(
+        campaign_dir,
+        tracking_experiment=config.get("tracking_experiment"),
+    )
+    print(
+        "Summary: "
+        f"succeeded={summary['status_counts'].get('succeeded', 0)} "
+        f"failed={summary['status_counts'].get('failed', 0)} "
+        f"skipped={summary['status_counts'].get('skipped', 0)}"
+    )
+    print(f"Summary written to: {campaign_dir / 'summary.json'}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

@@ -1,0 +1,16 @@
+2026-03-16 18:51:35,546	INFO worker.py:2023 -- Started a local Ray instance.
+[36m(Experiment pid=2016558)[0m No GPU available, running on CPU
+[36m(pid=gcs_server)[0m [2026-03-16 18:52:03,902 E 2013446 2013446] (gcs_server) gcs_server.cc:303: Failed to establish connection to the event+metrics exporter agent. Events and metrics will not be exported. Exporter agent status: RpcError: Running out of retries to initialize the metrics agent. rpc_code: 14
+[36m(Experiment pid=2016560)[0m No GPU available, running on CPU[32m [repeated 3x across cluster][0m
+[33m(raylet)[0m [2026-03-16 18:52:05,501 E 2013708 2013708] (raylet) main.cc:979: Failed to establish connection to the metrics exporter agent. Metrics will not be exported. Exporter agent status: RpcError: Running out of retries to initialize the metrics agent. rpc_code: 14
+[36m(pid=2013804)[0m [2026-03-16 18:52:06,280 E 2013804 2014331] core_worker_process.cc:837: Failed to establish connection to the metrics exporter agent. Metrics will not be exported. Exporter agent status: RpcError: Running out of retries to initialize the metrics agent. rpc_code: 14
+[2026-03-16 18:52:06,565 E 2013341 2013801] core_worker_process.cc:837: Failed to establish connection to the metrics exporter agent. Metrics will not be exported. Exporter agent status: RpcError: Running out of retries to initialize the metrics agent. rpc_code: 14
+[36m(Experiment pid=2016561)[0m Attempting to load config from: /home/matt/Desktop/ray/aide-parallel-public/tasks/algotune/vendor/AlgoTune/AlgoTuner/config/config.yaml
+[36m(Experiment pid=2016561)[0m Successfully loaded config from: /home/matt/Desktop/ray/aide-parallel-public/tasks/algotune/vendor/AlgoTune/AlgoTuner/config/config.yaml
+[36m(Experiment pid=2016560)[0m [2026-03-16 18:52:07,574 E 2016560 2016819] core_worker_process.cc:837: Failed to establish connection to the metrics exporter agent. Metrics will not be exported. Exporter agent status: RpcError: Running out of retries to initialize the metrics agent. rpc_code: 14[32m [repeated 43x across cluster][0m
+[36m(Experiment pid=2016559)[0m Attempting to load config from: /home/matt/Desktop/ray/aide-parallel-public/tasks/algotune/vendor/AlgoTune/AlgoTuner/config/config.yaml
+[36m(Experiment pid=2016559)[0m Successfully loaded config from: /home/matt/Desktop/ray/aide-parallel-public/tasks/algotune/vendor/AlgoTune/AlgoTuner/config/config.yaml
+[36m(Experiment pid=2016560)[0m Attempting to load config from: /home/matt/Desktop/ray/aide-parallel-public/tasks/algotune/vendor/AlgoTune/AlgoTuner/config/config.yaml
+[36m(Experiment pid=2016560)[0m Successfully loaded config from: /home/matt/Desktop/ray/aide-parallel-public/tasks/algotune/vendor/AlgoTune/AlgoTuner/config/config.yaml
+[36m(Experiment pid=2016558)[0m Attempting to load config from: /home/matt/Desktop/ray/aide-parallel-public/tasks/algotune/vendor/AlgoTune/AlgoTuner/config/config.yaml
+[36m(Experiment pid=2016558)[0m Successfully loaded config from: /home/matt/Desktop/ray/aide-parallel-public/tasks/algotune/vendor/AlgoTune/AlgoTuner/config/config.yaml

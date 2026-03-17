@@ -1,0 +1,202 @@
+Using task=algotune contract=contract.yaml
+Executing: python /home/matt/Desktop/ray/aide-parallel-public/src/aide_runner.py --task algotune --local --num-experiments 4 --num-iterations 1 --steps 4 --cpus-per-experiment 2 --model claude-sonnet-4-20250514 --feedback-model claude-sonnet-4-20250514 --at-task affine_transform_2d --at-n-problems 5 --at-n-runs 3 --result-json /home/matt/Desktop/ray/aide-parallel-public/runs/algotune/full-algotune-ray-coverage-anthropic-clean/tasks/affine_transform_2d/result.json --at-fast
+
+🚀 EXPERIMENTS STARTED: 4 agents running in parallel
+   Running on CPU workers
+   Task: algotune | Steps per experiment: 4
+   Waiting for all experiments to complete...
+
+[36m(Experiment pid=2011885)[0m [search policy] drafting new node (not enough drafts)
+[36m(Experiment pid=2011885)[0m Agent is generating code, parent node type: <class 'NoneType'>
+[36m(Experiment pid=2011886)[0m [18:51:08] WARNING  CODE_DIR not set when initializing DaCe   dace_config.py:104
+[36m(Experiment pid=2011886)[0m                     for process 2011886                                         
+[36m(Experiment pid=2011886)[0m            ERROR    Error in isolated benchmark for 'solve':    benchmark.py:582
+[36m(Experiment pid=2011886)[0m            ERROR    Problem 0: Solver benchmark failed: evaluate_algotune.py:508
+[36m(Experiment pid=2011886)[0m                     Isolated benchmark failed:  in                              
+[36m(Experiment pid=2011886)[0m                     function 'run_isolated_benchmark'                           
+[36m(Experiment pid=2011886)[0m                     at line 1238 in                                             
+[36m(Experiment pid=2011886)[0m                     isolated_benchmark.py (system code)                         
+[36m(Experiment pid=2011886)[0m Agent is parsing execution results for node 85fd95c211d140bca0954251b6935aba
+[36m(Experiment pid=2011884)[0m [search policy] drafting new node (not enough drafts)[32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2011884)[0m Agent is generating code, parent node type: <class 'NoneType'>[32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2011885)[0m            ERROR    scipy.ndimage.affine_transform    affine_transform_2d.py:104
+[36m(Experiment pid=2011885)[0m                     failed:                                                     
+[36m(Experiment pid=2011885)[0m            ERROR    scipy.ndimage.affine_transform    affine_transform_2d.py:104
+[36m(Experiment pid=2011885)[0m                     failed:                                                     
+[36m(Experiment pid=2011885)[0m            ERROR    scipy.ndimage.affine_transform    affine_transform_2d.py:104
+[36m(Experiment pid=2011885)[0m                     failed:                                                     
+[36m(Experiment pid=2011885)[0m            ERROR    scipy.ndimage.affine_transform    affine_transform_2d.py:104
+[36m(Experiment pid=2011885)[0m                     failed:                                                     
+[36m(Experiment pid=2011885)[0m            WARNING  Failed to create distinct problem, using    benchmark.py:335
+[36m(Experiment pid=2011885)[0m                     deep copy fallback: Unable to allocate 78.1                 
+[36m(Experiment pid=2011885)[0m                     KiB for an array with shape (100, 100) and                  
+[36m(Experiment pid=2011885)[0m                     data type float64                                           
+[36m(Experiment pid=2011885)[0m                     Unable to allocate 78.1 KiB for an array                    
+[36m(Experiment pid=2011885)[0m                     with shape (100, 100) and data type float64                 
+[36m(Experiment pid=2011885)[0m                     numpy.core._exceptions._ArrayMemory                         
+[36m(Experiment pid=2011885)[0m                     Error: Unable to allocate 78.1 KiB                          
+[36m(Experiment pid=2011885)[0m                     for an array with shape (100, 100)                          
+[36m(Experiment pid=2011885)[0m                     and data type float64 in function                           
+[36m(Experiment pid=2011885)[0m                     'deepcopy' at line 143 in copy.py                           
+[36m(Experiment pid=2011885)[0m                     (system code)                                               
+[36m(Experiment pid=2011887)[0m [18:51:13] WARNING  CODE_DIR not set when initializing DaCe   dace_config.py:104[32m [repeated 2x across cluster][0m
+[36m(Experiment pid=2011887)[0m                     for process 2011887                                         [32m [repeated 2x across cluster][0m
+[36m(Experiment pid=2011887)[0m            ERROR    Error in isolated benchmark for 'solve':    benchmark.py:582[32m [repeated 2x across cluster][0m
+[36m(Experiment pid=2011887)[0m            ERROR    Problem 0: Solver benchmark failed: evaluate_algotune.py:508[32m [repeated 2x across cluster][0m
+[36m(Experiment pid=2011887)[0m                     Isolated benchmark failed:  in                              
+[36m(Experiment pid=2011887)[0m                     function 'run_isolated_benchmark'                           
+[36m(Experiment pid=2011887)[0m                     at line 1238 in                                             
+[36m(Experiment pid=2011887)[0m                     isolated_benchmark.py (system code)                         
+[36m(Experiment pid=2011887)[0m Agent is parsing execution results for node 4925cb3a23d44883a260f70952fd6066[32m [repeated 2x across cluster][0m
+[36m(Experiment pid=2011886)[0m [search policy] drafting new node (not enough drafts)
+[36m(Experiment pid=2011886)[0m Agent is generating code, parent node type: <class 'NoneType'>
+[36m(Experiment pid=2011885)[0m [search policy] drafting new node (not enough drafts)
+[36m(Experiment pid=2011885)[0m Agent is generating code, parent node type: <class 'NoneType'>
+[36m(Experiment pid=2011884)[0m                     failed: Unable to allocate 78.1                             
+[36m(Experiment pid=2011884)[0m                     KiB for an array with shape (100,                           
+[36m(Experiment pid=2011884)[0m                     100) and data type float64                                  
+[36m(Experiment pid=2011884)[0m                     failed: Unable to allocate 78.1                             
+[36m(Experiment pid=2011884)[0m                     KiB for an array with shape (100,                           
+[36m(Experiment pid=2011884)[0m                     100) and data type float64                                  
+[36m(Experiment pid=2011884)[0m                     failed: Unable to allocate 78.1                             
+[36m(Experiment pid=2011884)[0m                     KiB for an array with shape (100,                           
+[36m(Experiment pid=2011884)[0m                     100) and data type float64                                  
+[36m(Experiment pid=2011884)[0m                     failed: Unable to allocate 78.1                             
+[36m(Experiment pid=2011884)[0m                     KiB for an array with shape (100,                           
+[36m(Experiment pid=2011884)[0m                     100) and data type float64                                  
+[36m(Experiment pid=2011884)[0m            ERROR    scipy.ndimage.affine_transform    affine_transform_2d.py:104[32m [repeated 4x across cluster][0m
+[36m(Experiment pid=2011884)[0m                     Unable to allocate 78.1 KiB for an array                    
+[36m(Experiment pid=2011884)[0m                     with shape (100, 100) and data type float64                 
+[36m(Experiment pid=2011884)[0m                     numpy.core._exceptions._ArrayMemory                         
+[36m(Experiment pid=2011884)[0m                     Error: Unable to allocate 78.1 KiB                          
+[36m(Experiment pid=2011884)[0m                     for an array with shape (100, 100)                          
+[36m(Experiment pid=2011884)[0m                     and data type float64 in function                           
+[36m(Experiment pid=2011884)[0m                     'deepcopy' at line 143 in copy.py                           
+[36m(Experiment pid=2011884)[0m                     (system code)                                               
+[36m(Experiment pid=2011884)[0m [18:51:20] WARNING  CODE_DIR not set when initializing DaCe   dace_config.py:104
+[36m(Experiment pid=2011884)[0m                     for process 2011884                                         
+[36m(Experiment pid=2011884)[0m            ERROR    Error in isolated benchmark for 'solve':    benchmark.py:582
+[36m(Experiment pid=2011884)[0m            ERROR    Problem 0: Solver benchmark failed: evaluate_algotune.py:508
+[36m(Experiment pid=2011884)[0m Agent is parsing execution results for node 465fc37c347240bea927b49cc0bf5c9d
+[36m(Experiment pid=2011884)[0m [search policy] drafting new node (not enough drafts)[32m [repeated 2x across cluster][0m
+[36m(Experiment pid=2011884)[0m Agent is generating code, parent node type: <class 'NoneType'>[32m [repeated 2x across cluster][0m
+[33m(raylet)[0m Traceback (most recent call last):
+  File "python/ray/_raylet.pyx", line 1715, in ray._raylet.execute_task
+  File "python/ray/_raylet.pyx", line 1826, in ray._raylet.execute_task
+  File "python/ray/_raylet.pyx", line 1722, in ray._raylet.execute_task
+  File "python/ray/_raylet.pyx", line 1665, in ray._raylet.execute_task.function_executor
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/ray/_private/function_manager.py", line 693, in actor_method_executor
+    return method(__ray_actor, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/ray/util/tracing/tracing_helper.py", line 461, in _resume_span
+    return method(self, *_args, **_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide-parallel-public/src/aide_runner.py", line 235, in run
+    exp.agent.step(exec_callback=exp.interpreter.run)
+  File "/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/agent.py", line 491, in step
+    exec_result=exec_callback(result_node.code, True),
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/interpreter.py", line 240, in run
+    self.create_process()
+  File "/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/interpreter.py", line 191, in create_process
+    self.code_inq, self.result_outq, self.event_outq = Queue(), Queue(), Queue()
+                                                       ^^^^^^^
+  File "/usr/lib/python3.12/multiprocessing/context.py", line 103, in Queue
+    return Queue(maxsize, ctx=self.get_context())
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/multiprocessing/queues.py", line 43, in __init__
+    self._rlock = ctx.Lock()
+                  ^^^^^^^^^^
+  File "/usr/lib/python3.12/multiprocessing/context.py", line 68, in Lock
+    return Lock(ctx=self.get_context())
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/multiprocessing/synchronize.py", line 169, in __init__
+    SemLock.__init__(self, SEMAPHORE, 1, 1, ctx=ctx)
+  File "/usr/lib/python3.12/multiprocessing/synchronize.py", line 57, in __init__
+    sl = self._semlock = _multiprocessing.SemLock(
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 12] Cannot allocate memory
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "python/ray/_raylet.pyx", line 2164, in ray._raylet.task_execution_handler
+  File "python/ray/_raylet.pyx", line 2023, in ray._raylet.execute_task_with_cancellation_handler
+  File "python/ray/_raylet.pyx", line 1667, in ray._raylet.execute_task
+  File "python/ray/_raylet.pyx", line 1668, in ray._raylet.execute_task
+  File "python/ray/_raylet.pyx", line 1917, in ray._raylet.execute_task
+  File "python/ray/_raylet.pyx", line 926, in ray._raylet.store_task_errors
+  File "python/ray/_raylet.pyx", line 4129, in ray._raylet.CoreWorker.store_task_outputs
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/ray/_private/serialization.py", line 722, in serialize
+    return self._serialize_to_msgpack(value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/ray/_private/serialization.py", line 644, in _serialize_to_msgpack
+    msgpack_data = MessagePackSerializer.dumps(value, _python_serializer)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "python/ray/includes/serialization.pxi", line 175, in ray._raylet.MessagePackSerializer.dumps
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/msgpack/__init__.py", line 36, in packb
+    return Packer(**kwargs).pack(o)
+           ^^^^^^^^^^^^^^^^
+  File "msgpack/_packer.pyx", line 118, in msgpack._cmsgpack.Packer.__cinit__
+MemoryError: Unable to allocate internal buffer.
+An unexpected internal error occurred while the worker was executing a task.
+[33m(raylet)[0m A worker died or was killed while executing a task by an unexpected system error. To troubleshoot the problem, check the logs for the dead worker. Lease ID: 010000000717acb30849acf77fc25d0e013baa01f361a71c101a5dedd9d65919 Worker ID: 63860193167ff6469f267d7ba4d7615511750e83e7019d5a5611b5bd Node ID: 4ab84ef31839aa2d99d394e3e07457949e00ec4dbde1e0404775ccbb Worker IP address: 192.168.0.105 Worker port: 41333 Worker PID: 2011885 Worker exit type: SYSTEM_ERROR Worker exit detail: Worker exits unexpectedly. Worker exits with an exit code None. Traceback (most recent call last):
+  File "python/ray/_raylet.pyx", line 1715, in ray._raylet.execute_task
+  File "python/ray/_raylet.pyx", line 1826, in ray._raylet.execute_task
+  File "python/ray/_raylet.pyx", line 1722, in ray._raylet.execute_task
+  File "python/ray/_raylet.pyx", line 1665, in ray._raylet.execute_task.function_executor
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/ray/_private/function_manager.py", line 693, in actor_method_executor
+    return method(__ray_actor, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/ray/util/tracing/tracing_helper.py", line 461, in _resume_span
+    return method(self, *_args, **_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide-parallel-public/src/aide_runner.py", line 235, in run
+    exp.agent.step(exec_callback=exp.interpreter.run)
+  File "/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/agent.py", line 491, in step
+    exec_result=exec_callback(result_node.code, True),
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/interpreter.py", line 240, in run
+    self.create_process()
+  File "/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/interpreter.py", line 191, in create_process
+    self.code_inq, self.result_outq, self.event_outq = Queue(), Queue(), Queue()
+                                                       ^^^^^^^
+  File "/usr/lib/python3.12/multiprocessing/context.py", line 103, in Queue
+    return Queue(maxsize, ctx=self.get_context())
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/multiprocessing/queues.py", line 43, in __init__
+    self._rlock = ctx.Lock()
+                  ^^^^^^^^^^
+  File "/usr/lib/python3.12/multiprocessing/context.py", line 68, in Lock
+    return Lock(ctx=self.get_context())
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/multiprocessing/synchronize.py", line 169, in __init__
+    SemLock.__init__(self, SEMAPHORE, 1, 1, ctx=ctx)
+  File "/usr/lib/python3.12/multiprocessing/synchronize.py", line 57, in __init__
+    sl = self._semlock = _multiprocessing.SemLock(
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 12] Cannot allocate memory
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "python/ray/_raylet.pyx", line 2164, in ray._raylet.task_execution_handler
+  File "python/ray/_raylet.pyx", line 2023, in ray._raylet.execute_task_with_cancellation_handler
+  File "python/ray/_raylet.pyx", line 1667, in ray._raylet.execute_task
+  File "python/ray/_raylet.pyx", line 1668, in ray._raylet.execute_task
+  File "python/ray/_raylet.pyx", line 1917, in ray._raylet.execute_task
+  File "python/ray/_raylet.pyx", line 926, in ray._raylet.store_task_errors
+  File "python/ray/_raylet.pyx", line 4129, in ray._raylet.CoreWorker.store_task_outputs
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/ray/_private/serialization.py", line 722, in serialize
+    return self._serialize_to_msgpack(value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/ray/_private/serialization.py", line 644, in _serialize_to_msgpack
+    msgpack_data = MessagePackSerializer.dumps(value, _python_serializer)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "python/ray/includes/serialization.pxi", line 175, in ray._raylet.MessagePackSerializer.dumps
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/msgpack/__init__.py", line 36, in packb
+    return Packer(**kwargs).pack(o)
+           ^^^^^^^^^^^^^^^^
+  File "msgpack/_packer.pyx", line 118, in msgpack._cmsgpack.Packer.__cinit__
+MemoryError: Unable to allocate internal buffer.
+An unexpected internal error occurred while the worker was executing a task.

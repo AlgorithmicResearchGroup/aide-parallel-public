@@ -337,7 +337,7 @@ PIPELINE FLOW:
 5. Final Output:
    - Best speedup achieved across all steps
    - Final optimized code in optimize.py
-   - Results logged to W&B if enabled
+   - Results logged to MLflow if enabled
 """)
 
 

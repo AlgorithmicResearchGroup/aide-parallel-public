@@ -126,11 +126,15 @@ class Agent:
             "The code should be a single-file python program that is self-contained and can be executed as-is.",
             "No parts of the code should be skipped, don't terminate the before finishing the script.",
             "Your response should only contain a single code block.",
-            f"Be aware of the running time of the code, it should complete within {humanize.naturaldelta(self.cfg.exec.timeout)}.",
             'All the provided input data is stored in "./input" directory.',
             '**If there is test data provided for this task, please save the test predictions in a `submission.csv` file in the "./working" directory as described in the task description** This is extremely important since this file is used for grading/evaluation. DO NOT FORGET THE submission.csv file!',
             'You can also use the "./working" directory to store any temporary files that your code needs to create.',
         ]
+        if self.cfg.exec.timeout is not None:
+            impl_guideline.insert(
+                4,
+                f"Be aware of the running time of the code, it should complete within {humanize.naturaldelta(self.cfg.exec.timeout)}.",
+            )
         if self.acfg.expose_prediction:
             impl_guideline.append(
                 "The implementation should include a predict() function, "

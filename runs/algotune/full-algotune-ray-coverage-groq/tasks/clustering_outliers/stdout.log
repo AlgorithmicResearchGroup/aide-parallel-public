@@ -1,0 +1,236 @@
+Using task=algotune contract=contract.yaml
+Executing: python /home/matt/Desktop/ray/aide-parallel-public/src/aide_runner.py --task algotune --local --num-experiments 4 --num-iterations 1 --steps 4 --cpus-per-experiment 2 --model llama-3.3-70b-versatile --feedback-model llama-3.3-70b-versatile --at-task clustering_outliers --at-n-problems 5 --at-n-runs 3 --result-json /home/matt/Desktop/ray/aide-parallel-public/runs/algotune/full-algotune-ray-coverage-groq/tasks/clustering_outliers/result.json --at-fast
+
+🚀 EXPERIMENTS STARTED: 4 agents running in parallel
+   Running on CPU workers
+   Task: algotune | Steps per experiment: 4
+   Waiting for all experiments to complete...
+
+[36m(Experiment pid=2080065)[0m [search policy] drafting new node (not enough drafts)
+[36m(Experiment pid=2080065)[0m Agent is generating code, parent node type: <class 'NoneType'>
+[36m(Experiment pid=2080065)[0m [19:01:15] WARNING  CODE_DIR not set when initializing DaCe   dace_config.py:104
+[36m(Experiment pid=2080065)[0m                     for process 2080065                                         
+[36m(Experiment pid=2080064)[0m [search policy] drafting new node (not enough drafts)[32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2080064)[0m Agent is generating code, parent node type: <class 'NoneType'>[32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2080065)[0m            ERROR    [isolated_benchmark] Task         isolated_benchmark.py:2463
+[36m(Experiment pid=2080065)[0m                     'clustering_outliers' failed with                           
+[36m(Experiment pid=2080065)[0m                     non-retryable error:                                        
+[36m(Experiment pid=2080065)[0m            ERROR    Problem 0: Solver benchmark failed: evaluate_algotune.py:508
+[36m(Experiment pid=2080065)[0m                     Non-retryable error:                                        
+[36m(Experiment pid=2080065)[0m Agent is parsing execution results for node e2156ce3d62b4aaba16a7cb246d41c2e
+[36m(Experiment pid=2080065)[0m            ERROR    Function call failed:                           agent.py:564
+[36m(Experiment pid=2080065)[0m            INFO     Backing off backoff_create(...) for 0.2s      _common.py:105
+[36m(Experiment pid=2080065)[0m                     (False)                                                     
+[36m(Experiment pid=2080065)[0m [19:01:16] INFO     Backing off backoff_create(...) for 1.2s      _common.py:105
+[36m(Experiment pid=2080065)[0m                     (False)                                                     
+[36m(Experiment pid=2080066)[0m [19:01:18] WARNING  [isolated_benchmark] Run 1/3      isolated_benchmark.py:1425
+[36m(Experiment pid=2080066)[0m                     failed: ValueError:                                         
+[36m(Experiment pid=2080066)[0m                     CACHE_PROTECTION_VIOLATION:                                 
+[36m(Experiment pid=2080066)[0m                     Warmup and timed problems are                               
+[36m(Experiment pid=2080066)[0m                     identical in function                                       
+[36m(Experiment pid=2080066)[0m                     'validate_problem_isolation' at                             
+[36m(Experiment pid=2080066)[0m                     line 818 in isolated_benchmark.py                           
+[36m(Experiment pid=2080066)[0m                     (system code)                                               
+[36m(Experiment pid=2080066)[0m            ERROR    Unexpected error cleaning up temporary  robust_tempdir.py:98
+[36m(Experiment pid=2080066)[0m                     directory: [Errno 12] Cannot allocate                       
+[36m(Experiment pid=2080066)[0m                     memory: '/tmp/tmpl26c84pl'                                  
+[36m(Experiment pid=2080066)[0m            WARNING  [isolated_benchmark] Task         isolated_benchmark.py:2436
+[36m(Experiment pid=2080066)[0m                     'clustering_outliers' attempt 1                             
+[36m(Experiment pid=2080066)[0m                     failed with retryable error:                                
+[36m(Experiment pid=2080066)[0m                     [Errno 12] Cannot allocate                                  
+[36m(Experiment pid=2080066)[0m                     memory: '/tmp/tmpl26c84pl'.                                 
+[36m(Experiment pid=2080066)[0m                     Retrying in 0.51s...                                        
+[33m(raylet)[0m Traceback (most recent call last):
+  File "python/ray/_raylet.pyx", line 1715, in ray._raylet.execute_task
+  File "python/ray/_raylet.pyx", line 1826, in ray._raylet.execute_task
+  File "python/ray/_raylet.pyx", line 1722, in ray._raylet.execute_task
+  File "python/ray/_raylet.pyx", line 1665, in ray._raylet.execute_task.function_executor
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/ray/_private/function_manager.py", line 693, in actor_method_executor
+    return method(__ray_actor, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/ray/util/tracing/tracing_helper.py", line 461, in _resume_span
+    return method(self, *_args, **_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide-parallel-public/src/aide_runner.py", line 235, in run
+    exp.agent.step(exec_callback=exp.interpreter.run)
+  File "/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/agent.py", line 483, in step
+    result_node = self._draft()
+                  ^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/agent.py", line 320, in _draft
+    plan, code = self.plan_and_code_query(prompt)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/agent.py", line 233, in plan_and_code_query
+    completion_text = query(
+                      ^^^^^^
+  File "/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/backend/__init__.py", line 68, in query
+    system_message=compile_prompt_to_md(system_message) if system_message else None,
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/backend/utils.py", line 53, in compile_prompt_to_md
+    out.append(compile_prompt_to_md(v, _header_depth=_header_depth + 1))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/backend/utils.py", line 54, in compile_prompt_to_md
+    return "\n".join(out)
+           ^^^^^^^^^^^^^^
+MemoryError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "python/ray/_raylet.pyx", line 2164, in ray._raylet.task_execution_handler
+  File "python/ray/_raylet.pyx", line 2023, in ray._raylet.execute_task_with_cancellation_handler
+  File "python/ray/_raylet.pyx", line 1667, in ray._raylet.execute_task
+  File "python/ray/_raylet.pyx", line 1668, in ray._raylet.execute_task
+  File "python/ray/_raylet.pyx", line 1917, in ray._raylet.execute_task
+  File "python/ray/_raylet.pyx", line 926, in ray._raylet.store_task_errors
+  File "python/ray/_raylet.pyx", line 4129, in ray._raylet.CoreWorker.store_task_outputs
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/ray/_private/serialization.py", line 722, in serialize
+    return self._serialize_to_msgpack(value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/ray/_private/serialization.py", line 644, in _serialize_to_msgpack
+    msgpack_data = MessagePackSerializer.dumps(value, _python_serializer)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "python/ray/includes/serialization.pxi", line 175, in ray._raylet.MessagePackSerializer.dumps
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/msgpack/__init__.py", line 36, in packb
+    return Packer(**kwargs).pack(o)
+           ^^^^^^^^^^^^^^^^
+  File "msgpack/_packer.pyx", line 118, in msgpack._cmsgpack.Packer.__cinit__
+MemoryError: Unable to allocate internal buffer.
+An unexpected internal error occurred while the worker was executing a task.
+[36m(Experiment pid=2080066)[0m [19:01:19] ERROR    Unexpected error cleaning up temporary  robust_tempdir.py:98
+[36m(Experiment pid=2080066)[0m                     directory: [Errno 12] Cannot allocate                       
+[36m(Experiment pid=2080066)[0m                     memory: '/tmp/tmpfgqntlar'                                  
+[36m(Experiment pid=2080066)[0m            WARNING  [isolated_benchmark] Task         isolated_benchmark.py:2436
+[36m(Experiment pid=2080066)[0m                     'clustering_outliers' attempt 2                             
+[36m(Experiment pid=2080066)[0m                     failed with retryable error:                                
+[36m(Experiment pid=2080066)[0m                     [Errno 12] Cannot allocate                                  
+[36m(Experiment pid=2080066)[0m                     memory: '/tmp/tmpfgqntlar'.                                 
+[36m(Experiment pid=2080066)[0m                     Retrying in 1.09s...                                        
+[33m(raylet)[0m Traceback (most recent call last):
+  File "python/ray/_raylet.pyx", line 1715, in ray._raylet.execute_task
+  File "python/ray/_raylet.pyx", line 1826, in ray._raylet.execute_task
+  File "python/ray/_raylet.pyx", line 1722, in ray._raylet.execute_task
+  File "python/ray/_raylet.pyx", line 1665, in ray._raylet.execute_task.function_executor
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/ray/_private/function_manager.py", line 693, in actor_method_executor
+    return method(__ray_actor, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/ray/util/tracing/tracing_helper.py", line 461, in _resume_span
+    return method(self, *_args, **_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide-parallel-public/src/aide_runner.py", line 235, in run
+    exp.agent.step(exec_callback=exp.interpreter.run)
+  File "/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/agent.py", line 483, in step
+    result_node = self._draft()
+                  ^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/agent.py", line 320, in _draft
+    plan, code = self.plan_and_code_query(prompt)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/agent.py", line 233, in plan_and_code_query
+    completion_text = query(
+                      ^^^^^^
+  File "/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/backend/__init__.py", line 68, in query
+    system_message=compile_prompt_to_md(system_message) if system_message else None,
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/backend/utils.py", line 54, in compile_prompt_to_md
+    return "\n".join(out)
+           ^^^^^^^^^^^^^^
+MemoryError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "python/ray/_raylet.pyx", line 2164, in ray._raylet.task_execution_handler
+  File "python/ray/_raylet.pyx", line 2023, in ray._raylet.execute_task_with_cancellation_handler
+  File "python/ray/_raylet.pyx", line 1667, in ray._raylet.execute_task
+  File "python/ray/_raylet.pyx", line 1668, in ray._raylet.execute_task
+  File "python/ray/_raylet.pyx", line 1917, in ray._raylet.execute_task
+  File "python/ray/_raylet.pyx", line 926, in ray._raylet.store_task_errors
+  File "python/ray/_raylet.pyx", line 4129, in ray._raylet.CoreWorker.store_task_outputs
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/ray/_private/serialization.py", line 722, in serialize
+    return self._serialize_to_msgpack(value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/ray/_private/serialization.py", line 644, in _serialize_to_msgpack
+    msgpack_data = MessagePackSerializer.dumps(value, _python_serializer)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "python/ray/includes/serialization.pxi", line 175, in ray._raylet.MessagePackSerializer.dumps
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/msgpack/__init__.py", line 36, in packb
+    return Packer(**kwargs).pack(o)
+           ^^^^^^^^^^^^^^^^
+  File "msgpack/_packer.pyx", line 118, in msgpack._cmsgpack.Packer.__cinit__
+MemoryError: Unable to allocate internal buffer.
+An unexpected internal error occurred while the worker was executing a task.
+[36m(Experiment pid=2080064)[0m [19:01:16] WARNING  CODE_DIR not set when initializing DaCe   dace_config.py:104[32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2080064)[0m                     for process 2080064                                         [32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2080064)[0m [search policy] drafting new node (not enough drafts)[32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2080064)[0m Agent is generating code, parent node type: <class 'NoneType'>[32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2080064)[0m            ERROR    [isolated_benchmark] Task         isolated_benchmark.py:2463[32m [repeated 2x across cluster][0m
+[36m(Experiment pid=2080064)[0m                     'clustering_outliers' failed with                           [32m [repeated 2x across cluster][0m
+[36m(Experiment pid=2080064)[0m                     non-retryable error:                                        [32m [repeated 2x across cluster][0m
+[36m(Experiment pid=2080064)[0m            ERROR    Problem 0: Solver benchmark failed: evaluate_algotune.py:508[32m [repeated 2x across cluster][0m
+[36m(Experiment pid=2080064)[0m                     Non-retryable error:                                        [32m [repeated 2x across cluster][0m
+[36m(Experiment pid=2080064)[0m Agent is parsing execution results for node d2208a8a4e354359a3fb5d9afe871bf3[32m [repeated 2x across cluster][0m
+[36m(Experiment pid=2080064)[0m            ERROR    Function call failed:                           agent.py:564[32m [repeated 2x across cluster][0m
+[36m(Experiment pid=2080064)[0m [19:01:18] INFO     Backing off backoff_create(...) for 5.0s      _common.py:105[32m [repeated 7x across cluster][0m
+[36m(Experiment pid=2080064)[0m                     (False)                                                     [32m [repeated 7x across cluster][0m
+[33m(raylet)[0m A worker died or was killed while executing a task by an unexpected system error. To troubleshoot the problem, check the logs for the dead worker. Lease ID: 0b0000006c0a7dd5ba7aa70a33a4d5162f292c6d1be5d2bfc0a07103f8224a02 Worker ID: d4bac21cba1d64236dfacd7b1ae8998c48de07864aaddf8e77aa1657 Node ID: 4a07146ee756d3255d5eaef3123e51967f946ad5fcdac81ba9ebd680 Worker IP address: 192.168.0.105 Worker port: 32903 Worker PID: 2080066 Worker exit type: SYSTEM_ERROR Worker exit detail: Worker exits unexpectedly. Worker exits with an exit code None. Traceback (most recent call last):
+  File "python/ray/_raylet.pyx", line 1715, in ray._raylet.execute_task
+  File "python/ray/_raylet.pyx", line 1826, in ray._raylet.execute_task
+  File "python/ray/_raylet.pyx", line 1722, in ray._raylet.execute_task
+  File "python/ray/_raylet.pyx", line 1665, in ray._raylet.execute_task.function_executor
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/ray/_private/function_manager.py", line 693, in actor_method_executor
+    return method(__ray_actor, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/ray/util/tracing/tracing_helper.py", line 461, in _resume_span
+    return method(self, *_args, **_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide-parallel-public/src/aide_runner.py", line 235, in run
+    exp.agent.step(exec_callback=exp.interpreter.run)
+  File "/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/agent.py", line 483, in step
+    result_node = self._draft()
+                  ^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/agent.py", line 320, in _draft
+    plan, code = self.plan_and_code_query(prompt)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/agent.py", line 233, in plan_and_code_query
+    completion_text = query(
+                      ^^^^^^
+  File "/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/backend/__init__.py", line 68, in query
+    system_message=compile_prompt_to_md(system_message) if system_message else None,
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/backend/utils.py", line 54, in compile_prompt_to_md
+    return "\n".join(out)
+           ^^^^^^^^^^^^^^
+MemoryError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "python/ray/_raylet.pyx", line 2164, in ray._raylet.task_execution_handler
+  File "python/ray/_raylet.pyx", line 2023, in ray._raylet.execute_task_with_cancellation_handler
+  File "python/ray/_raylet.pyx", line 1667, in ray._raylet.execute_task
+  File "python/ray/_raylet.pyx", line 1668, in ray._raylet.execute_task
+  File "python/ray/_raylet.pyx", line 1917, in ray._raylet.execute_task
+  File "python/ray/_raylet.pyx", line 926, in ray._raylet.store_task_errors
+  File "python/ray/_raylet.pyx", line 4129, in ray._raylet.CoreWorker.store_task_outputs
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/ray/_private/serialization.py", line 722, in serialize
+    return self._serialize_to_msgpack(value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/ray/_private/serialization.py", line 644, in _serialize_to_msgpack
+    msgpack_data = MessagePackSerializer.dumps(value, _python_serializer)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "python/ray/includes/serialization.pxi", line 175, in ray._raylet.MessagePackSerializer.dumps
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/msgpack/__init__.py", line 36, in packb
+    return Packer(**kwargs).pack(o)
+           ^^^^^^^^^^^^^^^^
+  File "msgpack/_packer.pyx", line 118, in msgpack._cmsgpack.Packer.__cinit__
+MemoryError: Unable to allocate internal buffer.
+An unexpected internal error occurred while the worker was executing a task.
+[36m(Experiment pid=2080066)[0m                     'clustering_outliers' failed                                
+[36m(Experiment pid=2080066)[0m                     after 3 attempts. Final error:                              
+[36m(Experiment pid=2080066)[0m                     Manager context failed after 3                              
+[36m(Experiment pid=2080066)[0m                     attempts:                                                   
+[36m(Experiment pid=2080066)[0m [search policy] drafting new node (not enough drafts)
+[36m(Experiment pid=2080066)[0m Agent is generating code, parent node type: <class 'NoneType'>
+[36m(Experiment pid=2080066)[0m [19:01:21] ERROR    [isolated_benchmark] Task         isolated_benchmark.py:2420
+[36m(Experiment pid=2080066)[0m            ERROR    Problem 0: Solver benchmark failed: evaluate_algotune.py:508
+[36m(Experiment pid=2080066)[0m Agent is parsing execution results for node a65bcd2cd7cd42138962951f00c80ee4
+[36m(Experiment pid=2080066)[0m            ERROR    Function call failed:                           agent.py:564

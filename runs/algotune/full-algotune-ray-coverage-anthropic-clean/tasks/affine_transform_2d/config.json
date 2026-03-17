@@ -1,0 +1,19 @@
+{
+  "at_fast": true,
+  "at_n_problems": 5,
+  "at_n_runs": 3,
+  "campaign_id": "full-algotune-ray-coverage-anthropic-clean",
+  "category": "signal_processing",
+  "config_hash": "58df00cbfe6e",
+  "cpus_per_experiment": 2,
+  "feedback_model": "claude-sonnet-4-20250514",
+  "head_node_ip": null,
+  "local": true,
+  "model": "claude-sonnet-4-20250514",
+  "num_experiments": 4,
+  "num_iterations": 1,
+  "profile": "coverage",
+  "steps": 4,
+  "task_name": "affine_transform_2d",
+  "wandb_project": null
+}

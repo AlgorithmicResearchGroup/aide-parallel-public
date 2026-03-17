@@ -124,10 +124,10 @@ The primary metric is **speedup** - the ratio of original PyTorch execution time
 
 ## Monitoring Progress
 
-Watch your experiments in W&B:
+If you enable `AIDE_ENABLE_MLFLOW=1`, KernelBench runs are logged to MLflow:
 - Speedup metrics for each iteration
-- Code evolution across iterations
-- Comparison across different tasks
+- Code artifacts for generated kernels
+- Comparison across different tasks inside one experiment
 
 ## Troubleshooting
 

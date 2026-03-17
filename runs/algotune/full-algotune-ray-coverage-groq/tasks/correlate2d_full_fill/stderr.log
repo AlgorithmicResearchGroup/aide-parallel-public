@@ -1,0 +1,36 @@
+2026-03-16 19:01:39,651	INFO worker.py:1837 -- Connecting to existing Ray cluster at address: 192.168.0.105:64600...
+2026-03-16 19:01:39,665	INFO worker.py:2023 -- Connected to Ray cluster.
+[36m(Experiment pid=2083570)[0m No GPU available, running on CPU
+[36m(Experiment pid=2083571)[0m Attempting to load config from: /home/matt/Desktop/ray/aide-parallel-public/tasks/algotune/vendor/AlgoTune/AlgoTuner/config/config.yaml
+[36m(Experiment pid=2083571)[0m Successfully loaded config from: /home/matt/Desktop/ray/aide-parallel-public/tasks/algotune/vendor/AlgoTune/AlgoTuner/config/config.yaml
+[36m(Experiment pid=2083571)[0m No GPU available, running on CPU[32m [repeated 3x across cluster] (Ray deduplicates logs by default. Set RAY_DEDUP_LOGS=0 to disable log deduplication, or see https://docs.ray.io/en/master/ray-observability/user-guides/configure-logging.html#log-deduplication for more options.)[0m
+[36m(Experiment pid=2083572)[0m Attempting to load config from: /home/matt/Desktop/ray/aide-parallel-public/tasks/algotune/vendor/AlgoTune/AlgoTuner/config/config.yaml[32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2083572)[0m Successfully loaded config from: /home/matt/Desktop/ray/aide-parallel-public/tasks/algotune/vendor/AlgoTune/AlgoTuner/config/config.yaml[32m [repeated 3x across cluster][0m
+Traceback (most recent call last):
+  File "/home/matt/Desktop/ray/aide-parallel-public/src/aide_runner.py", line 970, in <module>
+    result_payload = main(
+                     ^^^^^
+  File "/home/matt/Desktop/ray/aide-parallel-public/src/aide_runner.py", line 674, in main
+    ranked_results, experiment_actors = run_experiments(
+                                        ^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide-parallel-public/src/aide_runner.py", line 532, in run_experiments
+    result = ray.get(ref)
+             ^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/ray/_private/auto_init_hook.py", line 22, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/ray/_private/client_mode_hook.py", line 104, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/ray/_private/worker.py", line 2972, in get
+    values, debugger_breakpoint = worker.get_objects(
+                                  ^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/ray/_private/worker.py", line 1033, in get_objects
+    raise value
+ray.exceptions.ActorDiedError: The actor died unexpectedly before finishing this task.
+	class_name: Experiment
+	actor_id: ef27d20678f81d5e1848153508000000
+	pid: 2083569
+	namespace: 9042e405-eb44-468d-87d2-b685806d5c61
+	ip: 192.168.0.105
+The actor is dead because its owner has died. Owner Id: 08000000ffffffffffffffffffffffffffffffffffffffffffffffff Owner Ip address: 192.168.0.105 Owner worker exit type: SYSTEM_ERROR Worker exit detail: Owner's node has crashed.
