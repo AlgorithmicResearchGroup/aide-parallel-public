@@ -9,19 +9,38 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import logging
 import os
 import sys
+import threading
 from contextlib import contextmanager
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from .paths import ensure_algotune_on_path, resolve_algotune_tasks_dir
+try:
+    from .paths import ensure_algotune_on_path, resolve_algotune_tasks_dir
+except ImportError:
+    from paths import ensure_algotune_on_path, resolve_algotune_tasks_dir
 
 
 ALGOTUNE_ROOT = ensure_algotune_on_path()
 ALGOTUNE_TASKS_DIR = resolve_algotune_tasks_dir()
 
 STRICT_MODE_NAME = "benchmark_strict"
+
+
+@dataclass
+class _StrictEvalContext:
+    task_instance: Any
+    baseline_manager: Any
+    dataset_dir: str
+    train_size: int
+    test_size: int
+
+
+_STRICT_EVAL_CONTEXTS: dict[tuple[str, str, int, int], _StrictEvalContext] = {}
+_STRICT_EVAL_CONTEXTS_LOCK = threading.Lock()
 
 
 def _task_module_path(task_name: str) -> Path:
@@ -275,6 +294,55 @@ def _normalize_dataset_eval_result(
     return result
 
 
+def _get_or_create_eval_context(
+    *,
+    task_name: str,
+    dataset_dir: Path,
+    dataset_cfg: dict[str, Any],
+    task_instance: Any | None = None,
+) -> _StrictEvalContext:
+    from AlgoTuneTasks.factory import TaskFactory
+    from AlgoTuner.utils.evaluator.baseline_manager import BaselineManager
+
+    train_size = int(dataset_cfg["train_size"])
+    test_size = int(dataset_cfg["test_size"])
+    dataset_dir_str = str(dataset_dir)
+    cache_key = (task_name, dataset_dir_str, train_size, test_size)
+
+    with _STRICT_EVAL_CONTEXTS_LOCK:
+        cached = _STRICT_EVAL_CONTEXTS.get(cache_key)
+        if cached is not None:
+            cached.task_instance.data_dir = dataset_dir_str
+            logging.info(
+                "Reusing strict AlgoTune baseline context for %s (dataset=%s, train=%s, test=%s)",
+                task_name,
+                dataset_dir_str,
+                train_size,
+                test_size,
+            )
+            return cached
+
+        if task_instance is None:
+            task_instance = TaskFactory(task_name)
+        task_instance.data_dir = dataset_dir_str
+        context = _StrictEvalContext(
+            task_instance=task_instance,
+            baseline_manager=BaselineManager(task_instance),
+            dataset_dir=dataset_dir_str,
+            train_size=train_size,
+            test_size=test_size,
+        )
+        _STRICT_EVAL_CONTEXTS[cache_key] = context
+        logging.info(
+            "Created strict AlgoTune baseline context for %s (dataset=%s, train=%s, test=%s)",
+            task_name,
+            dataset_dir_str,
+            train_size,
+            test_size,
+        )
+        return context
+
+
 def evaluate_solver_split(
     *,
     task_name: str,
@@ -285,7 +353,6 @@ def evaluate_solver_split(
     assert_benchmark_environment(check_all_tasks=False)
 
     from AlgoTuneTasks.factory import TaskFactory
-    from AlgoTuner.utils.evaluator.baseline_manager import BaselineManager
     from AlgoTuner.utils.evaluator.main import evaluate_code_on_dataset
     from AlgoTuner.utils.timing_config import DEV_RUNS, EVAL_RUNS
 
@@ -321,8 +388,14 @@ def evaluate_solver_split(
             },
         )
 
-    task_instance.data_dir = str(dataset_dir)
-    baseline_manager = BaselineManager(task_instance)
+    eval_context = _get_or_create_eval_context(
+        task_name=task_name,
+        dataset_dir=dataset_dir,
+        dataset_cfg=dataset_cfg,
+        task_instance=task_instance,
+    )
+    task_instance = eval_context.task_instance
+    baseline_manager = eval_context.baseline_manager
     train_iter, test_iter = task_instance.load_dataset(
         train_size=dataset_cfg["train_size"],
         test_size=dataset_cfg["test_size"],
