@@ -8,4 +8,5 @@ tqdm
 numpy
 torch
 mlflow
+databricks-sdk<0.73.0
 litellm
