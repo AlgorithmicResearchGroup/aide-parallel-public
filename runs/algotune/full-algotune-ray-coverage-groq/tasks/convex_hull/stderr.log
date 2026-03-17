@@ -1,0 +1,121 @@
+2026-03-16 19:01:19,994	INFO worker.py:1837 -- Connecting to existing Ray cluster at address: 192.168.0.105:64600...
+2026-03-16 19:01:20,011	INFO worker.py:2023 -- Connected to Ray cluster.
+[36m(Experiment pid=2081548)[0m No GPU available, running on CPU
+[36m(Experiment pid=2081547)[0m Attempting to load config from: /home/matt/Desktop/ray/aide-parallel-public/tasks/algotune/vendor/AlgoTune/AlgoTuner/config/config.yaml
+[36m(Experiment pid=2081547)[0m Successfully loaded config from: /home/matt/Desktop/ray/aide-parallel-public/tasks/algotune/vendor/AlgoTune/AlgoTuner/config/config.yaml
+[36m(Experiment pid=2081550)[0m --- Logging error ---
+[36m(Experiment pid=2081549)[0m No GPU available, running on CPU[32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2081550)[0m Attempting to load config from: /home/matt/Desktop/ray/aide-parallel-public/tasks/algotune/vendor/AlgoTune/AlgoTuner/config/config.yaml[32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2081550)[0m Successfully loaded config from: /home/matt/Desktop/ray/aide-parallel-public/tasks/algotune/vendor/AlgoTune/AlgoTuner/config/config.yaml[32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2081550)[0m Traceback (most recent call last):
+[36m(Experiment pid=2081550)[0m   File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/rich/logging.py", line 170, in emit
+[36m(Experiment pid=2081550)[0m     self.console.print(log_renderable)
+[36m(Experiment pid=2081550)[0m   File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/rich/console.py", line 1700, in print
+[36m(Experiment pid=2081550)[0m   File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/rich/console.py", line 1332, in render
+[36m(Experiment pid=2081550)[0m     for render_output in iter_render:
+[36m(Experiment pid=2081550)[0m   File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/rich/table.py", line 509, in __rich_console__
+[36m(Experiment pid=2081550)[0m     yield from self._render(console, render_options, widths)
+[36m(Experiment pid=2081550)[0m   File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/rich/table.py", line 822, in _render
+[36m(Experiment pid=2081550)[0m     lines = console.render_lines(
+[36m(Experiment pid=2081550)[0m             ^^^^^^^^^^^^^^^^^^^^^
+[36m(Experiment pid=2081550)[0m   File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/rich/console.py", line 1372, in render_lines
+[36m(Experiment pid=2081550)[0m     lines = list(
+[36m(Experiment pid=2081550)[0m             ^^^^^
+[36m(Experiment pid=2081550)[0m   File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/rich/segment.py", line 291, in split_and_crop_lines
+[36m(Experiment pid=2081550)[0m     for segment in segments:
+[36m(Experiment pid=2081550)[0m   File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/rich/console.py", line 1332, in render
+[36m(Experiment pid=2081550)[0m     for render_output in iter_render:
+[36m(Experiment pid=2081550)[0m   File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/rich/padding.py", line 97, in __rich_console__
+[36m(Experiment pid=2081550)[0m     lines = console.render_lines(
+[36m(Experiment pid=2081550)[0m             ^^^^^^^^^^^^^^^^^^^^^
+[36m(Experiment pid=2081550)[0m   File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/rich/console.py", line 1372, in render_lines
+[36m(Experiment pid=2081550)[0m     lines = list(
+[36m(Experiment pid=2081550)[0m             ^^^^^
+[36m(Experiment pid=2081550)[0m   File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/rich/segment.py", line 291, in split_and_crop_lines
+[36m(Experiment pid=2081550)[0m     for segment in segments:
+[36m(Experiment pid=2081550)[0m   File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/rich/console.py", line 1336, in render
+[36m(Experiment pid=2081550)[0m     yield from self.render(render_output, _options)
+[36m(Experiment pid=2081550)[0m   File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/rich/console.py", line 1332, in render
+[36m(Experiment pid=2081550)[0m     for render_output in iter_render:
+[36m(Experiment pid=2081550)[0m   File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/rich/text.py", line 694, in __rich_console__
+[36m(Experiment pid=2081550)[0m     lines = self.wrap(
+[36m(Experiment pid=2081550)[0m             ^^^^^^^^^^
+[36m(Experiment pid=2081550)[0m   File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/rich/text.py", line 1233, in wrap
+[36m(Experiment pid=2081550)[0m     offsets = divide_line(str(line), width, fold=wrap_overflow == "fold")
+[36m(Experiment pid=2081550)[0m               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[36m(Experiment pid=2081550)[0m   File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/rich/_wrap.py", line 51, in divide_line
+[36m(Experiment pid=2081550)[0m     cell_offset += _cell_len(word)
+[36m(Experiment pid=2081550)[0m                    ^^^^^^^^^^^^^^^
+[36m(Experiment pid=2081550)[0m   File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/rich/cells.py", line 41, in cell_len
+[36m(Experiment pid=2081550)[0m     return _cell_len(text)
+[36m(Experiment pid=2081550)[0m            ^^^^^^^^^^^^^^^
+[36m(Experiment pid=2081550)[0m MemoryError
+[36m(Experiment pid=2081550)[0m Call stack:
+[36m(Experiment pid=2081550)[0m   File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/ray/_private/workers/default_worker.py", line 322, in <module>
+[36m(Experiment pid=2081550)[0m     worker.main_loop()
+[36m(Experiment pid=2081550)[0m   File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/ray/_private/worker.py", line 1047, in main_loop
+[36m(Experiment pid=2081550)[0m     self.core_worker.run_task_loop()
+[36m(Experiment pid=2081550)[0m   File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/ray/_private/function_manager.py", line 693, in actor_method_executor
+[36m(Experiment pid=2081550)[0m     return method(__ray_actor, *args, **kwargs)
+[36m(Experiment pid=2081550)[0m   File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/ray/util/tracing/tracing_helper.py", line 461, in _resume_span
+[36m(Experiment pid=2081550)[0m     return method(self, *_args, **_kwargs)
+[36m(Experiment pid=2081550)[0m   File "/home/matt/Desktop/ray/aide-parallel-public/src/aide_runner.py", line 235, in run
+[36m(Experiment pid=2081550)[0m     exp.agent.step(exec_callback=exp.interpreter.run)
+[36m(Experiment pid=2081550)[0m   File "/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/agent.py", line 483, in step
+[36m(Experiment pid=2081550)[0m     result_node = self._draft()
+[36m(Experiment pid=2081550)[0m   File "/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/agent.py", line 320, in _draft
+[36m(Experiment pid=2081550)[0m     plan, code = self.plan_and_code_query(prompt)
+[36m(Experiment pid=2081550)[0m   File "/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/agent.py", line 233, in plan_and_code_query
+[36m(Experiment pid=2081550)[0m     completion_text = query(
+[36m(Experiment pid=2081550)[0m   File "/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/backend/__init__.py", line 67, in query
+[36m(Experiment pid=2081550)[0m     output, req_time, in_tok_count, out_tok_count, info = query_func(
+[36m(Experiment pid=2081550)[0m   File "/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/backend/backend_openai.py", line 118, in query
+[36m(Experiment pid=2081550)[0m     response = backoff_create(
+[36m(Experiment pid=2081550)[0m   File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/backoff/_sync.py", line 65, in retry
+[36m(Experiment pid=2081550)[0m     _call_handlers(on_backoff, **details,
+[36m(Experiment pid=2081550)[0m   File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/backoff/_sync.py", line 20, in _call_handlers
+[36m(Experiment pid=2081550)[0m     hdlr(details)
+[36m(Experiment pid=2081550)[0m   File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/backoff/_common.py", line 105, in _log_backoff
+[36m(Experiment pid=2081550)[0m     logger.log(log_level, msg, *log_args)
+[36m(Experiment pid=2081550)[0m   File "/usr/lib/python3.12/logging/__init__.py", line 1609, in log
+[36m(Experiment pid=2081550)[0m     self._log(level, msg, args, **kwargs)
+[36m(Experiment pid=2081550)[0m   File "/usr/lib/python3.12/logging/__init__.py", line 1684, in _log
+[36m(Experiment pid=2081550)[0m     self.handle(record)
+[36m(Experiment pid=2081550)[0m   File "/usr/lib/python3.12/logging/__init__.py", line 1700, in handle
+[36m(Experiment pid=2081550)[0m     self.callHandlers(record)
+[36m(Experiment pid=2081550)[0m   File "/usr/lib/python3.12/logging/__init__.py", line 1762, in callHandlers
+[36m(Experiment pid=2081550)[0m     hdlr.handle(record)
+[36m(Experiment pid=2081550)[0m   File "/usr/lib/python3.12/logging/__init__.py", line 1028, in handle
+[36m(Experiment pid=2081550)[0m     self.emit(record)
+[36m(Experiment pid=2081550)[0m   File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/rich/logging.py", line 172, in emit
+[36m(Experiment pid=2081550)[0m     self.handleError(record)
+[36m(Experiment pid=2081550)[0m Message: 'Backing off %s(...) for %.1fs (%s)'
+[36m(Experiment pid=2081550)[0m Arguments: ('backoff_create', 11.928985888685126, False)
+Traceback (most recent call last):
+  File "/home/matt/Desktop/ray/aide-parallel-public/src/aide_runner.py", line 970, in <module>
+    result_payload = main(
+                     ^^^^^
+  File "/home/matt/Desktop/ray/aide-parallel-public/src/aide_runner.py", line 674, in main
+    ranked_results, experiment_actors = run_experiments(
+                                        ^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide-parallel-public/src/aide_runner.py", line 532, in run_experiments
+    result = ray.get(ref)
+             ^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/ray/_private/auto_init_hook.py", line 22, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/ray/_private/client_mode_hook.py", line 104, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/ray/_private/worker.py", line 2972, in get
+    values, debugger_breakpoint = worker.get_objects(
+                                  ^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/ray/_private/worker.py", line 1033, in get_objects
+    raise value
+ray.exceptions.ActorDiedError: The actor died unexpectedly before finishing this task.
+	class_name: Experiment
+	actor_id: ab2161dc602863e816668eb805000000
+	pid: 2081548
+	namespace: 5370ed15-f21f-4e8d-bb43-4013a8ed605d
+	ip: 192.168.0.105
+The actor is dead because its owner has died. Owner Id: 05000000ffffffffffffffffffffffffffffffffffffffffffffffff Owner Ip address: 192.168.0.105 Owner worker exit type: SYSTEM_ERROR Worker exit detail: Owner's node has crashed.

@@ -7,4 +7,5 @@ python-dotenv
 tqdm
 numpy
 torch
-wandb
+mlflow
+litellm

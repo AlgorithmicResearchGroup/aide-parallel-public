@@ -1,0 +1,170 @@
+Using task=algotune contract=contract.yaml
+Executing: python /home/matt/Desktop/ray/aide-parallel-public/src/aide_runner.py --task algotune --local --num-experiments 4 --num-iterations 1 --steps 4 --cpus-per-experiment 2 --model llama-3.3-70b-versatile --feedback-model llama-3.3-70b-versatile --at-task dynamic_assortment_planning --at-n-problems 5 --at-n-runs 3 --result-json /home/matt/Desktop/ray/aide-parallel-public/runs/algotune/full-algotune-ray-coverage-groq/tasks/dynamic_assortment_planning/result.json --at-fast
+
+🚀 EXPERIMENTS STARTED: 4 agents running in parallel
+   Running on CPU workers
+   Task: algotune | Steps per experiment: 4
+   Waiting for all experiments to complete...
+
+[36m(Experiment pid=2114144)[0m [search policy] drafting new node (not enough drafts)
+[36m(Experiment pid=2114144)[0m Agent is generating code, parent node type: <class 'NoneType'>
+[36m(Experiment pid=2114144)[0m [19:03:08] WARNING  CODE_DIR not set when initializing DaCe   dace_config.py:104
+[36m(Experiment pid=2114144)[0m                     for process 2114144                                         
+[36m(Experiment pid=2114144)[0m [19:03:09] WARNING  time_execution_ns: Warmup run 1/1 for  precise_timing.py:753
+[36m(Experiment pid=2114144)[0m                     'solve' FAILED. Error:                                      
+[36m(Experiment pid=2114144)[0m            WARNING  time_execution_ns: Skipping            precise_timing.py:912
+[36m(Experiment pid=2114144)[0m                     measurement runs for 'solve' due to                         
+[36m(Experiment pid=2114144)[0m                     warmup failure.                                             
+[36m(Experiment pid=2114142)[0m [search policy] drafting new node (not enough drafts)[32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2114142)[0m Agent is generating code, parent node type: <class 'NoneType'>[32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2114144)[0m            WARNING  time_execution_ns: No measurement     precise_timing.py:1005
+[36m(Experiment pid=2114144)[0m                     runs were successful for 'solve'.                           
+[36m(Experiment pid=2114144)[0m                     Setting success=False.                                      
+[36m(Experiment pid=2114144)[0m            WARNING  TIME_EXECUTION_NS_EXIT_DEBUG: FAILURE precise_timing.py:1131
+[36m(Experiment pid=2114144)[0m                     CASE - success=False, values_ns                             
+[36m(Experiment pid=2114144)[0m                     length=0, error=Error:                                      
+[36m(Experiment pid=2114144)[0m            ERROR    Problem 0: Baseline benchmark       evaluate_algotune.py:508
+[36m(Experiment pid=2114144)[0m                     failed: Error:                                              
+[36m(Experiment pid=2114144)[0m Agent is parsing execution results for node c2797d66778c41a4906e2beade2ce9e1
+[36m(Experiment pid=2114142)[0m [19:03:10] INFO     Backing off backoff_create(...) for 0.6s      _common.py:105
+[36m(Experiment pid=2114142)[0m                     (False)                                                     
+[33m(raylet)[0m Traceback (most recent call last):
+  File "python/ray/_raylet.pyx", line 1715, in ray._raylet.execute_task
+  File "python/ray/_raylet.pyx", line 1826, in ray._raylet.execute_task
+  File "python/ray/_raylet.pyx", line 1722, in ray._raylet.execute_task
+  File "python/ray/_raylet.pyx", line 1665, in ray._raylet.execute_task.function_executor
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/ray/_private/function_manager.py", line 693, in actor_method_executor
+    return method(__ray_actor, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/ray/util/tracing/tracing_helper.py", line 461, in _resume_span
+    return method(self, *_args, **_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide-parallel-public/src/aide_runner.py", line 235, in run
+    exp.agent.step(exec_callback=exp.interpreter.run)
+  File "/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/agent.py", line 491, in step
+    exec_result=exec_callback(result_node.code, True),
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/interpreter.py", line 240, in run
+    self.create_process()
+  File "/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/interpreter.py", line 191, in create_process
+    self.code_inq, self.result_outq, self.event_outq = Queue(), Queue(), Queue()
+                                                       ^^^^^^^
+  File "/usr/lib/python3.12/multiprocessing/context.py", line 103, in Queue
+    return Queue(maxsize, ctx=self.get_context())
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/multiprocessing/queues.py", line 43, in __init__
+    self._rlock = ctx.Lock()
+                  ^^^^^^^^^^
+  File "/usr/lib/python3.12/multiprocessing/context.py", line 68, in Lock
+    return Lock(ctx=self.get_context())
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/multiprocessing/synchronize.py", line 169, in __init__
+    SemLock.__init__(self, SEMAPHORE, 1, 1, ctx=ctx)
+  File "/usr/lib/python3.12/multiprocessing/synchronize.py", line 57, in __init__
+    sl = self._semlock = _multiprocessing.SemLock(
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 12] Cannot allocate memory
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "python/ray/_raylet.pyx", line 2164, in ray._raylet.task_execution_handler
+  File "python/ray/_raylet.pyx", line 2023, in ray._raylet.execute_task_with_cancellation_handler
+  File "python/ray/_raylet.pyx", line 1667, in ray._raylet.execute_task
+  File "python/ray/_raylet.pyx", line 1668, in ray._raylet.execute_task
+  File "python/ray/_raylet.pyx", line 1917, in ray._raylet.execute_task
+  File "python/ray/_raylet.pyx", line 926, in ray._raylet.store_task_errors
+  File "python/ray/_raylet.pyx", line 4129, in ray._raylet.CoreWorker.store_task_outputs
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/ray/_private/serialization.py", line 722, in serialize
+    return self._serialize_to_msgpack(value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/ray/_private/serialization.py", line 644, in _serialize_to_msgpack
+    msgpack_data = MessagePackSerializer.dumps(value, _python_serializer)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "python/ray/includes/serialization.pxi", line 175, in ray._raylet.MessagePackSerializer.dumps
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/msgpack/__init__.py", line 36, in packb
+    return Packer(**kwargs).pack(o)
+           ^^^^^^^^^^^^^^^^
+  File "msgpack/_packer.pyx", line 118, in msgpack._cmsgpack.Packer.__cinit__
+MemoryError: Unable to allocate internal buffer.
+An unexpected internal error occurred while the worker was executing a task.
+[33m(raylet)[0m A worker died or was killed while executing a task by an unexpected system error. To troubleshoot the problem, check the logs for the dead worker. Lease ID: 14000000dc0647c9006cd7fc92b8bbc0a32ab7c1128eab7116e9166f40b55f6a Worker ID: 4bf6411c27a3f46f534ac4915599eeda1cdbd83350c606bc521615d6 Node ID: e43869a3036b07bb81dad89e609d8eea54862ae6a22403948de58f7c Worker IP address: 192.168.0.105 Worker port: 33999 Worker PID: 2114144 Worker exit type: SYSTEM_ERROR Worker exit detail: Worker exits unexpectedly. Worker exits with an exit code None. Traceback (most recent call last):
+  File "python/ray/_raylet.pyx", line 1715, in ray._raylet.execute_task
+  File "python/ray/_raylet.pyx", line 1826, in ray._raylet.execute_task
+  File "python/ray/_raylet.pyx", line 1722, in ray._raylet.execute_task
+  File "python/ray/_raylet.pyx", line 1665, in ray._raylet.execute_task.function_executor
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/ray/_private/function_manager.py", line 693, in actor_method_executor
+    return method(__ray_actor, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/ray/util/tracing/tracing_helper.py", line 461, in _resume_span
+    return method(self, *_args, **_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide-parallel-public/src/aide_runner.py", line 235, in run
+    exp.agent.step(exec_callback=exp.interpreter.run)
+  File "/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/agent.py", line 491, in step
+    exec_result=exec_callback(result_node.code, True),
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/interpreter.py", line 240, in run
+    self.create_process()
+  File "/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/interpreter.py", line 191, in create_process
+    self.code_inq, self.result_outq, self.event_outq = Queue(), Queue(), Queue()
+                                                       ^^^^^^^
+  File "/usr/lib/python3.12/multiprocessing/context.py", line 103, in Queue
+    return Queue(maxsize, ctx=self.get_context())
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/multiprocessing/queues.py", line 43, in __init__
+    self._rlock = ctx.Lock()
+                  ^^^^^^^^^^
+  File "/usr/lib/python3.12/multiprocessing/context.py", line 68, in Lock
+    return Lock(ctx=self.get_context())
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/multiprocessing/synchronize.py", line 169, in __init__
+    SemLock.__init__(self, SEMAPHORE, 1, 1, ctx=ctx)
+  File "/usr/lib/python3.12/multiprocessing/synchronize.py", line 57, in __init__
+    sl = self._semlock = _multiprocessing.SemLock(
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 12] Cannot allocate memory
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "python/ray/_raylet.pyx", line 2164, in ray._raylet.task_execution_handler
+  File "python/ray/_raylet.pyx", line 2023, in ray._raylet.execute_task_with_cancellation_handler
+  File "python/ray/_raylet.pyx", line 1667, in ray._raylet.execute_task
+  File "python/ray/_raylet.pyx", line 1668, in ray._raylet.execute_task
+  File "python/ray/_raylet.pyx", line 1917, in ray._raylet.execute_task
+  File "python/ray/_raylet.pyx", line 926, in ray._raylet.store_task_errors
+  File "python/ray/_raylet.pyx", line 4129, in ray._raylet.CoreWorker.store_task_outputs
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/ray/_private/serialization.py", line 722, in serialize
+    return self._serialize_to_msgpack(value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/ray/_private/serialization.py", line 644, in _serialize_to_msgpack
+    msgpack_data = MessagePackSerializer.dumps(value, _python_serializer)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "python/ray/includes/serialization.pxi", line 175, in ray._raylet.MessagePackSerializer.dumps
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/msgpack/__init__.py", line 36, in packb
+    return Packer(**kwargs).pack(o)
+           ^^^^^^^^^^^^^^^^
+  File "msgpack/_packer.pyx", line 118, in msgpack._cmsgpack.Packer.__cinit__
+MemoryError: Unable to allocate internal buffer.
+An unexpected internal error occurred while the worker was executing a task.
+[36m(Experiment pid=2114143)[0m [19:03:09] WARNING  CODE_DIR not set when initializing DaCe   dace_config.py:104[32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2114143)[0m                     for process 2114143                                         [32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2114143)[0m            WARNING  time_execution_ns: Warmup run 1/1 for  precise_timing.py:753[32m [repeated 2x across cluster][0m
+[36m(Experiment pid=2114143)[0m                     'solve' FAILED. Error:                                      [32m [repeated 2x across cluster][0m
+[36m(Experiment pid=2114143)[0m            WARNING  time_execution_ns: Skipping            precise_timing.py:912[32m [repeated 2x across cluster][0m
+[36m(Experiment pid=2114143)[0m                     measurement runs for 'solve' due to                         [32m [repeated 2x across cluster][0m
+[36m(Experiment pid=2114143)[0m                     warmup failure.                                             [32m [repeated 2x across cluster][0m
+[36m(Experiment pid=2114143)[0m [search policy] drafting new node (not enough drafts)[32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2114143)[0m Agent is generating code, parent node type: <class 'NoneType'>[32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2114143)[0m            WARNING  time_execution_ns: No measurement     precise_timing.py:1005[32m [repeated 2x across cluster][0m
+[36m(Experiment pid=2114143)[0m                     runs were successful for 'solve'.                           [32m [repeated 2x across cluster][0m
+[36m(Experiment pid=2114143)[0m                     Setting success=False.                                      [32m [repeated 2x across cluster][0m
+[36m(Experiment pid=2114143)[0m            WARNING  TIME_EXECUTION_NS_EXIT_DEBUG: FAILURE precise_timing.py:1131[32m [repeated 2x across cluster][0m
+[36m(Experiment pid=2114143)[0m                     CASE - success=False, values_ns                             [32m [repeated 2x across cluster][0m
+[36m(Experiment pid=2114143)[0m                     length=0, error=Error:                                      [32m [repeated 2x across cluster][0m
+[36m(Experiment pid=2114143)[0m            ERROR    Problem 0: Baseline benchmark       evaluate_algotune.py:508[32m [repeated 2x across cluster][0m
+[36m(Experiment pid=2114143)[0m                     failed: Error:                                              [32m [repeated 2x across cluster][0m
+[36m(Experiment pid=2114143)[0m Agent is parsing execution results for node 6b696cdbf05a47f8928babcb790493ef[32m [repeated 2x across cluster][0m
+[36m(Experiment pid=2114143)[0m            INFO     Backing off backoff_create(...) for 1.6s      _common.py:105[32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2114143)[0m                     (False)                                                     [32m [repeated 3x across cluster][0m

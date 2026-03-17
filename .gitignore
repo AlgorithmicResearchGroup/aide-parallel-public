@@ -12,6 +12,7 @@ __pycache__/
 logs/
 workspaces/
 wandb/
+mlruns/
 ray_results/
 /tmp/
 tasks/algotune/vendor/AlgoTune/AlgoTuneTasks/**/*.jsonl
@@ -28,3 +29,5 @@ venv/
 # OS/editor
 .vscode/
 .idea/
+
+runs/

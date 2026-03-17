@@ -1,0 +1,220 @@
+Using task=algotune contract=contract.yaml
+Executing: python /home/matt/Desktop/ray/aide-parallel-public/src/aide_runner.py --task algotune --local --num-experiments 4 --num-iterations 1 --steps 4 --cpus-per-experiment 2 --model llama-3.3-70b-versatile --feedback-model llama-3.3-70b-versatile --at-task lasso --at-n-problems 5 --at-n-runs 3 --result-json /home/matt/Desktop/ray/aide-parallel-public/runs/algotune/full-algotune-ray-coverage-groq/tasks/lasso/result.json --at-fast
+
+🚀 EXPERIMENTS STARTED: 4 agents running in parallel
+   Running on CPU workers
+   Task: algotune | Steps per experiment: 4
+   Waiting for all experiments to complete...
+
+[36m(Experiment pid=2161667)[0m [search policy] drafting new node (not enough drafts)
+[36m(Experiment pid=2161667)[0m Agent is generating code, parent node type: <class 'NoneType'>
+[36m(Experiment pid=2161668)[0m Agent is parsing execution results for node 7915c11196a648f998179ac4cfd3881c
+[36m(Experiment pid=2161667)[0m [19:07:39] WARNING  CODE_DIR not set when initializing DaCe   dace_config.py:104
+[36m(Experiment pid=2161667)[0m                     for process 2161667                                         
+[36m(Experiment pid=2161667)[0m            ERROR    Error: Unable to allocate 3.81 MiB for an array  lasso.py:57
+[36m(Experiment pid=2161667)[0m                     with shape (500, 1000) and data type float64                
+[36m(Experiment pid=2161667)[0m            ERROR    Error: Unable to allocate 3.81 MiB for an array  lasso.py:57
+[36m(Experiment pid=2161667)[0m                     with shape (500, 1000) and data type float64                
+[36m(Experiment pid=2161667)[0m            ERROR    Error: Unable to allocate 3.81 MiB for an array  lasso.py:57
+[36m(Experiment pid=2161667)[0m                     with shape (500, 1000) and data type float64                
+[36m(Experiment pid=2161667)[0m            ERROR    Error: Unable to allocate 3.81 MiB for an array  lasso.py:57
+[36m(Experiment pid=2161667)[0m                     with shape (500, 1000) and data type float64                
+[36m(Experiment pid=2161667)[0m            ERROR    Error in isolated benchmark for 'solve':    benchmark.py:582
+[36m(Experiment pid=2161667)[0m                     Unable to allocate 3.81 MiB for an array                    
+[36m(Experiment pid=2161667)[0m                     with shape (500, 1000) and data type                        
+[36m(Experiment pid=2161667)[0m                     float64                                                     
+[36m(Experiment pid=2161667)[0m            ERROR    Problem 0: Solver benchmark failed: evaluate_algotune.py:508
+[36m(Experiment pid=2161667)[0m                     numpy.core._exceptions._ArrayMemory                         
+[36m(Experiment pid=2161667)[0m                     Error: Unable to allocate 3.81 MiB                          
+[36m(Experiment pid=2161667)[0m                     for an array with shape (500, 1000)                         
+[36m(Experiment pid=2161667)[0m                     and data type float64 in function                           
+[36m(Experiment pid=2161667)[0m                     'deepcopy' at line 143 in copy.py                           
+[36m(Experiment pid=2161667)[0m                     (system code)                                               
+[36m(Experiment pid=2161667)[0m            INFO     Backing off backoff_create(...) for 1.0s      _common.py:105
+[36m(Experiment pid=2161667)[0m                     (False)                                                     
+[36m(Experiment pid=2161668)[0m [search policy] drafting new node (not enough drafts)[32m [repeated 5x across cluster][0m
+[36m(Experiment pid=2161668)[0m Agent is generating code, parent node type: <class 'NoneType'>[32m [repeated 5x across cluster][0m
+[36m(Experiment pid=2161669)[0m                     float64                                                     
+[36m(Experiment pid=2161667)[0m [19:07:40] INFO     Backing off backoff_create(...) for 0.9s      _common.py:105
+[36m(Experiment pid=2161667)[0m                     (False)                                                     
+[36m(Experiment pid=2161669)[0m Agent is parsing execution results for node 2ed5e4dbda134dd6b066ab00583dff71[32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2161668)[0m                     float64                                                     
+[36m(Experiment pid=2161670)[0m                     float64                                                     
+[36m(Experiment pid=2161670)[0m [19:07:42] WARNING  CODE_DIR not set when initializing DaCe   dace_config.py:104[32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2161670)[0m                     for process 2161670                                         [32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2161670)[0m            ERROR    Error: Unable to allocate 3.81 MiB for an array  lasso.py:57[32m [repeated 12x across cluster][0m
+[36m(Experiment pid=2161670)[0m                     with shape (500, 1000) and data type                        [32m [repeated 15x across cluster][0m
+[36m(Experiment pid=2161670)[0m            ERROR    Error in isolated benchmark for 'solve':    benchmark.py:582[32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2161670)[0m                     Unable to allocate 3.81 MiB for an array                    [32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2161670)[0m            ERROR    Problem 0: Solver benchmark failed: evaluate_algotune.py:508[32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2161670)[0m                     numpy.core._exceptions._ArrayMemory                         [32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2161670)[0m                     Error: Unable to allocate 3.81 MiB                          [32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2161670)[0m                     for an array with shape (500, 1000)                         [32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2161670)[0m                     and data type float64 in function                           [32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2161670)[0m                     'deepcopy' at line 143 in copy.py                           [32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2161670)[0m                     (system code)                                               [32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2161670)[0m [19:07:44] INFO     Backing off backoff_create(...) for 1.3s      _common.py:105[32m [repeated 7x across cluster][0m
+[36m(Experiment pid=2161670)[0m                     (False)                                                     [32m [repeated 7x across cluster][0m
+[36m(Experiment pid=2161670)[0m [search policy] drafting new node (not enough drafts)[32m [repeated 2x across cluster][0m
+[36m(Experiment pid=2161670)[0m Agent is generating code, parent node type: <class 'NoneType'>[32m [repeated 2x across cluster][0m
+[36m(Experiment pid=2161670)[0m Agent is parsing execution results for node e6a093713fdb43f2a807cf0e247fed56[32m [repeated 2x across cluster][0m
+[36m(Experiment pid=2161668)[0m [19:07:50] INFO     Backing off backoff_create(...) for 4.6s      _common.py:105[32m [repeated 7x across cluster][0m
+[36m(Experiment pid=2161668)[0m                     (False)                                                     [32m [repeated 7x across cluster][0m
+[36m(Experiment pid=2161670)[0m [19:07:57] INFO     Backing off backoff_create(...) for 19.6s     _common.py:105[32m [repeated 5x across cluster][0m
+[36m(Experiment pid=2161670)[0m                     (False)                                                     [32m [repeated 5x across cluster][0m
+[33m(raylet)[0m Traceback (most recent call last):
+  File "python/ray/_raylet.pyx", line 1715, in ray._raylet.execute_task
+  File "python/ray/_raylet.pyx", line 1826, in ray._raylet.execute_task
+  File "python/ray/_raylet.pyx", line 1722, in ray._raylet.execute_task
+  File "python/ray/_raylet.pyx", line 1665, in ray._raylet.execute_task.function_executor
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/ray/_private/function_manager.py", line 693, in actor_method_executor
+    return method(__ray_actor, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/ray/util/tracing/tracing_helper.py", line 461, in _resume_span
+    return method(self, *_args, **_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide-parallel-public/src/aide_runner.py", line 235, in run
+    exp.agent.step(exec_callback=exp.interpreter.run)
+  File "/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/agent.py", line 483, in step
+    result_node = self._draft()
+                  ^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/agent.py", line 320, in _draft
+    plan, code = self.plan_and_code_query(prompt)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/agent.py", line 233, in plan_and_code_query
+    completion_text = query(
+                      ^^^^^^
+  File "/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/backend/__init__.py", line 67, in query
+    output, req_time, in_tok_count, out_tok_count, info = query_func(
+                                                          ^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/backend/backend_openai.py", line 118, in query
+    response = backoff_create(
+               ^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/backoff/_sync.py", line 48, in retry
+    ret = target(*args, **kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/backend/utils.py", line 26, in backoff_create
+    return create_fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/openai/_utils/_utils.py", line 286, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/openai/resources/chat/completions/completions.py", line 1189, in create
+    return self._post(
+           ^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/openai/_base_client.py", line 1259, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/openai/_base_client.py", line 968, in request
+    request = self._build_request(options, retries_taken=retries_taken)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/openai/_base_client.py", line 547, in _build_request
+    return self._client.build_request(  # pyright: ignore[reportUnknownMemberType]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/httpx/_client.py", line 378, in build_request
+    return Request(
+           ^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/httpx/_models.py", line 408, in __init__
+    headers, stream = encode_request(
+                      ^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/httpx/_content.py", line 216, in encode_request
+    return encode_json(json)
+           ^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/httpx/_content.py", line 177, in encode_json
+    body = json_dumps(
+           ^^^^^^^^^^^
+  File "/usr/lib/python3.12/json/__init__.py", line 238, in dumps
+    **kw).encode(obj)
+          ^^^^^^^^^^^
+  File "/usr/lib/python3.12/json/encoder.py", line 200, in encode
+    chunks = self.iterencode(o, _one_shot=True)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/json/encoder.py", line 258, in iterencode
+    return _iterencode(o, 0)
+           ^^^^^^^^^^^^^^^^^
+MemoryError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "python/ray/_raylet.pyx", line 2164, in ray._raylet.task_execution_handler
+  File "python/ray/_raylet.pyx", line 2023, in ray._raylet.execute_task_with_cancellation_handler
+  File "python/ray/_raylet.pyx", line 1667, in ray._raylet.execute_task
+  File "python/ray/_raylet.pyx", line 1668, in ray._raylet.execute_task
+  File "python/ray/_raylet.pyx", line 1917, in ray._raylet.execute_task
+  File "python/ray/_raylet.pyx", line 926, in ray._raylet.store_task_errors
+  File "python/ray/_raylet.pyx", line 4129, in ray._raylet.CoreWorker.store_task_outputs
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/ray/_private/serialization.py", line 722, in serialize
+    return self._serialize_to_msgpack(value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/ray/_private/serialization.py", line 644, in _serialize_to_msgpack
+    msgpack_data = MessagePackSerializer.dumps(value, _python_serializer)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "python/ray/includes/serialization.pxi", line 175, in ray._raylet.MessagePackSerializer.dumps
+  File "/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/msgpack/__init__.py", line 36, in packb
+    return Packer(**kwargs).pack(o)
+           ^^^^^^^^^^^^^^^^
+  File "msgpack/_packer.pyx", line 118, in msgpack._cmsgpack.Packer.__cinit__
+MemoryError: Unable to allocate internal buffer.
+An unexpected internal error occurred while the worker was executing a task.
+[36m(Experiment pid=2161669)[0m [19:08:08] INFO     Backing off backoff_create(...) for 45.0s     _common.py:105
+[36m(Experiment pid=2161669)[0m                     (False)                                                     
+[36m(Experiment pid=2161670)[0m [19:08:17] INFO     Backing off backoff_create(...) for 30.7s     _common.py:105
+[36m(Experiment pid=2161670)[0m                     (False)                                                     
+[36m(Experiment pid=2161668)[0m [19:08:19] INFO     Backing off backoff_create(...) for 39.3s     _common.py:105
+[36m(Experiment pid=2161668)[0m                     (False)                                                     
+[36m(Experiment pid=2161667)[0m [19:08:29] ERROR    Function call failed:                           agent.py:564
+[36m(Experiment pid=2161667)[0m [search policy] drafting new node (not enough drafts)
+[36m(Experiment pid=2161667)[0m Agent is generating code, parent node type: <class 'NoneType'>
+[36m(Experiment pid=2161667)[0m            INFO     Backing off backoff_create(...) for 1.2s      _common.py:105
+[36m(Experiment pid=2161667)[0m                     (False)                                                     
+[36m(Experiment pid=2161667)[0m [19:08:30] INFO     Backing off backoff_create(...) for 2.3s      _common.py:105
+[36m(Experiment pid=2161667)[0m                     (False)                                                     
+[36m(Experiment pid=2161667)[0m [19:08:32] INFO     Backing off backoff_create(...) for 0.1s      _common.py:105
+[36m(Experiment pid=2161667)[0m                     (False)                                                     
+[36m(Experiment pid=2161667)[0m            INFO     Backing off backoff_create(...) for 6.6s      _common.py:105
+[36m(Experiment pid=2161667)[0m                     (False)                                                     
+[36m(Experiment pid=2161667)[0m [19:08:39] INFO     Backing off backoff_create(...) for 2.7s      _common.py:105
+[36m(Experiment pid=2161667)[0m                     (False)                                                     
+[36m(Experiment pid=2161667)[0m [19:08:42] INFO     Backing off backoff_create(...) for 39.8s     _common.py:105
+[36m(Experiment pid=2161667)[0m                     (False)                                                     
+[36m(Experiment pid=2161670)[0m [19:08:47] INFO     Backing off backoff_create(...) for 40.4s     _common.py:105
+[36m(Experiment pid=2161670)[0m                     (False)                                                     
+[36m(Experiment pid=2161669)[0m [19:08:54] INFO     Backing off backoff_create(...) for 20.0s     _common.py:105
+[36m(Experiment pid=2161669)[0m                     (False)                                                     
+[36m(Experiment pid=2161668)[0m [19:08:59] INFO     Backing off backoff_create(...) for 12.9s     _common.py:105[32m [repeated 2x across cluster][0m
+[36m(Experiment pid=2161668)[0m                     (False)                                                     [32m [repeated 2x across cluster][0m
+[36m(Experiment pid=2161668)[0m [19:09:12] INFO     Backing off backoff_create(...) for 20.0s     _common.py:105
+[36m(Experiment pid=2161668)[0m                     (False)                                                     
+[36m(Experiment pid=2161669)[0m [19:09:15] INFO     Backing off backoff_create(...) for 30.9s     _common.py:105
+[36m(Experiment pid=2161669)[0m                     (False)                                                     
+[36m(Experiment pid=2161667)[0m [19:09:22] INFO     Backing off backoff_create(...) for 4.5s      _common.py:105
+[36m(Experiment pid=2161667)[0m                     (False)                                                     
+[36m(Experiment pid=2161667)[0m [19:09:26] INFO     Backing off backoff_create(...) for 3.6s      _common.py:105
+[36m(Experiment pid=2161667)[0m                     (False)                                                     
+[36m(Experiment pid=2161668)[0m [19:09:32] INFO     Backing off backoff_create(...) for 34.7s     _common.py:105[32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2161668)[0m                     (False)                                                     [32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2161669)[0m [19:09:46] INFO     Backing off backoff_create(...) for 51.2s     _common.py:105
+[36m(Experiment pid=2161669)[0m                     (False)                                                     
+[36m(Experiment pid=2161668)[0m [19:10:06] INFO     Backing off backoff_create(...) for 13.3s     _common.py:105
+[36m(Experiment pid=2161668)[0m                     (False)                                                     
+[36m(Experiment pid=2161670)[0m [19:10:17] INFO     Backing off backoff_create(...) for 0.5s      _common.py:105
+[36m(Experiment pid=2161670)[0m                     (False)                                                     
+[36m(Experiment pid=2161670)[0m [19:10:18] INFO     Backing off backoff_create(...) for 36.8s     _common.py:105
+[36m(Experiment pid=2161670)[0m                     (False)                                                     
+[36m(Experiment pid=2161669)[0m [19:10:37] INFO     Backing off backoff_create(...) for 28.5s     _common.py:105[32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2161669)[0m                     (False)                                                     [32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2161668)[0m [19:10:42] INFO     Backing off backoff_create(...) for 17.8s     _common.py:105
+[36m(Experiment pid=2161668)[0m                     (False)                                                     
+[36m(Experiment pid=2161667)[0m [19:10:42] INFO     Backing off backoff_create(...) for 24.4s     _common.py:105
+[36m(Experiment pid=2161667)[0m                     (False)                                                     
+[36m(Experiment pid=2161670)[0m [19:10:55] INFO     Backing off backoff_create(...) for 51.8s     _common.py:105
+[36m(Experiment pid=2161670)[0m                     (False)                                                     
+[36m(Experiment pid=2161668)[0m [19:11:00] INFO     Backing off backoff_create(...) for 3.0s      _common.py:105
+[36m(Experiment pid=2161668)[0m                     (False)                                                     
+[36m(Experiment pid=2161668)[0m [19:11:03] INFO     Backing off backoff_create(...) for 47.2s     _common.py:105
+[36m(Experiment pid=2161668)[0m                     (False)                                                     
+[36m(Experiment pid=2161669)[0m [19:11:06] INFO     Backing off backoff_create(...) for 20.3s     _common.py:105
+[36m(Experiment pid=2161669)[0m                     (False)                                                     
+[36m(Experiment pid=2161667)[0m [19:11:07] INFO     Backing off backoff_create(...) for 47.9s     _common.py:105
+[36m(Experiment pid=2161667)[0m                     (False)                                                     

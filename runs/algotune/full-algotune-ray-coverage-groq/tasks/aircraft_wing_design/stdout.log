@@ -1,0 +1,125 @@
+Using task=algotune contract=contract.yaml
+Executing: python /home/matt/Desktop/ray/aide-parallel-public/src/aide_runner.py --task algotune --local --num-experiments 4 --num-iterations 1 --steps 4 --cpus-per-experiment 2 --model llama-3.3-70b-versatile --feedback-model llama-3.3-70b-versatile --at-task aircraft_wing_design --at-n-problems 5 --at-n-runs 3 --result-json /home/matt/Desktop/ray/aide-parallel-public/runs/algotune/full-algotune-ray-coverage-groq/tasks/aircraft_wing_design/result.json --at-fast
+
+🚀 EXPERIMENTS STARTED: 4 agents running in parallel
+   Running on CPU workers
+   Task: algotune | Steps per experiment: 4
+   Waiting for all experiments to complete...
+
+[36m(Experiment pid=2059270)[0m [search policy] drafting new node (not enough drafts)
+[36m(Experiment pid=2059270)[0m Agent is generating code, parent node type: <class 'NoneType'>
+[36m(Experiment pid=2059270)[0m Agent is parsing execution results for node 0f0dc6d553ee400884f23d464588f8d6
+[36m(Experiment pid=2059268)[0m [search policy] drafting new node (not enough drafts)[32m [repeated 3x across cluster] (Ray deduplicates logs by default. Set RAY_DEDUP_LOGS=0 to disable log deduplication, or see https://docs.ray.io/en/master/ray-observability/user-guides/configure-logging.html#log-deduplication for more options.)[0m
+[36m(Experiment pid=2059268)[0m Agent is generating code, parent node type: <class 'NoneType'>[32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2059268)[0m [19:00:04] ERROR    OpenAI API error (status 400): Error   backend_openai.py:135
+[36m(Experiment pid=2059268)[0m                     code: 400 - {'error': {'message':                           
+[36m(Experiment pid=2059268)[0m                     "Failed to call a function. Please                          
+[36m(Experiment pid=2059268)[0m                     adjust your prompt. See                                     
+[36m(Experiment pid=2059268)[0m                     'failed_generation' for more                                
+[36m(Experiment pid=2059268)[0m                     details.", 'type':                                          
+[36m(Experiment pid=2059268)[0m                     'invalid_request_error', 'code':                            
+[36m(Experiment pid=2059268)[0m                     'tool_use_failed',                                          
+[36m(Experiment pid=2059268)[0m                     'failed_generation':                                        
+[36m(Experiment pid=2059268)[0m                     '<function=submit_review>{"is_bug":                         
+[36m(Experiment pid=2059268)[0m                     true, "lower_is_better": true,                              
+[36m(Experiment pid=2059268)[0m                     "metric": null, "summary": "The                             
+[36m(Experiment pid=2059268)[0m                     provided solution encounters an                             
+[36m(Experiment pid=2059268)[0m                     ImportError due to the inability to                         
+[36m(Experiment pid=2059268)[0m                     import \\\'eye_array\\\' from                               
+[36m(Experiment pid=2059268)[0m                     \\\'scipy.sparse\\\'. This issue                            
+[36m(Experiment pid=2059268)[0m                     arises from changes in the SciPy                            
+[36m(Experiment pid=2059268)[0m                     library, where \\\'eye_array\\\' has                        
+[36m(Experiment pid=2059268)[0m                     been removed. As a result, the                              
+[36m(Experiment pid=2059268)[0m                     solution cannot be executed, and its                        
+[36m(Experiment pid=2059268)[0m                     validity and performance cannot be                          
+[36m(Experiment pid=2059268)[0m                     assessed."}</function>'}}                                   
+[36m(Experiment pid=2059268)[0m            ERROR    Function call failed: Error code: 400 -         agent.py:564
+[36m(Experiment pid=2059268)[0m                     {'error': {'message': "Failed to call a                     
+[36m(Experiment pid=2059268)[0m                     function. Please adjust your prompt. See                    
+[36m(Experiment pid=2059268)[0m                     'failed_generation' for more details.", 'type':             
+[36m(Experiment pid=2059268)[0m                     'invalid_request_error', 'code':                            
+[36m(Experiment pid=2059268)[0m                     'tool_use_failed', 'failed_generation':                     
+[36m(Experiment pid=2059268)[0m                     '<function=submit_review>{"is_bug": true,                   
+[36m(Experiment pid=2059268)[0m                     "lower_is_better": true, "metric": null,                    
+[36m(Experiment pid=2059268)[0m                     "summary": "The provided solution encounters an             
+[36m(Experiment pid=2059268)[0m                     ImportError due to the inability to import                  
+[36m(Experiment pid=2059268)[0m                     \\\'eye_array\\\' from \\\'scipy.sparse\\\'.                
+[36m(Experiment pid=2059268)[0m                     This issue arises from changes in the SciPy                 
+[36m(Experiment pid=2059268)[0m                     library, where \\\'eye_array\\\' has been                   
+[36m(Experiment pid=2059268)[0m                     removed. As a result, the solution cannot be                
+[36m(Experiment pid=2059268)[0m                     executed, and its validity and performance                  
+[36m(Experiment pid=2059268)[0m                     cannot be assessed."}</function>'}}                         
+[36m(Experiment pid=2059270)[0m Agent is parsing execution results for node 1b3de82edde94b12b05d243a81dbc409[32m [repeated 4x across cluster][0m
+[36m(Experiment pid=2059268)[0m [search policy] drafting new node (not enough drafts)[32m [repeated 4x across cluster][0m
+[36m(Experiment pid=2059268)[0m Agent is generating code, parent node type: <class 'NoneType'>[32m [repeated 4x across cluster][0m
+[36m(Experiment pid=2059269)[0m Agent is parsing execution results for node 180c2759eeb347b79e1fec7382b16804[32m [repeated 5x across cluster][0m
+[36m(Experiment pid=2059268)[0m [search policy] drafting new node (not enough drafts)[32m [repeated 4x across cluster][0m
+[36m(Experiment pid=2059268)[0m Agent is generating code, parent node type: <class 'NoneType'>[32m [repeated 4x across cluster][0m
+[36m(Experiment pid=2059271)[0m [19:00:14] ERROR    OpenAI API error (status 400): Error   backend_openai.py:135
+[36m(Experiment pid=2059271)[0m                     code: 400 - {'error': {'message':                           
+[36m(Experiment pid=2059271)[0m                     "Failed to call a function. Please                          
+[36m(Experiment pid=2059271)[0m                     adjust your prompt. See                                     
+[36m(Experiment pid=2059271)[0m                     'failed_generation' for more                                
+[36m(Experiment pid=2059271)[0m                     details.", 'type':                                          
+[36m(Experiment pid=2059271)[0m                     'invalid_request_error', 'code':                            
+[36m(Experiment pid=2059271)[0m                     'tool_use_failed',                                          
+[36m(Experiment pid=2059271)[0m                     'failed_generation':                                        
+[36m(Experiment pid=2059271)[0m                     '<function=submit_review>{"is_bug":                         
+[36m(Experiment pid=2059271)[0m                     true, "lower_is_better": true,                              
+[36m(Experiment pid=2059271)[0m                     "metric": null, "summary": "The code                        
+[36m(Experiment pid=2059271)[0m                     is unable to execute due to a                               
+[36m(Experiment pid=2059271)[0m                     ModuleNotFoundError: No module named                        
+[36m(Experiment pid=2059271)[0m                     \\\'cp\\\'. This suggests that the                          
+[36m(Experiment pid=2059271)[0m                     necessary package (likely cvxpy) is                         
+[36m(Experiment pid=2059271)[0m                     not installed or imported                                   
+[36m(Experiment pid=2059271)[0m                     correctly."}</function>'}}                                  
+[36m(Experiment pid=2059271)[0m            ERROR    Function call failed: Error code: 400 -         agent.py:564
+[36m(Experiment pid=2059271)[0m                     {'error': {'message': "Failed to call a                     
+[36m(Experiment pid=2059271)[0m                     function. Please adjust your prompt. See                    
+[36m(Experiment pid=2059271)[0m                     'failed_generation' for more details.", 'type':             
+[36m(Experiment pid=2059271)[0m                     'invalid_request_error', 'code':                            
+[36m(Experiment pid=2059271)[0m                     'tool_use_failed', 'failed_generation':                     
+[36m(Experiment pid=2059271)[0m                     '<function=submit_review>{"is_bug": true,                   
+[36m(Experiment pid=2059271)[0m                     "lower_is_better": true, "metric": null,                    
+[36m(Experiment pid=2059271)[0m                     "summary": "The code is unable to execute due               
+[36m(Experiment pid=2059271)[0m                     to a ModuleNotFoundError: No module named                   
+[36m(Experiment pid=2059271)[0m                     \\\'cp\\\'. This suggests that the necessary                
+[36m(Experiment pid=2059271)[0m                     package (likely cvxpy) is not installed or                  
+[36m(Experiment pid=2059271)[0m                     imported correctly."}</function>'}}                         
+[36m(Experiment pid=2059268)[0m Agent is parsing execution results for node eb4ae95a2d0c4c4abf9901104dab074c[32m [repeated 5x across cluster][0m
+[36m(Experiment pid=2059268)[0m [search policy] drafting new node (not enough drafts)[32m [repeated 4x across cluster][0m
+[36m(Experiment pid=2059268)[0m Agent is generating code, parent node type: <class 'NoneType'>[32m [repeated 4x across cluster][0m
+[19:00:19] ✅ [1/4] Experiment 0 done | GPU None | Metric: None
+[36m(Experiment pid=2059271)[0m 
+[36m(Experiment pid=2059271)[0m ============================================================
+[36m(Experiment pid=2059271)[0m ✅ EXPERIMENT 0 COMPLETED at 19:00:19
+[36m(Experiment pid=2059271)[0m    Task: algotune
+[36m(Experiment pid=2059271)[0m    GPU: CPU (ID: None)
+[36m(Experiment pid=2059271)[0m    Final Metric: None
+[36m(Experiment pid=2059271)[0m    Total Steps: 4
+[36m(Experiment pid=2059271)[0m ============================================================
+[36m(Experiment pid=2059271)[0m 
+[19:00:19] ✅ [2/4] Experiment 2 done | GPU None | Metric: None
+[36m(Experiment pid=2059269)[0m 
+[36m(Experiment pid=2059269)[0m 
+[19:00:20] ✅ [3/4] Experiment 3 done | GPU None | Metric: None
+[36m(Experiment pid=2059268)[0m 
+[36m(Experiment pid=2059268)[0m 
+[19:00:20] ✅ [4/4] Experiment 1 done | GPU None | Metric: None
+
+🎉 ALL 4 EXPERIMENTS COMPLETED!
+[36m(Experiment pid=2059270)[0m 
+[36m(Experiment pid=2059270)[0m 
+[19:00:20] WARNING  No valid metric was produced. The         aide_runner.py:779
+                    environment ran successfully, but the                       
+                    selected model did not generate an                          
+                    evaluable solution. Try a stronger model,                   
+                    more steps, or run ./cli/aide-check to                      
+                    verify setup.                                               
+[36m(Experiment pid=2059270)[0m Agent is parsing execution results for node 965adfc48f5f4f8f8b95bb81ee6365fa
+[36m(Experiment pid=2059270)[0m ============================================================[32m [repeated 6x across cluster][0m
+[36m(Experiment pid=2059270)[0m ✅ EXPERIMENT 1 COMPLETED at 19:00:20[32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2059270)[0m    Task: algotune[32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2059270)[0m    GPU: CPU (ID: None)[32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2059270)[0m    Final Metric: None[32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2059270)[0m    Total Steps: 4[32m [repeated 3x across cluster][0m

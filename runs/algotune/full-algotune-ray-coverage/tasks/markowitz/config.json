@@ -1,0 +1,19 @@
+{
+  "at_fast": true,
+  "at_n_problems": 5,
+  "at_n_runs": 3,
+  "campaign_id": "full-algotune-ray-coverage",
+  "category": "convex_optimization",
+  "config_hash": "ed0a8def1b7a",
+  "cpus_per_experiment": 2,
+  "feedback_model": null,
+  "head_node_ip": null,
+  "local": false,
+  "model": null,
+  "num_experiments": 4,
+  "num_iterations": 1,
+  "profile": "coverage",
+  "steps": 4,
+  "task_name": "markowitz",
+  "wandb_project": null
+}

@@ -1,0 +1,30 @@
+{
+  "command": [
+    "/home/matt/Desktop/ray/aide-parallel-public/cli/aide-run",
+    "--task",
+    "algotune",
+    "--at-task",
+    "chebyshev_center",
+    "--num-experiments",
+    "4",
+    "--num-iterations",
+    "1",
+    "--steps",
+    "4",
+    "--cpus-per-experiment",
+    "2",
+    "--at-n-problems",
+    "5",
+    "--at-n-runs",
+    "3",
+    "--result-json",
+    "/home/matt/Desktop/ray/aide-parallel-public/runs/algotune/full-algotune-ray-coverage/tasks/chebyshev_center/result.json",
+    "--at-fast"
+  ],
+  "config_hash": "685c3b1ecf20",
+  "error": "\u001b[36mray::Experiment.run()\u001b[39m (pid=2001341, ip=192.168.0.105, actor_id=c081782c9cdca41a8242462902000000, repr=<aide_runner.Experiment object at 0x72b128cbe120>)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/matt/Desktop/ray/aide-parallel-public/src/aide_runner.py\", line 235, in run\n    exp.agent.step(exec_callback=exp.interpreter.run)\n  File \"/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/agent.py\", line 483, in step\n    result_node = self._draft()\n                  ^^^^^^^^^^^^^\n  File \"/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/agent.py\", line 320, in _draft\n    plan, code = self.plan_and_code_query(prompt)\n                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/agent.py\", line 233, in plan_and_code_query\n    completion_text = query(\n                      ^^^^^^\n  File \"/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/backend/__init__.py\", line 67, in query\n    output, req_time, in_tok_count, out_tok_count, info = query_func(\n                                                          ^^^^^^^^^^^\n  File \"/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/backend/backend_openai.py\", line 73, in query\n    _setup_openai_client()\n  File \"/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/funcy/flow.py\", line 230, in wrapper\n    return func(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/matt/Desktop/ray/aide-parallel-public/aideml/aide/backend/backend_openai.py\", line 47, in _setup_openai_client\n    _client = openai.OpenAI(api_key=api_key, base_url=OPENAI_BASE_URL, max_retries=0)\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/matt/Desktop/ray/aide_parallel/venv-algotune/lib/python3.12/site-packages/openai/_client.py\", line 137, in __init__\n    raise OpenAIError(\nopenai.OpenAIError: The api_key client option must be set either by passing api_key to the client or by setting the OPENAI_API_KEY environment variable",
+  "returncode": 1,
+  "status": "failed",
+  "task_id": "chebyshev_center",
+  "task_type": "algotune"
+}

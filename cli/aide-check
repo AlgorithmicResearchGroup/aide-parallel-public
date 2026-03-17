@@ -12,7 +12,7 @@ echo "Running baseline attention evaluation on CPU..."
 (
   cd "${REPO_ROOT}"
   AIDE_ATTENTION_FAST_EVAL=1 \
-  WANDB_API_KEY= \
+  AIDE_ENABLE_MLFLOW=0 \
   AIDE_PROJECT_ROOT="${REPO_ROOT}" \
   python tasks/attention/evaluate.py --solution-path tasks/attention/optimize.py --device cpu
 )

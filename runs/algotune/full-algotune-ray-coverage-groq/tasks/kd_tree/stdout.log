@@ -1,0 +1,64 @@
+Using task=algotune contract=contract.yaml
+Executing: python /home/matt/Desktop/ray/aide-parallel-public/src/aide_runner.py --task algotune --local --num-experiments 4 --num-iterations 1 --steps 4 --cpus-per-experiment 2 --model llama-3.3-70b-versatile --feedback-model llama-3.3-70b-versatile --at-task kd_tree --at-n-problems 5 --at-n-runs 3 --result-json /home/matt/Desktop/ray/aide-parallel-public/runs/algotune/full-algotune-ray-coverage-groq/tasks/kd_tree/result.json --at-fast
+
+🚀 EXPERIMENTS STARTED: 4 agents running in parallel
+   Running on CPU workers
+   Task: algotune | Steps per experiment: 4
+   Waiting for all experiments to complete...
+
+[36m(Experiment pid=2156269)[0m [search policy] drafting new node (not enough drafts)
+[36m(Experiment pid=2156269)[0m Agent is generating code, parent node type: <class 'NoneType'>
+[36m(Experiment pid=2156269)[0m Agent is parsing execution results for node 8ab16dcbca3446feb8d371bc15a5a71f
+[36m(Experiment pid=2156266)[0m [19:05:59] WARNING  CODE_DIR not set when initializing DaCe   dace_config.py:104
+[36m(Experiment pid=2156266)[0m                     for process 2156266                                         
+[36m(Experiment pid=2156266)[0m            WARNING  time_execution_ns: Warmup run 1/1 for  precise_timing.py:753
+[36m(Experiment pid=2156266)[0m                     'solve' FAILED. Error: Unable to                            
+[36m(Experiment pid=2156266)[0m                     allocate 3.81 MiB for an array with                         
+[36m(Experiment pid=2156266)[0m                     shape (10000, 50) and data type                             
+[36m(Experiment pid=2156266)[0m                     float64                                                     
+[36m(Experiment pid=2156266)[0m            WARNING  time_execution_ns: Skipping            precise_timing.py:912
+[36m(Experiment pid=2156266)[0m                     measurement runs for 'solve' due to                         
+[36m(Experiment pid=2156266)[0m                     warmup failure.                                             
+[36m(Experiment pid=2156266)[0m            WARNING  time_execution_ns: No measurement     precise_timing.py:1005
+[36m(Experiment pid=2156266)[0m                     runs were successful for 'solve'.                           
+[36m(Experiment pid=2156266)[0m                     Setting success=False.                                      
+[36m(Experiment pid=2156266)[0m            WARNING  TIME_EXECUTION_NS_EXIT_DEBUG: FAILURE precise_timing.py:1131
+[36m(Experiment pid=2156266)[0m                     CASE - success=False, values_ns                             
+[36m(Experiment pid=2156266)[0m                     length=0, error=Error: Unable to                            
+[36m(Experiment pid=2156266)[0m                     allocate 3.81 MiB for an array with                         
+[36m(Experiment pid=2156266)[0m                     shape (10000, 50) and data type                             
+[36m(Experiment pid=2156266)[0m                     float64                                                     
+[36m(Experiment pid=2156266)[0m            ERROR    Problem 0: Baseline benchmark       evaluate_algotune.py:508
+[36m(Experiment pid=2156266)[0m                     failed: Error: Unable to allocate                           
+[36m(Experiment pid=2156266)[0m                     3.81 MiB for an array with shape                            
+[36m(Experiment pid=2156266)[0m                     (10000, 50) and data type float64                           
+[36m(Experiment pid=2156269)[0m [search policy] drafting new node (not enough drafts)[32m [repeated 4x across cluster][0m
+[36m(Experiment pid=2156269)[0m Agent is generating code, parent node type: <class 'NoneType'>[32m [repeated 4x across cluster][0m
+[36m(Experiment pid=2156267)[0m                     float64                                                     
+[36m(Experiment pid=2156267)[0m                     float64                                                     
+[36m(Experiment pid=2156268)[0m                     float64                                                     
+[36m(Experiment pid=2156268)[0m                     float64                                                     
+[36m(Experiment pid=2156269)[0m                     float64                                                     
+[36m(Experiment pid=2156269)[0m                     float64                                                     
+[36m(Experiment pid=2156269)[0m Agent is parsing execution results for node 4a1b59a5341f4d36a87e377a6244778c[32m [repeated 4x across cluster][0m
+[36m(Experiment pid=2156269)[0m [19:06:01] WARNING  CODE_DIR not set when initializing DaCe   dace_config.py:104[32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2156269)[0m                     for process 2156269                                         [32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2156269)[0m            WARNING  time_execution_ns: Warmup run 1/1 for  precise_timing.py:753[32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2156269)[0m                     'solve' FAILED. Error: Unable to                            [32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2156269)[0m                     allocate 3.81 MiB for an array with                         [32m [repeated 6x across cluster][0m
+[36m(Experiment pid=2156269)[0m                     shape (10000, 50) and data type                             [32m [repeated 6x across cluster][0m
+[36m(Experiment pid=2156269)[0m            WARNING  time_execution_ns: Skipping            precise_timing.py:912[32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2156269)[0m                     measurement runs for 'solve' due to                         [32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2156269)[0m                     warmup failure.                                             [32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2156269)[0m            WARNING  time_execution_ns: No measurement     precise_timing.py:1005[32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2156269)[0m                     runs were successful for 'solve'.                           [32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2156269)[0m                     Setting success=False.                                      [32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2156269)[0m            WARNING  TIME_EXECUTION_NS_EXIT_DEBUG: FAILURE precise_timing.py:1131[32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2156269)[0m                     CASE - success=False, values_ns                             [32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2156269)[0m                     length=0, error=Error: Unable to                            [32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2156269)[0m            ERROR    Problem 0: Baseline benchmark       evaluate_algotune.py:508[32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2156269)[0m                     failed: Error: Unable to allocate                           [32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2156269)[0m                     3.81 MiB for an array with shape                            [32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2156269)[0m                     (10000, 50) and data type float64                           [32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2156268)[0m [search policy] drafting new node (not enough drafts)[32m [repeated 3x across cluster][0m
+[36m(Experiment pid=2156268)[0m Agent is generating code, parent node type: <class 'NoneType'>[32m [repeated 3x across cluster][0m

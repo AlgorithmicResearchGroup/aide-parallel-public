@@ -1,0 +1,19 @@
+{
+  "at_fast": true,
+  "at_n_problems": 5,
+  "at_n_runs": 3,
+  "campaign_id": "full-algotune-ray-coverage",
+  "category": "nonconvex_optimization",
+  "config_hash": "b9fbfa7028a1",
+  "cpus_per_experiment": 2,
+  "feedback_model": null,
+  "head_node_ip": null,
+  "local": false,
+  "model": null,
+  "num_experiments": 4,
+  "num_iterations": 1,
+  "profile": "coverage",
+  "steps": 4,
+  "task_name": "nmf",
+  "wandb_project": null
+}

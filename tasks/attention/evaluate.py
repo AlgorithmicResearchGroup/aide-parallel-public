@@ -20,35 +20,16 @@ import torch
 import torch.nn as nn
 import math
 
-try:
-    import wandb
-except ImportError:
-    wandb = None
-
 # Paths ---------------------------------------------------------------------
 TASK_ROOT = Path(__file__).resolve().parent
+REPO_ROOT = TASK_ROOT.parents[1]
 NANOGPT_ROOT = TASK_ROOT / "nanoGPT"
 _DATA_CACHE: dict[str, torch.Tensor] = {}
+MLFLOW_ENABLED = os.environ.get("AIDE_ENABLE_MLFLOW", "0") == "1"
+MLFLOW_LOGGER = None
 
-
-class _NullWandb:
-    run = None
-
-    @staticmethod
-    def init(*args, **kwargs):
-        return None
-
-    @staticmethod
-    def log(*args, **kwargs):
-        return None
-
-
-WANDB = wandb if wandb is not None else _NullWandb()
-WANDB_ENABLED = (
-    wandb is not None
-    and os.environ.get("AIDE_ENABLE_WANDB", "0") == "1"
-    and bool(os.environ.get("WANDB_API_KEY"))
-)
+if str(REPO_ROOT) not in sys.path:
+    sys.path.append(str(REPO_ROOT))
 
 
 def _repo_attention_data_root() -> Path | None:
@@ -114,6 +95,35 @@ def load_module(path: Path) -> ModuleType:
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)  # type: ignore[call-arg]
     return module
+
+
+def _get_mlflow_logger(device: torch.device, fast_eval: bool):
+    global MLFLOW_LOGGER
+    if not MLFLOW_ENABLED:
+        return None
+    if MLFLOW_LOGGER is not None:
+        return MLFLOW_LOGGER
+
+    try:
+        from src.mlflow_integration import create_mlflow_logger_for_experiment
+    except ImportError:
+        print("MLflow integration unavailable for attention evaluator; continuing without tracking.", flush=True)
+        return None
+
+    gpu_id = device.index if device.type == "cuda" and device.index is not None else -1
+    MLFLOW_LOGGER = create_mlflow_logger_for_experiment(
+        experiment_name="attention-training",
+        gpu_id=gpu_id,
+        config={
+            "task_type": "attention",
+            "device": str(device),
+            "dataset": DATA_DIR.name,
+            "fast_eval": fast_eval,
+        },
+        tracking_experiment=os.environ.get("MLFLOW_EXPERIMENT_NAME"),
+        parent_run_id=os.environ.get("AIDE_MLFLOW_PARENT_RUN_ID"),
+    )
+    return MLFLOW_LOGGER if getattr(MLFLOW_LOGGER, "enabled", False) else None
 
 
 def prepare_environment() -> None:
@@ -205,9 +215,7 @@ def train_and_eval(builder: Callable[[object], nn.Module], device_str: str) -> f
     else:
         print(f"Using full evaluation profile with dataset: {DATA_DIR.name}", flush=True)
 
-    # Initialize W&B if not already initialized
-    if WANDB_ENABLED and WANDB.run is None:
-        WANDB.init(project="attention-training", name="nanoGPT-training")
+    mlflow_logger = _get_mlflow_logger(device, fast_eval)
 
     meta = load_meta()
     vocab_size = meta.get("vocab_size", 50304)
@@ -269,15 +277,15 @@ def train_and_eval(builder: Callable[[object], nn.Module], device_str: str) -> f
                 raise RuntimeError("Training produced non-finite loss")
             loss = loss / grad_accum_steps
 
-            # Log loss to console and W&B (before gradient accumulation division)
+            # Log loss to console and MLflow (before gradient accumulation division)
             if micro_idx == 0:
                 actual_loss = loss.item() * grad_accum_steps
                 # Print progress every 10 steps or at key milestones
                 if optimizer_step % 10 == 0 or optimizer_step in [1, 5, 50, 100, 200, 500, 800]:
                     elapsed = time.time() - start_time
                     print(f"[TRAINING] Step {optimizer_step}/{total_optimizer_steps}: loss = {actual_loss:.4f} | Elapsed: {elapsed:.1f}s", flush=True)
-                if optimizer_step % 10 == 0 and WANDB_ENABLED:
-                    WANDB.log({"train_loss": actual_loss, "step": optimizer_step})
+                if optimizer_step % 10 == 0 and mlflow_logger:
+                    mlflow_logger.log_metrics({"train_loss": actual_loss}, step=optimizer_step)
             if device.type == "cuda":
                 scaler.scale(loss).backward()
             else:
@@ -329,8 +337,23 @@ def train_and_eval(builder: Callable[[object], nn.Module], device_str: str) -> f
             losses.append(loss.item())
 
     val_loss = float(sum(losses) / len(losses))
-    if WANDB_ENABLED:
-        WANDB.log({"val_loss": val_loss})
+    if mlflow_logger:
+        mlflow_logger.log_metrics(
+            {
+                "val_loss": val_loss,
+                "training_elapsed_seconds": elapsed_time,
+            },
+            step=optimizer_step,
+        )
+        mlflow_logger.log_experiment_summary(
+            {
+                "val_loss": val_loss,
+                "training_elapsed_seconds": elapsed_time,
+                "device": str(device),
+                "dataset": DATA_DIR.name,
+                "fast_eval": fast_eval,
+            }
+        )
     return val_loss
 
 
@@ -359,8 +382,14 @@ def main() -> None:
     else:
         raise AttributeError("Module must expose build_attention(config) or AttentionBlock class")
 
-    val_loss = train_and_eval(builder, args.device)
-    print(f"val_loss: {val_loss:.6f}")
+    try:
+        val_loss = train_and_eval(builder, args.device)
+        print(f"val_loss: {val_loss:.6f}")
+    finally:
+        global MLFLOW_LOGGER
+        if MLFLOW_LOGGER is not None:
+            MLFLOW_LOGGER.finish()
+            MLFLOW_LOGGER = None
 
 
 if __name__ == "__main__":

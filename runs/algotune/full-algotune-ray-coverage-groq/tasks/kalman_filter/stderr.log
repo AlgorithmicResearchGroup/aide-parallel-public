@@ -1,0 +1,4 @@
+2026-03-16 19:05:06,958	INFO worker.py:1837 -- Connecting to existing Ray cluster at address: 192.168.0.105:40210...
+2026-03-16 19:05:06,975	INFO worker.py:2023 -- Connected to Ray cluster.
+[36m(Experiment pid=2154234)[0m No GPU available, running on CPU
+[36m(Experiment pid=2154233)[0m No GPU available, running on CPU[32m [repeated 3x across cluster][0m

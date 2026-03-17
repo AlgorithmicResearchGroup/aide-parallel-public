@@ -12,5 +12,6 @@ torch>=2.2.0,<3.0.0
 torchvision>=0.17.0,<1.0.0
 torchaudio>=2.2.0,<3.0.0
 
-# Optional logging package used by the attention evaluator and W&B integration
-wandb>=0.16.0
+# Optional experiment tracking used by the runner and attention evaluator
+mlflow>=2.16.0
+litellm>=1.61.0

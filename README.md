@@ -25,14 +25,6 @@ cp .env.example .env
 
 Set one provider and one model pair in `.env`.
 
-OpenAI example:
-
-```bash
-OPENAI_API_KEY=...
-AIDE_MODEL=gpt-4o-mini
-AIDE_FEEDBACK_MODEL=gpt-4o-mini
-```
-
 Groq example:
 
 ```bash
@@ -41,6 +33,24 @@ OPENAI_BASE_URL=https://api.groq.com/openai/v1
 AIDE_MODEL=llama-3.3-70b-versatile
 AIDE_FEEDBACK_MODEL=llama-3.3-70b-versatile
 ```
+
+Anthropic example:
+
+```bash
+ANTHROPIC_API_KEY=...
+AIDE_MODEL=claude-sonnet-4-20250514
+AIDE_FEEDBACK_MODEL=claude-sonnet-4-20250514
+```
+
+Optional MLflow tracking:
+
+```bash
+AIDE_ENABLE_MLFLOW=1
+MLFLOW_EXPERIMENT_NAME=aide-public
+```
+
+If `MLFLOW_TRACKING_URI` is unset, runs are stored locally under `mlruns/`.
+For longer-lived tracking, prefer setting `MLFLOW_TRACKING_URI` to a real MLflow server or database-backed deployment.
 
 Run the deterministic setup check:
 
@@ -59,6 +69,8 @@ AIDE_ATTENTION_FAST_EVAL=1 ./cli/aide-run --local --task attention --num-experim
 - Use `./cli/aide-check` first. It verifies imports and runs a baseline attention evaluation on CPU.
 - Use the attention task for first run. It now auto-prepares a tiny Shakespeare dataset if the wiki dataset is missing.
 - Set `AIDE_MODEL` and `AIDE_FEEDBACK_MODEL` explicitly. Do not rely on provider-specific default model availability.
+- For the current repo state, Groq and Anthropic are the most reliable provider paths.
+- Enable `AIDE_ENABLE_MLFLOW=1` if you want experiment tracking. Local MLflow works without a server.
 
 ## KernelBench
 
@@ -97,7 +109,35 @@ Then run a small local smoke test:
 ./cli/aide-run --local --task algotune --at-task kmeans --num-experiments 1 --num-iterations 1 --steps 1 --cpus-per-experiment 2
 ```
 
-More details: [tasks/algotune/README.md](/Users/arg/Desktop/PUBLIC/aide_parallel/tasks/algotune/README.md)
+Validate the strict benchmark environment before any publishable AlgoTune run:
+
+```bash
+./cli/aide-algotune-validate-env
+```
+
+Run a strict held-out benchmark task:
+
+```bash
+./cli/aide-run --local --task algotune --at-task kmeans --num-experiments 1 --num-iterations 1 --steps 1 --cpus-per-experiment 2
+```
+
+The repo now exposes only the publishable AlgoTune path. It validates the Python 3.10 environment up front, searches on the train split, runs one held-out test evaluation at the end, and rejects repo-side timeout/compatibility shortcuts.
+If you source datasets from Hugging Face for strict runs, pin `ALGOTUNE_HF_REVISION` to a non-`main` revision so the benchmark data cannot drift.
+The shared AlgoTune env is only valid if `./cli/aide-algotune-validate-env` still passes after `aideml` is installed.
+
+Run a resumable sweep across the full AlgoTune inventory:
+
+```bash
+./cli/run-at-sequence all --local --profile coverage
+```
+
+Control per-task attempts and concurrent tasks independently:
+
+```bash
+./cli/run-at-sequence all --local --profile coverage --attempts-per-task 4 --max-concurrent-tasks 4
+```
+
+More details: `tasks/algotune/README.md`
 
 ## Optional Dependencies
 
@@ -117,8 +157,11 @@ python -m pip install -e ./aideml
 ## Main Commands
 
 - `./cli/aide-check`: validate the local install with a deterministic CPU run
+- `./cli/aide-algotune-validate-env`: validate the strict AlgoTune benchmark environment
 - `./cli/aide-run`: run AIDE experiments
 - `./cli/aide-run --task algotune --at-task <task>`: run an AlgoTune task locally or on Ray
+- `./cli/run-at-sequence all --profile coverage`: run a resumable AlgoTune sweep
+- `./cli/run-at-sequence all --attempts-per-task N --max-concurrent-tasks M`: control AlgoTune search depth and sweep concurrency
 - `./cli/aide-cluster-up`: start a Ray cluster from env vars
 - `./cli/aide-cluster-down`: stop the Ray cluster
 - `./cli/run-kb-sequence quick`: run a preset KernelBench sequence
