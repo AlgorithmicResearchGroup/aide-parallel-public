@@ -1206,24 +1206,27 @@ def evaluate_code_on_dataset(
             f"Attached {len(attributed_results.invalid_solution_analysis)} invalid solution analysis entries (from {len(all_invalid_analyses)} total)"
         )
 
-    # Calculate and attach aggregate metrics across all results
-    num_evaluated = len(all_results)
-    num_valid = sum(1 for r in all_results if r.get("is_valid", False))
-    num_errors = sum(1 for r in all_results if r.get("error") is not None)
-
-    attributed_results.aggregate_metrics = {
-        "num_evaluated": num_evaluated,
-        "num_valid": num_valid,
-        "num_errors": num_errors,
-        "accuracy": num_valid / num_evaluated if num_evaluated > 0 else 0,
-    }
+    # Calculate and attach aggregate metrics across all results.
+    # Preserve the full benchmark-relevant metrics rather than collapsing them to
+    # a reduced summary, since strict benchmark mode depends on mean/median
+    # speedup, validity, timeout counts, and overall_valid.
+    aggregate_metrics = _calculate_aggregate_metrics(all_results)
+    if "accuracy" not in aggregate_metrics:
+        num_evaluated = aggregate_metrics.get("num_evaluated", 0) or 0
+        num_valid = aggregate_metrics.get("num_valid", 0) or 0
+        aggregate_metrics["accuracy"] = (
+            num_valid / num_evaluated if num_evaluated > 0 else 0
+        )
+    attributed_results.aggregate_metrics = aggregate_metrics
 
     logging.info(
         f"Evaluation complete. Valid: {attributed_results.aggregate_metrics.get('num_valid', 0)}/{attributed_results.aggregate_metrics.get('num_evaluated', 0)}"
     )
     print(
         f"[algotune.main] subset={data_subset} aggregate_done "
-        f"evaluated={num_evaluated} valid={num_valid} errors={num_errors} "
+        f"evaluated={aggregate_metrics.get('num_evaluated')} "
+        f"valid={aggregate_metrics.get('num_valid')} "
+        f"errors={aggregate_metrics.get('num_errors')} "
         f"accuracy={attributed_results.aggregate_metrics.get('accuracy')}",
         file=os.sys.stderr,
         flush=True,

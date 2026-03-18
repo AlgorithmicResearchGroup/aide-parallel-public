@@ -1156,17 +1156,19 @@ def initialize_ray_cluster(head_node_ip: Optional[str] = None) -> None:
         ],
     }
 
-    # Load .env file and add to runtime_env
-    env_file = project_root / ".env"
-    if env_file.exists():
-        from dotenv import dotenv_values
+    # Load local env files and add to runtime_env. .env.local overrides .env.
+    from dotenv import dotenv_values
+
+    env_files = [project_root / ".env", project_root / ".env.local"]
+    for env_file in env_files:
+        if not env_file.exists():
+            continue
         loaded_env_vars = dotenv_values(env_file)
-        # Add API keys and other secrets to runtime_env
         for key, value in loaded_env_vars.items():
             if value:
                 runtime_env["env_vars"][key] = value
                 env_vars[key] = value
-        logger.info(f"Loaded {len(loaded_env_vars)} environment variables from .env")
+        logger.info(f"Loaded {len(loaded_env_vars)} environment variables from {env_file.name}")
 
     if head_node_ip:
         # Connect to existing Ray cluster with runtime_env
