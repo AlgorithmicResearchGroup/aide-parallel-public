@@ -202,7 +202,7 @@ Level: {level}
 This file contains the original Model class that needs to be optimized.
 Your task is to create a ModelNew class that:
 1. Has the EXACT same interface (__init__ and forward signatures)
-2. Produces outputs within tolerance (rtol=1e-3, atol=1e-5)
+2. Produces outputs within the official KernelBench tolerance (rtol=1e-2, atol=1e-2)
 3. Runs faster than the original on GPU
 
 IMPORTANT: You must create a class called "ModelNew" (not "Model")
@@ -258,7 +258,7 @@ from torch.utils.cpp_extension import load_inline
 # Remember:
 # 1. Keep the same __init__ signature as Model
 # 2. Keep the same forward signature as Model
-# 3. Maintain numerical accuracy (rtol=1e-3, atol=1e-5)
+# 3. Maintain numerical accuracy within the official KernelBench tolerance (rtol=1e-2, atol=1e-2)
 # 4. Focus on GPU performance optimization
 
 class ModelNew(nn.Module):

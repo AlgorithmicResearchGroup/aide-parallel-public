@@ -74,12 +74,30 @@ AIDE_ATTENTION_FAST_EVAL=1 ./cli/aide-run --local --task attention --num-experim
 
 ## KernelBench
 
-KernelBench needs a CUDA-capable GPU setup.
+KernelBench now runs only in a strict benchmark mode. It needs a CUDA-capable GPU setup plus an explicit baseline contract.
+
+Validate the strict environment first:
+
+```bash
+./cli/aide-kernelbench-validate-env --kb-reference-baseline H100_PCIe_LambdaLabs
+```
+
+Or generate a local eager baseline on your hardware:
+
+```bash
+./cli/aide-kernelbench-generate-baseline --hardware-name MY_GPU
+```
 
 Run a local KernelBench job:
 
 ```bash
-./cli/aide-run --local --task kernelbench --kb-task 1_19 --num-experiments 1 --num-iterations 1 --steps 1
+./cli/aide-run --local --task kernelbench --kb-task 1_19 --kb-reference-baseline H100_PCIe_LambdaLabs --num-experiments 1 --num-iterations 1 --steps 1
+```
+
+Run a resumable strict KernelBench campaign with the same interface shape as AlgoTune:
+
+```bash
+./cli/run-kb-sequence all --local --kb-reference-baseline H100_PCIe_LambdaLabs --num-experiments 4 --max-concurrent-tasks 4
 ```
 
 For Linux GPU nodes, install CUDA-specific PyTorch wheels separately, for example:
@@ -165,10 +183,13 @@ python -m pip install -e ./aideml
 
 - `./cli/aide-check`: validate the local install with a deterministic CPU run
 - `./cli/aide-algotune-validate-env`: validate the strict AlgoTune benchmark environment
+- `./cli/aide-kernelbench-validate-env`: validate the strict KernelBench benchmark environment
+- `./cli/aide-kernelbench-generate-baseline --hardware-name NAME`: generate a strict eager KernelBench baseline artifact
 - `./cli/aide-run`: run AIDE experiments
 - `./cli/aide-run --task algotune --at-task <task>`: run an AlgoTune task locally or on Ray
+- `./cli/aide-run --task kernelbench --kb-task <task> --kb-reference-baseline <name>`: run a strict KernelBench task locally or on Ray
 - `./cli/run-at-sequence all --profile coverage`: run a resumable AlgoTune sweep
 - `./cli/run-at-sequence all --attempts-per-task N --max-concurrent-tasks M`: control AlgoTune search depth and sweep concurrency
+- `./cli/run-kb-sequence all --num-experiments N --max-concurrent-tasks M`: run a resumable strict KernelBench sweep
 - `./cli/aide-cluster-up`: start a Ray cluster from env vars
 - `./cli/aide-cluster-down`: stop the Ray cluster
-- `./cli/run-kb-sequence quick`: run a preset KernelBench sequence

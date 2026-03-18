@@ -517,6 +517,16 @@ class Experiment:
                     "eval_metric": self.eval_metric,
                     "gpu_name": self.gpu_name,
                     "data_dir": str(self.data_dir),
+                    "kb_baseline_path": (
+                        os.environ.get("AIDE_KERNELBENCH_BASELINE_PATH")
+                        if self.task_type == "kernelbench"
+                        else None
+                    ),
+                    "kb_reference_baseline": (
+                        os.environ.get("AIDE_KERNELBENCH_REFERENCE_BASELINE")
+                        if self.task_type == "kernelbench"
+                        else None
+                    ),
                     "total_iterations": iteration,  # Will be updated in each iteration
                     "steps_per_iteration": steps,
                     "experiment_idx": experiment_idx,
@@ -832,6 +842,10 @@ def _result_status(task_type: str, result: dict[str, Any]) -> str:
     metric = result.get("valid_metric")
     if metric is None:
         return "failed"
+    if task_type == "kernelbench" and (
+        result.get("compiled") is not True or result.get("correct") is not True or result.get("error")
+    ):
+        return "failed"
     if task_type == "algotune" and (
         result.get("correct") is not True or result.get("error")
     ):
@@ -846,6 +860,24 @@ def _validate_algotune_strict_environment() -> None:
     from tasks.algotune.strict_benchmark import assert_benchmark_environment
 
     assert_benchmark_environment(check_all_tasks=True)
+
+
+def _validate_kernelbench_strict_environment(
+    *,
+    task_id: str,
+    baseline_path: str | None,
+    reference_baseline: str | None,
+) -> dict[str, Any]:
+    project_root_str = str(PROJECT_ROOT)
+    if project_root_str not in sys.path:
+        sys.path.insert(0, project_root_str)
+    from tasks.kernelbench.strict_benchmark import assert_benchmark_environment
+
+    return assert_benchmark_environment(
+        task_id=task_id,
+        baseline_path=baseline_path,
+        reference_baseline=reference_baseline,
+    )
 
 
 def _run_algotune_strict_final_evaluation(*, task_id: str, best_result: dict[str, Any]) -> dict[str, Any]:
@@ -1255,6 +1287,8 @@ def main(
                     "steps_per_experiment": steps_per_experiment,
                     "gpu_fraction": gpu_fraction,
                     "cpus_per_experiment": cpus_per_experiment,
+                    "kb_baseline_path": os.environ.get("AIDE_KERNELBENCH_BASELINE_PATH") if task_type == "kernelbench" else None,
+                    "kb_reference_baseline": os.environ.get("AIDE_KERNELBENCH_REFERENCE_BASELINE") if task_type == "kernelbench" else None,
                 },
                 tracking_experiment=tracking_experiment,
             )
@@ -1485,12 +1519,25 @@ def main(
             "gpu_fraction": gpu_fraction,
             "cpus_per_experiment": cpus_per_experiment,
             "tracking_experiment": tracking_experiment,
+            "kernelbench_eval": {
+                "mode": "benchmark_strict" if task_type == "kernelbench" else None,
+                "baseline_path": (
+                    os.environ.get("AIDE_KERNELBENCH_BASELINE_PATH")
+                    if task_type == "kernelbench"
+                    else None
+                ),
+                "reference_baseline": (
+                    os.environ.get("AIDE_KERNELBENCH_REFERENCE_BASELINE")
+                    if task_type == "kernelbench"
+                    else None
+                ),
+            },
             "algotune_eval": {
-                "mode": algotune_mode,
+                "mode": algotune_mode if task_type == "algotune" else None,
                 "search_split": "train" if task_type == "algotune" else None,
                 "final_split": "test" if task_type == "algotune" else None,
             },
-            "at_mode": algotune_mode,
+            "at_mode": algotune_mode if task_type == "algotune" else None,
             "non_reportable": _is_non_reportable_run(task_type, algotune_mode),
             "search_result": best_result,
             "final_result": final_result,
@@ -1543,6 +1590,10 @@ if __name__ == "__main__":
                        help="Override feedback model from contract")
     parser.add_argument("--kb-task", type=str, default=None,
                        help="KernelBench task ID (e.g., 1_19, 3_28)")
+    parser.add_argument("--kb-baseline-path", type=str, default=None,
+                       help="Strict KernelBench baseline JSON path")
+    parser.add_argument("--kb-reference-baseline", type=str, default=None,
+                       help="Vendored strict KernelBench reference baseline name")
     parser.add_argument("--at-task", type=str, default=None,
                        help="AlgoTune task name (e.g., kmeans, qr_factorization, svm)")
     parser.add_argument("--result-json", type=str, default=None,
@@ -1557,78 +1608,109 @@ if __name__ == "__main__":
     with open(data_dir / "contract.yaml", "r") as f:
         contract = yaml.safe_load(f)
 
-    # Handle KernelBench task-specific configuration
-    if args.task == "kernelbench":
-        if not args.kb_task:
-            logger.error("--kb-task is required for kernelbench tasks")
-            sys.exit(1)
+    algotune_n_problems = None
+    algotune_n_runs = None
+    algotune_mode = STRICT_ALGOTUNE_MODE
+    try:
+        # Handle KernelBench task-specific configuration
+        if args.task == "kernelbench":
+            if not args.kb_task:
+                logger.error("--kb-task is required for kernelbench tasks")
+                sys.exit(1)
+            if bool(args.kb_baseline_path) == bool(args.kb_reference_baseline):
+                logger.error(
+                    "KernelBench strict mode requires exactly one of "
+                    "--kb-baseline-path or --kb-reference-baseline"
+                )
+                sys.exit(1)
 
-        # Import kb_tasks module and prepare task
-        sys.path.insert(0, str(data_dir))
+            kb_env = _validate_kernelbench_strict_environment(
+                task_id=args.kb_task,
+                baseline_path=args.kb_baseline_path,
+                reference_baseline=args.kb_reference_baseline,
+            )
+            os.environ["AIDE_KERNELBENCH_BASELINE_PATH"] = str(kb_env["baseline_path"])
+            if kb_env.get("reference_baseline"):
+                os.environ["AIDE_KERNELBENCH_REFERENCE_BASELINE"] = str(kb_env["reference_baseline"])
+            else:
+                os.environ.pop("AIDE_KERNELBENCH_REFERENCE_BASELINE", None)
 
-        # First, prepare the task by injecting original code into optimize.py
-        from prepare_kernelbench_task import prepare_task
-        optimize_path = data_dir / "optimize.py"
+            sys.path.insert(0, str(data_dir))
 
-        logger.info(f"Preparing KernelBench task {args.kb_task}...")
-        prepare_task(args.kb_task, str(optimize_path))
+            from prepare_kernelbench_task import prepare_task
+            optimize_path = data_dir / "optimize.py"
 
-        # Now get enhanced task info with rich goals
-        from kb_tasks import get_task_info_with_code
-        task_info = get_task_info_with_code(args.kb_task)
+            logger.info(f"Preparing KernelBench task {args.kb_task}...")
+            prepare_task(args.kb_task, str(optimize_path))
 
-        # Update contract with rich task-specific information
-        contract["goal"] = task_info["goal"]  # Now includes full code and examples
+            from kb_tasks import get_task_info_with_code
+            task_info = get_task_info_with_code(args.kb_task)
 
-        # Update eval command with task ID - evaluate_gpu.py is in the input directory
-        # Note: eval command runs from working directory, so need ../input to reach sibling input directory
-        contract["eval"] = f"python ../input/evaluate_gpu.py --task-id {args.kb_task} --solution-path optimize.py --device cuda"
+            contract["goal"] = task_info["goal"]
+            contract["eval"] = f"python ../input/evaluate_gpu.py --task-id {args.kb_task} --solution-path optimize.py --device cuda"
 
-        # Use task-suggested steps if not overridden
-        if not args.steps:
-            contract["steps"] = task_info["suggested_steps"]
+            if not args.steps:
+                contract["steps"] = task_info["suggested_steps"]
 
-        logger.info(f"KernelBench task: {task_info['name']} (Level {task_info['level']})")
-        logger.info(f"Task prepared with original code and examples")
-    elif args.task == "algotune":
-        if not args.at_task:
-            logger.error("--at-task is required for algotune tasks")
-            sys.exit(1)
+            logger.info(f"KernelBench task: {task_info['name']} (Level {task_info['level']})")
+            logger.info(f"Task prepared with original code and examples")
+            logger.info("KernelBench strict baseline: %s", kb_env["baseline_path"])
+        elif args.task == "algotune":
+            if not args.at_task:
+                logger.error("--at-task is required for algotune tasks")
+                sys.exit(1)
 
-        sys.path.insert(0, str(data_dir))
+            sys.path.insert(0, str(data_dir))
 
-        from prepare_algotune_task import prepare_task
-        solver_path = data_dir / "solver.py"
+            from prepare_algotune_task import prepare_task
+            solver_path = data_dir / "solver.py"
 
-        logger.info(f"Preparing AlgoTune task {args.at_task}...")
-        prepare_task(args.at_task, str(solver_path))
+            logger.info(f"Preparing AlgoTune task {args.at_task}...")
+            prepare_task(args.at_task, str(solver_path))
 
-        from at_tasks import get_task_info_with_code
-        task_info = get_task_info_with_code(args.at_task)
+            from at_tasks import get_task_info_with_code
+            task_info = get_task_info_with_code(args.at_task)
 
-        algotune_mode = STRICT_ALGOTUNE_MODE
-        algotune_n_problems = None
-        algotune_n_runs = None
+            contract["goal"] = task_info["goal"]
+            contract["eval"] = (
+                f"python ../input/evaluate_algotune.py --task {args.at_task} "
+                "--solution-path solver.py --split test"
+            )
 
-        contract["goal"] = task_info["goal"]
-        contract["eval"] = (
-            f"python ../input/evaluate_algotune.py --task {args.at_task} "
-            "--solution-path solver.py --split test"
-        )
+            if not args.steps:
+                contract["steps"] = task_info.get("suggested_steps", contract.get("steps", 4))
 
-        if not args.steps:
-            contract["steps"] = task_info.get("suggested_steps", contract.get("steps", 4))
-
-        logger.info(
-            "AlgoTune task: %s (%s)",
-            task_info["name"],
-            task_info.get("category", "general"),
-        )
-        logger.info("Task prepared with description and reference implementation")
-    else:
-        algotune_n_problems = None
-        algotune_n_runs = None
-        algotune_mode = STRICT_ALGOTUNE_MODE
+            logger.info(
+                "AlgoTune task: %s (%s)",
+                task_info["name"],
+                task_info.get("category", "general"),
+            )
+            logger.info("Task prepared with description and reference implementation")
+    except Exception as exc:
+        if args.result_json:
+            _write_json(
+                args.result_json,
+                {
+                    "status": "failed",
+                    "task_type": args.task,
+                    "task_id": args.kb_task if args.task == "kernelbench" else (args.at_task if args.task == "algotune" else None),
+                    "kernelbench_eval": {
+                        "mode": "benchmark_strict" if args.task == "kernelbench" else None,
+                        "baseline_path": (
+                            os.environ.get("AIDE_KERNELBENCH_BASELINE_PATH")
+                            or (args.kb_baseline_path if args.task == "kernelbench" else None)
+                        ),
+                        "reference_baseline": (
+                            os.environ.get("AIDE_KERNELBENCH_REFERENCE_BASELINE")
+                            or (args.kb_reference_baseline if args.task == "kernelbench" else None)
+                        ),
+                    },
+                    "at_mode": algotune_mode if args.task == "algotune" else None,
+                    "non_reportable": _is_non_reportable_run(args.task, algotune_mode) if args.task == "algotune" else False,
+                    "error": _compact_exception(exc),
+                },
+            )
+        raise
 
     logger.info(f"Task configuration: {contract}")
 
@@ -1677,6 +1759,17 @@ if __name__ == "__main__":
                     "status": "failed",
                     "task_type": args.task,
                     "task_id": args.kb_task if args.task == "kernelbench" else (args.at_task if args.task == "algotune" else None),
+                    "kernelbench_eval": {
+                        "mode": "benchmark_strict" if args.task == "kernelbench" else None,
+                        "baseline_path": (
+                            os.environ.get("AIDE_KERNELBENCH_BASELINE_PATH")
+                            or (args.kb_baseline_path if args.task == "kernelbench" else None)
+                        ),
+                        "reference_baseline": (
+                            os.environ.get("AIDE_KERNELBENCH_REFERENCE_BASELINE")
+                            or (args.kb_reference_baseline if args.task == "kernelbench" else None)
+                        ),
+                    },
                     "at_mode": algotune_mode if args.task == "algotune" else None,
                     "non_reportable": _is_non_reportable_run(args.task, algotune_mode) if args.task == "algotune" else False,
                     "error": _compact_exception(exc),

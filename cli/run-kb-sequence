@@ -1,173 +1,458 @@
-#!/bin/bash
+#!/usr/bin/env python3
+"""Run resumable strict KernelBench campaigns."""
 
-# Helper script to run sequences of KernelBench tasks
-# This allows running multiple tasks one after another
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+from __future__ import annotations
 
-echo "=========================================="
-echo "KernelBench Task Sequence Runner"
-echo "=========================================="
-echo ""
+import argparse
+import json
+import shutil
+import subprocess
+import sys
+import time
+from datetime import datetime
+from pathlib import Path
+from typing import Any
 
-# Default settings
-GPU_FRACTION=${GPU_FRACTION:-0.5}
-NUM_EXPERIMENTS=${NUM_EXPERIMENTS:-16}
-TRACKING_EXPERIMENT=${TRACKING_EXPERIMENT:-"aide-kernelbench"}
-MODEL=${MODEL:-"gpt-4"}
 
-# Parse arguments
-if [ "$1" = "--help" ]; then
-    echo "Usage: $0 [PRESET|TASK_LIST]"
-    echo ""
-    echo "Presets:"
-    echo "  quick        - Run 5 representative Level 1 tasks"
-    echo "  level1       - Run 10 important Level 1 tasks"
-    echo "  level2       - Run 5 fusion tasks from Level 2"
-    echo "  level3       - Run 5 architecture tasks from Level 3"
-    echo "  matmul       - Run all matrix multiplication variants"
-    echo "  activations  - Run all activation function tasks"
-    echo "  test         - Run just 2 tasks for testing"
-    echo ""
-    echo "Or provide a space-separated list of task IDs:"
-    echo "  $0 1_19 1_23 2_1"
-    echo ""
-    echo "Environment variables:"
-    echo "  GPU_FRACTION     - GPU fraction per experiment (default: 0.5)"
-    echo "  NUM_EXPERIMENTS  - Number of parallel experiments (default: 16)"
-    echo "  TRACKING_EXPERIMENT - MLflow experiment name (default: aide-kernelbench)"
-    echo "  MODEL            - Model to use (default: gpt-4)"
-    echo ""
-    exit 0
-fi
+SCRIPT_DIR = Path(__file__).resolve().parent
+REPO_ROOT = SCRIPT_DIR.parent
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
 
-# Define task sets
-case "$1" in
-    "quick")
-        TASKS=("1_1" "1_19" "1_23" "1_26" "1_51")
-        STEPS=(15 15 15 15 15)
-        echo "Running quick representative subset (5 tasks)"
-        ;;
-    "level1")
-        TASKS=("1_1" "1_3" "1_19" "1_23" "1_26" "1_33" "1_40" "1_42" "1_51" "1_84")
-        STEPS=(15 15 15 15 15 15 15 15 15 15)
-        echo "Running important Level 1 tasks (10 tasks)"
-        ;;
-    "level2")
-        TASKS=("2_1" "2_4" "2_9" "2_12" "2_52")
-        STEPS=(20 20 20 20 20)
-        echo "Running Level 2 fusion tasks (5 tasks)"
-        ;;
-    "level3")
-        TASKS=("3_1" "3_9" "3_28" "3_35" "3_43")
-        STEPS=(25 25 30 25 30)
-        echo "Running Level 3 architecture tasks (5 tasks)"
-        ;;
-    "matmul")
-        TASKS=("1_1" "1_3" "1_10" "1_11")
-        STEPS=(15 15 15 15)
-        echo "Running matrix multiplication tasks (4 tasks)"
-        ;;
-    "activations")
-        TASKS=("1_19" "1_20" "1_21" "1_22" "1_23" "1_24" "1_25" "1_26")
-        STEPS=(15 15 15 15 15 15 15 15)
-        echo "Running activation function tasks (8 tasks)"
-        ;;
-    "test")
-        TASKS=("1_19" "1_23")
-        STEPS=(10 10)
-        echo "Running test subset (2 tasks)"
-        ;;
-    "")
-        echo "Error: No task set specified"
-        echo "Use --help for usage information"
-        exit 1
-        ;;
-    *)
-        # Custom task list provided
-        TASKS=($@)
-        STEPS=()
-        for task in "${TASKS[@]}"; do
-            # Determine steps based on level
-            level=${task:0:1}
-            case $level in
-                1) STEPS+=(15) ;;
-                2) STEPS+=(20) ;;
-                3) STEPS+=(25) ;;
-                4) STEPS+=(30) ;;
-                *) STEPS+=(20) ;;
-            esac
-        done
-        echo "Running custom task list: ${TASKS[@]}"
-        ;;
-esac
 
-echo "Settings:"
-echo "  GPU Fraction: $GPU_FRACTION"
-echo "  Experiments: $NUM_EXPERIMENTS"
-echo "  Tracking Experiment: $TRACKING_EXPERIMENT"
-echo "  Model: $MODEL"
-echo ""
+def parse_args() -> argparse.Namespace:
+    from src.kernelbench_sweep import PROFILE_DEFAULTS  # noqa: WPS433
 
-# Track results
-RESULTS_FILE="kb_sequence_results_$(date +%Y%m%d_%H%M%S).txt"
-echo "Results will be saved to: $RESULTS_FILE"
-echo "" | tee -a "$RESULTS_FILE"
-echo "Task Sequence Results - $(date)" | tee -a "$RESULTS_FILE"
-echo "================================" | tee -a "$RESULTS_FILE"
+    parser = argparse.ArgumentParser(description="Run a resumable strict KernelBench campaign")
+    parser.add_argument("tasks", nargs="*", help="Task ids to run, a preset name, or 'all' (default: all)")
+    parser.add_argument("--category", action="append", default=[], help="Restrict to one or more KernelBench categories")
+    parser.add_argument("--level", action="append", type=int, default=[], help="Restrict to one or more KernelBench levels")
+    parser.add_argument("--profile", choices=sorted(PROFILE_DEFAULTS), default="coverage")
+    parser.add_argument("--campaign-id", default=None)
+    parser.add_argument("--output-dir", default=None)
+    parser.add_argument("--local", action="store_true")
+    parser.add_argument("--head-node-ip", default=None)
+    parser.add_argument("--num-experiments", type=int, default=None)
+    parser.add_argument("--num-iterations", type=int, default=None)
+    parser.add_argument("--steps", type=int, default=None)
+    parser.add_argument("--gpu-fraction", type=float, default=None)
+    parser.add_argument("--cpus-per-experiment", type=int, default=None)
+    parser.add_argument("--max-concurrent-tasks", type=int, default=1)
+    parser.add_argument("--model", default=None)
+    parser.add_argument("--feedback-model", default=None)
+    parser.add_argument("--tracking-experiment", default=None)
+    parser.add_argument("--wandb-project", dest="tracking_experiment", help=argparse.SUPPRESS)
+    parser.add_argument("--resume", dest="resume", action="store_true", default=True)
+    parser.add_argument("--no-resume", dest="resume", action="store_false")
+    parser.add_argument("--rerun", action="store_true")
+    parser.add_argument("--failed-only", action="store_true")
+    parser.add_argument("--shard-index", type=int, default=0)
+    parser.add_argument("--num-shards", type=int, default=1)
+    parser.add_argument("--kb-baseline-path", default=None)
+    parser.add_argument("--kb-reference-baseline", default=None)
+    return parser.parse_args()
 
-# Run each task
-TOTAL_TASKS=${#TASKS[@]}
-CURRENT=1
 
-for i in "${!TASKS[@]}"; do
-    task="${TASKS[$i]}"
-    steps="${STEPS[$i]}"
+def resolve_task_selection(args: argparse.Namespace) -> list[str]:
+    from tasks.kernelbench.kb_tasks import get_all_tasks, get_representative_subset, get_task_info  # noqa: WPS433
 
-    echo "" | tee -a "$RESULTS_FILE"
-    echo "----------------------------------------" | tee -a "$RESULTS_FILE"
-    echo "[$CURRENT/$TOTAL_TASKS] Running task: $task (Steps: $steps)" | tee -a "$RESULTS_FILE"
-    echo "----------------------------------------" | tee -a "$RESULTS_FILE"
+    preset_tasks = {
+        "quick": get_representative_subset(),
+        "test": get_representative_subset()[:2],
+    }
+    all_tasks = sorted(get_all_tasks(), key=lambda task: (int(task.split("_")[0]), int(task.split("_")[1])))
+    requested = args.tasks or ["all"]
 
-    # Run the task
-    "${REPO_ROOT}/cli/aide-run" \
-        --task kernelbench \
-        --kb-task "$task" \
-        --num-experiments "$NUM_EXPERIMENTS" \
-        --gpu-fraction "$GPU_FRACTION" \
-        --tracking-experiment "$TRACKING_EXPERIMENT" \
-        --model "$MODEL" \
-        --steps "$steps" 2>&1 | tee -a "$RESULTS_FILE"
+    if len(requested) == 1 and requested[0] in preset_tasks:
+        selected = preset_tasks[requested[0]]
+    elif "all" in requested:
+        selected = all_tasks
+    else:
+        unknown = sorted(set(requested) - set(all_tasks))
+        if unknown:
+            raise SystemExit(f"Unknown KernelBench tasks: {', '.join(unknown)}")
+        selected = sorted(dict.fromkeys(requested), key=lambda task: (int(task.split('_')[0]), int(task.split('_')[1])))
 
-    # Extract speedup from the output (if available)
-    speedup=$(grep -o "speedup: [0-9.]*" "$RESULTS_FILE" | tail -1 | cut -d' ' -f2)
-    if [ -n "$speedup" ]; then
-        echo "Task $task completed with speedup: $speedup" | tee -a "$RESULTS_FILE"
-    fi
+    if args.category:
+        allowed = set(args.category)
+        selected = [task for task in selected if get_task_info(task).get("category") in allowed]
+    if args.level:
+        allowed_levels = set(args.level)
+        selected = [task for task in selected if get_task_info(task).get("level") in allowed_levels]
 
-    CURRENT=$((CURRENT + 1))
+    if args.num_shards < 1:
+        raise SystemExit("--num-shards must be >= 1")
+    if args.shard_index < 0 or args.shard_index >= args.num_shards:
+        raise SystemExit("--shard-index must be in [0, --num-shards)")
 
-    # Brief pause between tasks
-    if [ $CURRENT -le $TOTAL_TASKS ]; then
-        echo "Waiting 5 seconds before next task..." | tee -a "$RESULTS_FILE"
-        sleep 5
-    fi
-done
+    return [task for idx, task in enumerate(selected) if idx % args.num_shards == args.shard_index]
 
-echo "" | tee -a "$RESULTS_FILE"
-echo "========================================" | tee -a "$RESULTS_FILE"
-echo "All tasks completed!" | tee -a "$RESULTS_FILE"
-echo "Results saved to: $RESULTS_FILE" | tee -a "$RESULTS_FILE"
-echo "" | tee -a "$RESULTS_FILE"
 
-# Summary
-echo "Summary:" | tee -a "$RESULTS_FILE"
-echo "--------" | tee -a "$RESULTS_FILE"
-for task in "${TASKS[@]}"; do
-    speedup=$(grep "Task $task completed with speedup:" "$RESULTS_FILE" | tail -1 | cut -d':' -f2)
-    if [ -n "$speedup" ]; then
-        echo "  $task: speedup =$speedup" | tee -a "$RESULTS_FILE"
-    else
-        echo "  $task: no speedup data" | tee -a "$RESULTS_FILE"
-    fi
-done
+def effective_run_config(args: argparse.Namespace) -> dict[str, Any]:
+    from src.kernelbench_sweep import PROFILE_DEFAULTS  # noqa: WPS433
+
+    defaults = PROFILE_DEFAULTS[args.profile]
+    return {
+        "profile": args.profile,
+        "local": args.local,
+        "head_node_ip": args.head_node_ip,
+        "num_experiments": args.num_experiments or defaults["num_experiments"],
+        "num_iterations": args.num_iterations or defaults["num_iterations"],
+        "steps": args.steps,
+        "gpu_fraction": args.gpu_fraction or defaults["gpu_fraction"],
+        "cpus_per_experiment": args.cpus_per_experiment or defaults["cpus_per_experiment"],
+        "max_concurrent_tasks": args.max_concurrent_tasks,
+        "model": args.model,
+        "feedback_model": args.feedback_model,
+        "tracking_experiment": args.tracking_experiment,
+        "kb_baseline_path": args.kb_baseline_path,
+        "kb_reference_baseline": args.kb_reference_baseline,
+    }
+
+
+def append_manifest(manifest_path: Path, record: dict[str, Any]) -> None:
+    manifest_path.parent.mkdir(parents=True, exist_ok=True)
+    with manifest_path.open("a", encoding="utf-8") as handle:
+        handle.write(json.dumps(record, sort_keys=True) + "\n")
+
+
+def read_existing_result(task_dir: Path) -> dict[str, Any] | None:
+    result_path = task_dir / "result.json"
+    if not result_path.exists():
+        return None
+    return json.loads(result_path.read_text(encoding="utf-8"))
+
+
+def should_skip_task(
+    args: argparse.Namespace,
+    task_dir: Path,
+    config_hash: str,
+) -> tuple[bool, str | None, dict[str, Any] | None]:
+    existing = read_existing_result(task_dir)
+    if not args.resume or args.rerun:
+        return False, None, existing
+    if not existing or existing.get("config_hash") != config_hash:
+        if args.failed_only:
+            return True, "failed-only requested but no matching failed result exists", existing
+        return False, None, existing
+    status = existing.get("status")
+    if args.failed_only:
+        if status == "failed":
+            return False, None, existing
+        return True, f"failed-only requested and latest status is {status}", existing
+    if status in {"succeeded", "failed"}:
+        return True, f"matching {status} result already exists", existing
+    return False, None, existing
+
+
+def build_command(task_name: str, result_path: Path, config: dict[str, Any], task_steps: int) -> list[str]:
+    command = [
+        str(REPO_ROOT / "cli" / "aide-run"),
+        "--task", "kernelbench",
+        "--kb-task", task_name,
+        "--num-experiments", str(config["num_experiments"]),
+        "--num-iterations", str(config["num_iterations"]),
+        "--steps", str(task_steps),
+        "--gpu-fraction", str(config["gpu_fraction"]),
+        "--cpus-per-experiment", str(config["cpus_per_experiment"]),
+        "--result-json", str(result_path),
+    ]
+    if config["local"]:
+        command.append("--local")
+    elif config.get("head_node_ip"):
+        command.extend(["--head-node-ip", str(config["head_node_ip"])])
+    if config.get("model"):
+        command.extend(["--model", str(config["model"])])
+    if config.get("feedback_model"):
+        command.extend(["--feedback-model", str(config["feedback_model"])])
+    if config.get("tracking_experiment"):
+        command.extend(["--tracking-experiment", str(config["tracking_experiment"])])
+    if config.get("kb_baseline_path"):
+        command.extend(["--kb-baseline-path", str(config["kb_baseline_path"])])
+    if config.get("kb_reference_baseline"):
+        command.extend(["--kb-reference-baseline", str(config["kb_reference_baseline"])])
+    return command
+
+
+def create_manifest_record(
+    campaign_id: str,
+    context: dict[str, Any],
+    *,
+    status: str,
+    finished_at: str,
+    result: dict[str, Any] | None,
+    failure_reason: str | None,
+) -> dict[str, Any]:
+    report_result = (result or {}).get("report_result", (result or {}).get("best_result", result or {}))
+    kernelbench_eval = (result or {}).get("kernelbench_eval", {})
+    return {
+        "campaign_id": campaign_id,
+        "task_name": context["task_name"],
+        "level": context["level"],
+        "category": context["category"],
+        "status": status,
+        "attempt": context["attempt"],
+        "started_at": context["started_at"],
+        "finished_at": finished_at,
+        "best_metric": report_result.get("valid_metric"),
+        "compiled": report_result.get("compiled"),
+        "correct": report_result.get("correct"),
+        "failure_reason": failure_reason or report_result.get("error") or (result or {}).get("error"),
+        "artifact_dir": str(context["task_dir"]),
+        "config_hash": context["config_hash"],
+        "resume_key": f"{context['task_name']}:{context['config_hash']}",
+        "baseline_path": kernelbench_eval.get("baseline_path"),
+        "reference_baseline": kernelbench_eval.get("reference_baseline"),
+    }
+
+
+def prepare_task_context(
+    args: argparse.Namespace,
+    campaign_id: str,
+    index: int,
+    total_tasks: int,
+    task_name: str,
+    tasks_dir: Path,
+    existing_records: list[dict[str, Any]],
+    config: dict[str, Any],
+) -> dict[str, Any]:
+    from src.kernelbench_sweep import compute_config_hash  # noqa: WPS433
+    from tasks.kernelbench.kb_tasks import get_task_info  # noqa: WPS433
+
+    task_info = get_task_info(task_name)
+    task_dir = tasks_dir / task_name
+    task_dir.mkdir(parents=True, exist_ok=True)
+    task_steps = args.steps or task_info.get("suggested_steps", 15)
+
+    task_config = {
+        "campaign_id": campaign_id,
+        "task_name": task_name,
+        "level": task_info["level"],
+        "category": task_info["category"],
+        "steps": task_steps,
+        **config,
+    }
+    config_hash = compute_config_hash(task_config)
+    (task_dir / "config.json").write_text(
+        json.dumps({**task_config, "config_hash": config_hash}, indent=2, sort_keys=True),
+        encoding="utf-8",
+    )
+    skip, skip_reason, existing_result = should_skip_task(args, task_dir, config_hash)
+    attempt = sum(1 for record in existing_records if record.get("task_name") == task_name) + 1
+    return {
+        "index": index,
+        "total": total_tasks,
+        "task_name": task_name,
+        "level": task_info["level"],
+        "category": task_info["category"],
+        "task_dir": task_dir,
+        "config_hash": config_hash,
+        "attempt": attempt,
+        "skip": skip,
+        "skip_reason": skip_reason,
+        "existing_result": existing_result,
+        "started_at": None,
+        "result_path": task_dir / "result.json",
+        "stdout_path": task_dir / "stdout.log",
+        "stderr_path": task_dir / "stderr.log",
+        "command": build_command(task_name, task_dir / "result.json", config, task_steps),
+        "stdout_handle": None,
+        "stderr_handle": None,
+        "process": None,
+    }
+
+
+def finalize_task(campaign_id: str, context: dict[str, Any], existing_records: list[dict[str, Any]], manifest_path: Path) -> dict[str, Any]:
+    result_path = context["result_path"]
+    if result_path.exists():
+        result_payload = json.loads(result_path.read_text(encoding="utf-8"))
+    else:
+        result_payload = {
+            "status": "failed",
+            "error": f"aide-run exited with code {context['process'].returncode} without producing result.json",
+        }
+        result_path.write_text(json.dumps(result_payload, indent=2, sort_keys=True), encoding="utf-8")
+
+    result_payload["config_hash"] = context["config_hash"]
+    result_payload["command"] = context["command"]
+    result_payload["returncode"] = context["process"].returncode if context.get("process") is not None else None
+    result_path.write_text(json.dumps(result_payload, indent=2, sort_keys=True), encoding="utf-8")
+
+    best_solution_path = result_payload.get("best_result", {}).get("best_solution_path")
+    if best_solution_path and Path(best_solution_path).exists():
+        shutil.copyfile(best_solution_path, context["task_dir"] / "best_solver.py")
+
+    report_result = result_payload.get("report_result", result_payload.get("best_result", {}))
+    status = result_payload.get("status", "failed")
+    if context["process"].returncode != 0 and status != "succeeded":
+        status = "failed"
+    failure_reason = result_payload.get("error") or report_result.get("error")
+    record = create_manifest_record(
+        campaign_id,
+        context,
+        status=status,
+        finished_at=datetime.now().isoformat(),
+        result=result_payload,
+        failure_reason=failure_reason,
+    )
+    append_manifest(manifest_path, record)
+    existing_records.append(record)
+    print(f"  -> {status} | metric={record.get('best_metric')} | reason={record.get('failure_reason') or 'n/a'}")
+    return record
+
+
+def main() -> int:
+    args = parse_args()
+
+    from src.kernelbench_sweep import (
+        default_campaign_id,
+        load_manifest_records,
+        reconcile_campaign_runs_in_mlflow,
+        sync_campaign_summary_to_mlflow,
+        write_campaign_summary,
+    )  # noqa: WPS433
+    from tasks.kernelbench.strict_benchmark import validate_benchmark_environment  # noqa: WPS433
+    if bool(args.kb_baseline_path) == bool(args.kb_reference_baseline):
+        raise SystemExit("Specify exactly one of --kb-baseline-path or --kb-reference-baseline")
+    if args.max_concurrent_tasks < 1:
+        raise SystemExit("--max-concurrent-tasks must be >= 1")
+
+    selected_tasks = resolve_task_selection(args)
+    config = effective_run_config(args)
+    env_validation = validate_benchmark_environment(
+        baseline_path=args.kb_baseline_path,
+        reference_baseline=args.kb_reference_baseline,
+    )
+    if not env_validation["ok"]:
+        raise SystemExit(
+            "KernelBench strict benchmark environment validation failed: "
+            + "; ".join(env_validation["errors"])
+        )
+
+    campaign_id = args.campaign_id or default_campaign_id(args.profile, config.get("model"))
+    campaign_dir = Path(args.output_dir) if args.output_dir else REPO_ROOT / "runs" / "kernelbench" / campaign_id
+    tasks_dir = campaign_dir / "tasks"
+    manifest_path = campaign_dir / "manifest.jsonl"
+    campaign_dir.mkdir(parents=True, exist_ok=True)
+    tasks_dir.mkdir(parents=True, exist_ok=True)
+
+    campaign_config = {
+        "campaign_id": campaign_id,
+        "profile": args.profile,
+        "selected_task_count": len(selected_tasks),
+        "selected_tasks": selected_tasks,
+        "config": config,
+        "shard_index": args.shard_index,
+        "num_shards": args.num_shards,
+        "created_at": datetime.now().isoformat(),
+    }
+    (campaign_dir / "campaign_config.json").write_text(
+        json.dumps(campaign_config, indent=2, sort_keys=True),
+        encoding="utf-8",
+    )
+    write_campaign_summary(campaign_dir)
+    reconcile_campaign_runs_in_mlflow(campaign_dir, tracking_experiment=config.get("tracking_experiment"), finalize_incomplete=True)
+    sync_campaign_summary_to_mlflow(campaign_dir, tracking_experiment=config.get("tracking_experiment"))
+
+    existing_records = load_manifest_records(manifest_path)
+    print(f"Campaign: {campaign_id}")
+    print(f"Profile: {args.profile}")
+    print(f"Selected tasks: {len(selected_tasks)}")
+    print(f"Output dir: {campaign_dir}")
+    print(
+        "Concurrency: "
+        f"{config['max_concurrent_tasks']} task(s) in parallel, "
+        f"{config['num_experiments']} experiment(s) per task"
+    )
+
+    task_queue = [
+        prepare_task_context(
+            args,
+            campaign_id,
+            index,
+            len(selected_tasks),
+            task_name,
+            tasks_dir,
+            existing_records,
+            config,
+        )
+        for index, task_name in enumerate(selected_tasks, start=1)
+    ]
+    active: list[dict[str, Any]] = []
+
+    def start_task(context: dict[str, Any]) -> None:
+        context["started_at"] = datetime.now().isoformat()
+        print(f"[{context['index']}/{context['total']}] Running {context['task_name']} (level {context['level']}, {context['category']})")
+        context["stdout_handle"] = context["stdout_path"].open("w", encoding="utf-8")
+        context["stderr_handle"] = context["stderr_path"].open("w", encoding="utf-8")
+        context["process"] = subprocess.Popen(
+            context["command"],
+            cwd=str(REPO_ROOT),
+            stdout=context["stdout_handle"],
+            stderr=context["stderr_handle"],
+            text=True,
+        )
+        active.append(context)
+
+    try:
+        while task_queue or active:
+            while task_queue and len(active) < config["max_concurrent_tasks"]:
+                context = task_queue.pop(0)
+                if context["skip"]:
+                    print(f"[{context['index']}/{context['total']}] Skipping {context['task_name']}: {context['skip_reason']}")
+                    record = create_manifest_record(
+                        campaign_id,
+                        context,
+                        status="skipped",
+                        finished_at=datetime.now().isoformat(),
+                        result=context["existing_result"],
+                        failure_reason=context["skip_reason"],
+                    )
+                    append_manifest(manifest_path, record)
+                    existing_records.append(record)
+                    write_campaign_summary(campaign_dir)
+                    reconcile_campaign_runs_in_mlflow(campaign_dir, tracking_experiment=config.get("tracking_experiment"), finalize_incomplete=False)
+                    sync_campaign_summary_to_mlflow(campaign_dir, tracking_experiment=config.get("tracking_experiment"))
+                    continue
+                start_task(context)
+
+            finished = [context for context in active if context["process"].poll() is not None or context["result_path"].exists()]
+            for context in finished:
+                if context["process"].poll() is None:
+                    context["process"].terminate()
+                    try:
+                        context["process"].wait(timeout=10)
+                    except subprocess.TimeoutExpired:
+                        context["process"].kill()
+                        context["process"].wait(timeout=10)
+                context["stdout_handle"].close()
+                context["stderr_handle"].close()
+                finalize_task(campaign_id, context, existing_records, manifest_path)
+                write_campaign_summary(campaign_dir)
+                reconcile_campaign_runs_in_mlflow(campaign_dir, tracking_experiment=config.get("tracking_experiment"), finalize_incomplete=False)
+                sync_campaign_summary_to_mlflow(campaign_dir, tracking_experiment=config.get("tracking_experiment"))
+                active.remove(context)
+
+            if active and not finished:
+                time.sleep(1)
+    except KeyboardInterrupt:
+        for context in active:
+            if context.get("process") is not None and context["process"].poll() is None:
+                context["process"].terminate()
+        raise
+
+    summary = write_campaign_summary(campaign_dir)
+    reconcile_campaign_runs_in_mlflow(campaign_dir, tracking_experiment=config.get("tracking_experiment"), finalize_incomplete=True)
+    sync_campaign_summary_to_mlflow(campaign_dir, tracking_experiment=config.get("tracking_experiment"))
+    print(
+        "Summary: "
+        f"succeeded={summary['status_counts'].get('succeeded', 0)} "
+        f"failed={summary['status_counts'].get('failed', 0)} "
+        f"skipped={summary['status_counts'].get('skipped', 0)}"
+    )
+    print(f"Summary written to: {campaign_dir / 'summary.json'}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

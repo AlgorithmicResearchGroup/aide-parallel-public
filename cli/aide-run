@@ -18,6 +18,8 @@ TRACKING_EXPERIMENT=""
 MODEL="${AIDE_MODEL:-}"
 FEEDBACK_MODEL="${AIDE_FEEDBACK_MODEL:-}"
 KB_TASK=""
+KB_BASELINE_PATH=""
+KB_REFERENCE_BASELINE=""
 AT_TASK=""
 RESULT_JSON=""
 LOCAL_MODE="false"
@@ -48,6 +50,10 @@ while [[ $# -gt 0 ]]; do
       FEEDBACK_MODEL="$2"; shift 2 ;;
     --kb-task)
       KB_TASK="$2"; shift 2 ;;
+    --kb-baseline-path)
+      KB_BASELINE_PATH="$2"; shift 2 ;;
+    --kb-reference-baseline)
+      KB_REFERENCE_BASELINE="$2"; shift 2 ;;
     --at-task)
       AT_TASK="$2"; shift 2 ;;
     --at-n-problems|--at-n-runs|--at-mode|--at-fast|--no-at-fast)
@@ -74,6 +80,9 @@ Options:
   --model NAME             Generation model override
   --feedback-model NAME    Feedback model override
   --kb-task ID             KernelBench task ID (required for kernelbench)
+  --kb-baseline-path FILE  Strict KernelBench baseline JSON path
+  --kb-reference-baseline NAME
+                           Strict vendored KernelBench reference baseline name
   --at-task NAME           AlgoTune task name (required for algotune)
   --result-json FILE       Write final run metadata to FILE
   --local                  Run locally (no remote Ray address)
@@ -81,7 +90,7 @@ Options:
 
 Examples:
   ./cli/aide-run --local --num-experiments 2 --steps 1
-  ./cli/aide-run --task kernelbench --kb-task 1_19 --head-node-ip 10.0.0.5
+  ./cli/aide-run --task kernelbench --kb-task 1_19 --kb-reference-baseline H100_PCIe_LambdaLabs --head-node-ip 10.0.0.5
   ./cli/aide-run --local --task algotune --at-task kmeans --cpus-per-experiment 2
 USAGE
       exit 0 ;;
@@ -93,6 +102,11 @@ done
 
 if [[ "$TASK" == "kernelbench" && -z "$KB_TASK" ]]; then
   echo "ERROR: --kb-task is required for --task kernelbench"
+  exit 1
+fi
+
+if [[ "$TASK" == "kernelbench" && -n "$KB_BASELINE_PATH" && -n "$KB_REFERENCE_BASELINE" ]]; then
+  echo "ERROR: specify exactly one of --kb-baseline-path or --kb-reference-baseline for KernelBench"
   exit 1
 fi
 
@@ -141,6 +155,8 @@ fi
 [[ -n "$MODEL" ]] && CMD+=(--model "$MODEL")
 [[ -n "$FEEDBACK_MODEL" ]] && CMD+=(--feedback-model "$FEEDBACK_MODEL")
 [[ -n "$KB_TASK" ]] && CMD+=(--kb-task "$KB_TASK")
+[[ -n "$KB_BASELINE_PATH" ]] && CMD+=(--kb-baseline-path "$KB_BASELINE_PATH")
+[[ -n "$KB_REFERENCE_BASELINE" ]] && CMD+=(--kb-reference-baseline "$KB_REFERENCE_BASELINE")
 [[ -n "$AT_TASK" ]] && CMD+=(--at-task "$AT_TASK")
 [[ -n "$RESULT_JSON" ]] && CMD+=(--result-json "$RESULT_JSON")
 

@@ -409,6 +409,7 @@ class Interpreter:
 
                 try:
                     logger.debug(f"Running direct evaluation for task {self.task_id}")
+                    _progress(f"calling strict KernelBench evaluation task={self.task_id}")
 
                     kernelbench_path = working_dir_path.parent.parent / "tasks" / "kernelbench"
                     kb_library_path = working_dir_path.parent.parent / "tasks" / "kernel_bench" / "KernelBench"
@@ -443,11 +444,14 @@ class Interpreter:
                         output.append(f"[Eval error]: {eval_results['error']}\n")
 
                     logger.info(f"Evaluation complete - speedup: {speedup_value}")
+                    _progress(f"completed KernelBench evaluation speedup={speedup_value}")
                 except ImportError as e:
                     output.append(f"[Eval error]: Failed to import evaluation module: {str(e)}")
                     logger.error(f"Import error during evaluation: {e}")
+                    _progress(f"KernelBench evaluation import failed: {e}")
                 except Exception as e:
                     output.append(f"[Eval error]: Failed to run evaluation: {str(e)}")
                     logger.error(f"Evaluation failed: {e}")
+                    _progress(f"KernelBench evaluation failed: {e}")
 
         return ExecutionResult(output, exec_time, e_cls_name, exc_info, exc_stack)

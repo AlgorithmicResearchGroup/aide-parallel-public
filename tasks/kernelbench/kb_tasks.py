@@ -201,7 +201,7 @@ def get_task_info(task_id: str) -> dict:
 
     # Generate optimization goal based on level
     if level == 1:
-        goal = f"""Optimize the {task_info['name']} kernel for H100 GPU.
+        goal = f"""Optimize the {task_info['name']} kernel for the benchmark GPU used in this run.
 Focus on:
 - Memory coalescing and bandwidth optimization
 - Warp efficiency and divergence reduction
@@ -212,7 +212,7 @@ Focus on:
 The kernel should maintain numerical correctness while maximizing performance."""
 
     elif level == 2:
-        goal = f"""Optimize the fused operation {task_info['name']} for H100 GPU.
+        goal = f"""Optimize the fused operation {task_info['name']} for the benchmark GPU used in this run.
 Key optimization opportunities:
 - Kernel fusion to eliminate intermediate tensor materialization
 - Reduce memory bandwidth by combining operations
@@ -223,7 +223,7 @@ Key optimization opportunities:
 Focus on creating a single, efficient fused kernel that performs all operations."""
 
     elif level == 3:
-        goal = f"""Optimize the complete {task_info['name']} architecture for H100 GPU.
+        goal = f"""Optimize the complete {task_info['name']} architecture for the benchmark GPU used in this run.
 Optimization strategies:
 - Global kernel fusion opportunities across the architecture
 - Optimize critical path operations (e.g., attention, convolutions)
@@ -234,7 +234,7 @@ Optimization strategies:
 Look for opportunities to fuse multiple layers or operations while maintaining the model's functionality."""
 
     elif level == 4:
-        goal = f"""Optimize the HuggingFace model {task_info['name']} for H100 GPU.
+        goal = f"""Optimize the HuggingFace model {task_info['name']} for the benchmark GPU used in this run.
 Focus areas:
 - Attention mechanism optimization (if applicable)
 - Efficient handling of large sequence lengths
@@ -317,6 +317,25 @@ def list_tasks_by_level(level: int) -> list:
         raise ValueError(f"Invalid level: {level}")
 
     return sorted(all_tasks, key=lambda x: int(x.split("_")[1]))
+
+
+def get_all_tasks() -> list[str]:
+    """Return the full KernelBench task inventory."""
+    tasks: list[str] = []
+    for level in (1, 2, 3, 4):
+        tasks.extend(list_tasks_by_level(level))
+    return tasks
+
+
+def get_all_categories() -> list[str]:
+    """Return the known category names from the curated metadata."""
+    categories = {
+        info["category"]
+        for group in (LEVEL1_TASKS, LEVEL2_TASKS, LEVEL3_TASKS, LEVEL4_TASKS)
+        for info in group.values()
+    }
+    categories.add("generic")
+    return sorted(categories)
 
 def get_representative_subset() -> list:
     """Get a representative subset of tasks for quick testing."""
