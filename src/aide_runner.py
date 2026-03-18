@@ -77,6 +77,12 @@ ENV_ALIASES = (
 )
 
 
+def _parse_visible_gpu_ids(value: str | None) -> list[str]:
+    if not value:
+        return []
+    return [token.strip() for token in value.split(",") if token.strip()]
+
+
 def _progress(message: str) -> None:
     print(f"[aide.run] {message}", flush=True)
 
@@ -413,6 +419,11 @@ class Experiment:
         self.parent_run_id = parent_run_id
         self.mlflow_logger = None  # Persistent MLflow logger across iterations
         self.total_steps_completed = 0  # Track total steps across all iterations
+        self.cuda_visible_devices = os.environ.get("CUDA_VISIBLE_DEVICES")
+        self.visible_gpu_ids = _parse_visible_gpu_ids(self.cuda_visible_devices)
+        self.assigned_gpu_id = (
+            self.visible_gpu_ids[0] if len(self.visible_gpu_ids) == 1 else None
+        )
 
         if self.task_type == "algotune":
             # Keep parent actor processes single-threaded for local sweep stability.
@@ -434,7 +445,15 @@ class Experiment:
         if torch.cuda.is_available():
             self.gpu_id = torch.cuda.current_device()
             self.gpu_name = torch.cuda.get_device_name(self.gpu_id)
-            logger.info(f"Experiment initialized on GPU {self.gpu_id}: {self.gpu_name}")
+            if self.assigned_gpu_id is not None:
+                logger.info(
+                    "Experiment initialized on local GPU %s (assigned physical GPU %s): %s",
+                    self.gpu_id,
+                    self.assigned_gpu_id,
+                    self.gpu_name,
+                )
+            else:
+                logger.info(f"Experiment initialized on GPU {self.gpu_id}: {self.gpu_name}")
         else:
             self.gpu_id = None
             self.gpu_name = "CPU"
@@ -469,6 +488,8 @@ class Experiment:
             "error": _truncate_text(error, MAX_RETURN_ERROR_CHARS),
             "term_out": None,
             "gpu_id": self.gpu_id,
+            "assigned_gpu_id": self.assigned_gpu_id,
+            "cuda_visible_devices": self.cuda_visible_devices,
             "gpu_name": self.gpu_name,
             "experiment_idx": experiment_idx,
             "log_dir": str(exp.cfg.log_dir) if exp is not None else None,
@@ -532,10 +553,11 @@ class Experiment:
         else:
             tracking_available = False
 
-        # Set CUDA_VISIBLE_DEVICES to ensure subprocess uses correct GPU
-        if self.gpu_id is not None:
-            os.environ['CUDA_VISIBLE_DEVICES'] = str(self.gpu_id)
-            logger.info(f"Set CUDA_VISIBLE_DEVICES={self.gpu_id} for experiment")
+        if self.cuda_visible_devices:
+            logger.info(
+                "Preserving CUDA_VISIBLE_DEVICES=%s for experiment",
+                self.cuda_visible_devices,
+            )
         self._set_trace_context(experiment_idx=experiment_idx, iteration=iteration)
         _progress(
             f"experiment={experiment_idx} iteration={iteration} steps={steps} "
@@ -798,6 +820,8 @@ class Experiment:
                 "error": _truncate_text(eval_metadata["error"], MAX_RETURN_ERROR_CHARS),
                 "term_out": _truncate_text(term_out, MAX_RETURN_TEXT_CHARS),
                 "gpu_id": self.gpu_id,
+                "assigned_gpu_id": self.assigned_gpu_id,
+                "cuda_visible_devices": self.cuda_visible_devices,
                 "gpu_name": self.gpu_name,
                 "experiment_idx": experiment_idx,
                 "log_dir": str(exp.cfg.log_dir),
