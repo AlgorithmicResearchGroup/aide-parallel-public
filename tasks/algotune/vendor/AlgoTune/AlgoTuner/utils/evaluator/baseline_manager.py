@@ -11,6 +11,11 @@ from typing import Any
 from AlgoTuner.utils.timing_config import DEV_RUNS, EVAL_RUNS
 
 
+def _progress(message: str) -> None:
+    """Emit human-readable baseline progress without changing evaluator semantics."""
+    print(f"[algotune.baseline] {message}", file=os.sys.stderr, flush=True)
+
+
 class BaselineManager:
     """
     Manages baseline times for evaluation tasks.
@@ -62,12 +67,18 @@ class BaselineManager:
                 logging.info(
                     f"Using cached baseline times for {subset}: {len(self._cache[subset])} entries"
                 )
+                _progress(
+                    f"subset={subset} using cached baseline times count={len(self._cache[subset])}"
+                )
                 return self._cache[subset]
 
             # Retry loop for baseline generation
             for attempt in range(MAX_RETRIES):
                 logging.info(
                     f"Generating baseline times for subset '{subset}' (attempt {attempt + 1}/{MAX_RETRIES})"
+                )
+                _progress(
+                    f"subset={subset} baseline generation attempt={attempt + 1}/{MAX_RETRIES} starting"
                 )
 
                 # Progressive timeout increase on retries
@@ -87,6 +98,10 @@ class BaselineManager:
                 logging.info(
                     f"Baseline generation attempt {attempt + 1}: {actual_count}/{expected_count} items"
                 )
+                _progress(
+                    f"subset={subset} baseline generation attempt={attempt + 1}/{MAX_RETRIES} "
+                    f"completed count={actual_count}/{expected_count}"
+                )
 
                 # Check if results are complete - require 100% match
                 if actual_count == expected_count:
@@ -94,6 +109,9 @@ class BaselineManager:
                     self._cache[subset] = baseline_times
                     logging.info(f"Successfully generated all {actual_count} baseline times")
                     logging.info("BaselineManager.get_baseline_times completed, returning to caller")
+                    _progress(
+                        f"subset={subset} baseline generation complete count={actual_count}/{expected_count}"
+                    )
                     return baseline_times
 
                 # Incomplete results
@@ -242,6 +260,9 @@ class BaselineManager:
         baseline_times = {}
 
         problem_count = len(dataset_list)
+        _progress(
+            f"subset={subset} starting oracle baseline timing for {problem_count} problems num_runs={num_runs}"
+        )
         for i, item in enumerate(dataset_list):
             # Extract problem ID the same way as evaluation orchestrator
             if isinstance(item, dict):
@@ -286,11 +307,16 @@ class BaselineManager:
             # Per-problem retry loop
             MAX_RETRIES = 3
             problem_succeeded = False
+            _progress(f"subset={subset} problem={i + 1}/{problem_count} id={problem_id} starting")
 
             for retry_attempt in range(MAX_RETRIES):
                 if retry_attempt > 0:
                     logging.warning(
                         f"Retrying problem {problem_id} (attempt {retry_attempt + 1}/{MAX_RETRIES})"
+                    )
+                    _progress(
+                        f"subset={subset} problem={i + 1}/{problem_count} id={problem_id} "
+                        f"retry={retry_attempt + 1}/{MAX_RETRIES}"
                     )
 
                 # Run oracle solver with appropriate execution method
@@ -334,6 +360,10 @@ class BaselineManager:
                                     logging.info(
                                         f"BaselineManager: Problem {problem_id} oracle time: {min_time_ms}ms (isolated)"
                                     )
+                                _progress(
+                                    f"subset={subset} problem={i + 1}/{problem_count} id={problem_id} "
+                                    f"baseline_ms={float(min_time_ms):.4f} mode=isolated done"
+                                )
                                 problem_succeeded = True
                                 break  # Exit retry loop, move to next problem
                             else:
@@ -396,6 +426,10 @@ class BaselineManager:
                                     logging.info(
                                         f"BaselineManager: Problem {problem_id} oracle time: {min_time_ms}ms (regular)"
                                     )
+                                _progress(
+                                    f"subset={subset} problem={i + 1}/{problem_count} id={problem_id} "
+                                    f"baseline_ms={float(min_time_ms):.4f} mode=regular done"
+                                )
                                 problem_succeeded = True
                                 break  # Exit retry loop, move to next problem
                             else:
@@ -435,6 +469,10 @@ class BaselineManager:
                     logging.error(f"BaselineManager: Error evaluating problem {problem_id} on attempt {retry_attempt + 1}/{MAX_RETRIES}: {e}")
                     import traceback
                     logging.error(f"BaselineManager: Traceback: {traceback.format_exc()}")
+                    _progress(
+                        f"subset={subset} problem={i + 1}/{problem_count} id={problem_id} "
+                        f"attempt={retry_attempt + 1}/{MAX_RETRIES} error={type(e).__name__}: {e}"
+                    )
 
                     # Check if this is a timeout error
                     is_timeout = "BASELINE GENERATION FAILED" in str(e) or "timed out" in str(e).lower()
@@ -484,10 +522,19 @@ class BaselineManager:
                     else:
                         # Non-timeout error - log and skip this problem (don't retry)
                         logging.error(f"Skipping problem {problem_id} due to non-timeout error (will not retry)")
+                        _progress(
+                            f"subset={subset} problem={i + 1}/{problem_count} id={problem_id} failed_non_timeout"
+                        )
                         break  # Exit retry loop, move to next problem
+
+            if not problem_succeeded:
+                _progress(f"subset={subset} problem={i + 1}/{problem_count} id={problem_id} no_baseline")
 
         logging.info(
             f"BaselineManager: Generated baseline times for {len(baseline_times)} out of {problem_count} problems"
+        )
+        _progress(
+            f"subset={subset} finished oracle baseline timing count={len(baseline_times)}/{problem_count}"
         )
 
         logging.info(f"Generated {len(baseline_times)} baseline times")

@@ -4,8 +4,11 @@
 num_experiments: 1
 num_iterations: 1
 
-model: gpt-4.1-mini
-feedback_model: gpt-4.1-mini
+# Publication-grade AlgoTune runs now use the strict benchmark path only.
+# The model defaults here should point to a provider we actively use in the
+# validated strict environment.
+model: claude-sonnet-4-20250514
+feedback_model: claude-sonnet-4-20250514
 
 steps: 4
 metric: speedup
@@ -16,4 +19,5 @@ goal: |
   See solver.py for the task description and reference implementation.
 
 eval: |
-  python ../input/evaluate_algotune.py --task TASK_NAME --solution-path solver.py --n-problems 5 --n-runs 3 --fast
+  Strict AlgoTune evaluation is injected by src/aide_runner.py and uses the
+  vendored official benchmark path (train for search, test for final scoring).

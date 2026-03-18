@@ -14,6 +14,10 @@ from .utils.response import extract_code, extract_text_up_to_code, wrap_code
 logger = logging.getLogger("aide")
 
 
+def _progress(message: str) -> None:
+    print(f"[aide.agent] {message}", flush=True)
+
+
 ExecCallbackType = Callable[[str, bool], ExecutionResult]
 
 review_func_spec = FunctionSpec(
@@ -233,12 +237,18 @@ class Agent:
     def plan_and_code_query(self, prompt, retries=3) -> tuple[str, str]:
         """Generate a natural language plan + code in the same LLM call and split them apart."""
         completion_text = None
-        for _ in range(retries):
+        for attempt in range(1, retries + 1):
+            _progress(
+                f"requesting plan+code attempt={attempt}/{retries} model={self.acfg.code.model}"
+            )
             completion_text = query(
                 system_message=prompt,
                 user_message=None,
                 model=self.acfg.code.model,
                 #temperature=self.acfg.code.temp,
+            )
+            _progress(
+                f"received model text chars={len(completion_text) if completion_text is not None else 0}"
             )
 
             code = extract_code(completion_text)
@@ -246,10 +256,13 @@ class Agent:
 
             if code and nl_text:
                 # merge all code blocks into a single string
+                _progress(
+                    f"parsed plan+code successfully plan_chars={len(nl_text)} code_chars={len(code)}"
+                )
                 return nl_text, code
 
-            print("Plan + code extraction failed, retrying...")
-        print("Final plan + code extraction attempt failed, giving up...")
+            _progress("plan+code extraction failed; retrying")
+        _progress("final plan+code extraction attempt failed; returning raw completion")
         return "", completion_text  # type: ignore
 
     def _draft(self) -> Node:
@@ -321,6 +334,7 @@ class Agent:
         if self.acfg.data_preview and not self.is_gpu_task and not self.is_algotune_task:
             prompt["Data Overview"] = self.data_preview
 
+        _progress("building draft prompt")
         plan, code = self.plan_and_code_query(prompt)
         return Node(plan=plan, code=code)
 
@@ -398,6 +412,7 @@ class Agent:
             }
             prompt["Instructions"] |= self._prompt_impl_guideline
 
+        _progress(f"building improvement prompt parent={parent_node.id}")
         plan, code = self.plan_and_code_query(prompt)
         return Node(
             plan=plan,
@@ -468,6 +483,7 @@ class Agent:
             if self.acfg.data_preview:
                 prompt["Data Overview"] = self.data_preview
 
+        _progress(f"building debug prompt parent={parent_node.id}")
         plan, code = self.plan_and_code_query(prompt)
         return Node(plan=plan, code=code, parent=parent_node)
 
@@ -481,15 +497,19 @@ class Agent:
             self.update_data_preview()
 
         parent_node = self.search_policy()
-        print(f"Agent is generating code, parent node type: {type(parent_node)}")
+        _progress(f"selected parent node type={type(parent_node).__name__}")
 
         if parent_node is None:
+            _progress("starting draft action")
             result_node = self._draft()
         elif parent_node.is_buggy:
+            _progress(f"starting debug action parent={parent_node.id}")
             result_node = self._debug(parent_node)
         else:
+            _progress(f"starting improve action parent={parent_node.id}")
             result_node = self._improve(parent_node)
 
+        _progress(f"executing candidate node={result_node.id} code_chars={len(result_node.code)}")
         self.parse_exec_result(
             node=result_node,
             exec_result=exec_callback(result_node.code, True),
@@ -497,7 +517,7 @@ class Agent:
         self.journal.append(result_node)
 
     def parse_exec_result(self, node: Node, exec_result: ExecutionResult):
-        print(f"Agent is parsing execution results for node {node.id}")
+        _progress(f"parsing execution result node={node.id}")
 
         node.absorb_exec_result(exec_result)
 
@@ -552,6 +572,7 @@ class Agent:
             }
 
         try:
+            _progress(f"requesting review for node={node.id}")
             response = cast(
                 dict,
                 query(
@@ -562,10 +583,12 @@ class Agent:
                     #temperature=self.acfg.feedback.temp,
                 ),
             )
+            _progress(f"received review for node={node.id}: {response}")
         except Exception as e:
             # If the function call fails (e.g., invalid JSON, wrong schema, etc.)
             # treat it as a bug with 0 speedup
             logger.error(f"Function call failed: {e}")
+            _progress(f"review request failed for node={node.id}: {e}")
             response = {
                 "is_bug": True,
                 "summary": f"Function call failed: {str(e)[:200]}",

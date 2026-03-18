@@ -14,6 +14,10 @@ import os
 logger = logging.getLogger("aide")
 
 
+def _verbose_progress(message: str) -> None:
+    print(f"[aide.backend] {message}", flush=True)
+
+
 def determine_provider(model: str) -> str:
     # Check if model matches OpenAI patterns first
     if re.match(r"^(gpt-.*|o\d+(-.*)?|codex-mini-latest)$", model):
@@ -142,11 +146,16 @@ def query(
         )
 
     try:
+        _verbose_progress(f"starting model call provider={provider} model={model}")
         output, req_time, in_tok_count, out_tok_count, info = query_func(
             system_message=compiled_system_message,
             user_message=compiled_user_message,
             func_spec=func_spec,
             **model_kwargs,
+        )
+        _verbose_progress(
+            f"finished model call provider={provider} model={model} "
+            f"in_tokens={in_tok_count} out_tokens={out_tok_count} req_time={req_time:.2f}s"
         )
         if span is not None:
             span.set_outputs(
@@ -177,6 +186,7 @@ def query(
             span.set_attributes({k: v for k, v in response_attributes.items() if v is not None})
             span.set_status("OK")
     except Exception as exc:
+        _verbose_progress(f"model call failed provider={provider} model={model}: {exc}")
         if span is not None:
             span.record_exception(exc)
             span.set_status("ERROR")

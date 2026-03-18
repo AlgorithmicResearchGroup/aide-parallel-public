@@ -390,22 +390,12 @@ def dataset_decoder(dct: Any, base_dir: str | None = None) -> Any:
             task_name = Path(base_dir).name if base_dir else None
             if task_name and task_name not in _HF_NPY_REDOWNLOAD_ATTEMPTED:
                 _HF_NPY_REDOWNLOAD_ATTEMPTED.add(task_name)
-                try:
-                    from AlgoTuner.utils.hf_datasets import download_npy_files, ensure_hf_dataset
-
-                    logging.warning(
-                        "dataset_decoder: missing npy file; attempting HF re-download for task %s",
-                        task_name,
-                    )
-                    ensure_hf_dataset(task_name)
-                    download_npy_files(task_name)
-                except Exception as exc:
-                    logging.warning(
-                        "dataset_decoder: HF re-download failed for %s: %s", task_name, exc
-                    )
-
-            if not os.path.exists(npy_path):
-                return dct
+                logging.warning(
+                    "dataset_decoder: missing npy file for task %s. Automatic HF re-download is disabled; "
+                    "pre-fetch the local AlgoTune HF snapshot before running.",
+                    task_name,
+                )
+            return dct
 
         try:
             # Use mmap_mode='r' to load lazily from disk

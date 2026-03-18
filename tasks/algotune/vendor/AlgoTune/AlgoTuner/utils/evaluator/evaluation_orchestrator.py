@@ -24,6 +24,11 @@ from AlgoTuner.utils.evaluator.solution_checks import capture_validation_depende
 from AlgoTuner.utils.evaluator.validation_pipeline import ValidationPipeline
 
 
+def _progress(message: str) -> None:
+    """Emit human-readable evaluator progress without changing semantics."""
+    print(f"[algotune.eval] {message}", file=os.sys.stderr, flush=True)
+
+
 class EvaluationOrchestrator:
     """
     Orchestrates the entire evaluation pipeline.
@@ -90,6 +95,7 @@ class EvaluationOrchestrator:
         task_name = task_name or getattr(task_instance, "__class__.__name__", "Unknown")
 
         self.logger.info(f"Starting evaluation of {len(dataset)} problems for task {task_name}")
+        _progress(f"task={task_name} dataset_start problems={len(dataset)}")
 
         # DEBUG: Log baseline_times parameter
         self.logger.info(f"DEBUG_BASELINE: baseline_times parameter type: {type(baseline_times)}")
@@ -120,9 +126,6 @@ class EvaluationOrchestrator:
             warmup_problem_data = dataset[warmup_idx]
             warmup_problem, _ = self._extract_problem_data(warmup_problem_data)
 
-            # Log individual problem start
-            self.logger.info(f"Evaluating problem {i + 1}/{len(dataset)}: {problem_id}")
-
             # Ensure task_name is in metadata for isolated execution
             metadata["task_name"] = task_name
 
@@ -131,6 +134,13 @@ class EvaluationOrchestrator:
                 baseline_times.get(problem_id)
                 if baseline_times
                 else metadata.get("baseline_time_ms")
+            )
+
+            # Log individual problem start
+            self.logger.info(f"Evaluating problem {i + 1}/{len(dataset)}: {problem_id}")
+            _progress(
+                f"task={task_name} problem={i + 1}/{len(dataset)} id={problem_id} "
+                f"starting baseline_ms={baseline_time_ms}"
             )
 
             # DEBUG: Log baseline lookup for each problem
@@ -178,6 +188,12 @@ class EvaluationOrchestrator:
                 f"Completed problem {i + 1}/{len(dataset)}: {problem_id} - {status}, "
                 f"{speedup_str}, {time_str}{error_str}"
             )
+            _progress(
+                f"task={task_name} problem={i + 1}/{len(dataset)} id={problem_id} "
+                f"status={status} solver_ms={result.solver_time_ms} baseline_ms={result.baseline_time_ms} "
+                f"speedup={result.speedup} timeout={result.execution.timeout_occurred} "
+                f"error={result.execution.error_type.value if result.execution.error_type else 'none'}"
+            )
 
             # Check for critical errors that should stop evaluation
             # Check both execution and validation errors
@@ -216,6 +232,10 @@ class EvaluationOrchestrator:
                 self.logger.error(
                     f"Critical {error_source} error encountered, stopping evaluation: {error_context.error_type.value}"
                 )
+                _progress(
+                    f"task={task_name} early_exit source={error_source} "
+                    f"error_type={error_context.error_type.value} problem_id={problem_id}"
+                )
 
                 # Return with early exit error for immediate display
                 return DatasetResults(
@@ -248,6 +268,9 @@ class EvaluationOrchestrator:
 
                     self.logger.error(
                         f"Aborting evaluation after {consecutive_failures} consecutive failures"
+                    )
+                    _progress(
+                        f"task={task_name} early_abort consecutive_failures={consecutive_failures}"
                     )
 
                     return DatasetResults(
@@ -287,6 +310,16 @@ class EvaluationOrchestrator:
         self.logger.info(
             f"Completed evaluation in {evaluation_time_s:.2f}s. "
             f"Valid: {dataset_results.metrics.num_valid}/{dataset_results.metrics.num_evaluated}"
+        )
+        _progress(
+            f"task={task_name} dataset_done evaluated={dataset_results.metrics.num_evaluated} "
+            f"valid={dataset_results.metrics.num_valid} invalid={dataset_results.metrics.num_invalid} "
+            f"errors={dataset_results.metrics.num_errors} timeouts={dataset_results.metrics.num_timeouts} "
+            f"mean_speedup={dataset_results.metrics.mean_speedup} "
+            f"median_speedup={dataset_results.metrics.median_speedup} "
+            f"avg_solver_ms={dataset_results.metrics.avg_solver_time_ms} "
+            f"avg_baseline_ms={dataset_results.metrics.avg_baseline_time_ms} "
+            f"elapsed_s={evaluation_time_s:.2f}"
         )
 
         return dataset_results

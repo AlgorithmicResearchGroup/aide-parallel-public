@@ -65,6 +65,45 @@ TRACE_CONTEXT_ENV_MAP = {
 }
 
 
+def _progress(message: str) -> None:
+    print(f"[aide.run] {message}", flush=True)
+
+
+def _validate_model_credentials(model: str, feedback_model: str) -> None:
+    backend = _import_local_aide().backend
+
+    def required_env(provider: str) -> str | None:
+        if provider == "anthropic":
+            return "ANTHROPIC_API_KEY"
+        if provider == "gemini":
+            return "GEMINI_API_KEY"
+        if provider == "openrouter":
+            return "OPENROUTER_API_KEY"
+        if provider == "openai":
+            base_url = os.getenv("OPENAI_BASE_URL", "")
+            if "groq.com" in base_url or not base_url:
+                return "GROQ_API_KEY"
+            return "OPENAI_API_KEY"
+        return None
+
+    checked: set[tuple[str, str | None]] = set()
+    for candidate in (model, feedback_model):
+        provider = backend.determine_provider(candidate)
+        env_name = required_env(provider)
+        marker = (provider, env_name)
+        if marker in checked:
+            continue
+        checked.add(marker)
+        if env_name and not os.getenv(env_name):
+            detail = f"Selected model '{candidate}' uses provider '{provider}'"
+            if provider == "openai" and (os.getenv("OPENAI_BASE_URL", "") == "" or "groq.com" in os.getenv("OPENAI_BASE_URL", "")):
+                detail += " via the current OpenAI-compatible endpoint configuration"
+            raise RuntimeError(
+                f"{detail}, but required credential {env_name} is not set. "
+                f"Set {env_name} or pass --model/--feedback-model for a provider with configured credentials."
+            )
+
+
 def _import_local_aide():
     aide_root = str(PROJECT_ROOT / "aideml")
     if sys.path[0] != aide_root:
@@ -460,6 +499,10 @@ class Experiment:
             os.environ['CUDA_VISIBLE_DEVICES'] = str(self.gpu_id)
             logger.info(f"Set CUDA_VISIBLE_DEVICES={self.gpu_id} for experiment")
         self._set_trace_context(experiment_idx=experiment_idx, iteration=iteration)
+        _progress(
+            f"experiment={experiment_idx} iteration={iteration} steps={steps} "
+            f"task={self.task_type} model={self.model}"
+        )
 
         if tracking_available and self.mlflow_logger is None:
             self.mlflow_logger = create_mlflow_logger_for_experiment(
@@ -513,9 +556,13 @@ class Experiment:
             exp.cfg.agent.feedback.model = self.feedback_model
             exp.cfg.report.model = self.model
             logger.info(f"Starting experiment {experiment_idx} on GPU {self.gpu_id} - Iteration {iteration}")
+            _progress(f"created experiment workspace={exp.cfg.workspace_dir} log_dir={exp.cfg.log_dir}")
 
             for step in range(steps):
                 global_step = self.total_steps_completed + step
+                _progress(
+                    f"experiment={experiment_idx} iteration={iteration} step={step + 1}/{steps} starting"
+                )
                 if tracking_logger:
                     tracking_logger.log_metrics({
                         "aide_step": step + 1,
@@ -525,6 +572,9 @@ class Experiment:
 
                 try:
                     exp.agent.step(exec_callback=exp.interpreter.run)
+                    _progress(
+                        f"experiment={experiment_idx} iteration={iteration} step={step + 1}/{steps} finished"
+                    )
                 except RuntimeError as e:
                     if "out of memory" in str(e).lower() or "CUDA out of memory" in str(e):
                         logger.error(f"GPU OOM on experiment {experiment_idx}, step {step}: {e}")
@@ -540,6 +590,9 @@ class Experiment:
                         experiment_idx,
                         step,
                         compact_error,
+                    )
+                    _progress(
+                        f"experiment={experiment_idx} iteration={iteration} step={step + 1} failed: {compact_error}"
                     )
                     if tracking_logger:
                         tracking_logger.log_metrics(
@@ -630,6 +683,11 @@ class Experiment:
                     )
 
                     tracking_logger.log_code(best_node.code, name=f"code_iter{iteration}_step{step}", step=global_step)
+                if best_node:
+                    _progress(
+                        f"experiment={experiment_idx} best metric after step={step + 1}: "
+                        f"{best_node.metric.value if best_node.metric else None}"
+                    )
 
                 if torch.cuda.is_available() and (step + 1) % 5 == 0:
                     torch.cuda.empty_cache()
@@ -700,6 +758,7 @@ class Experiment:
                 "config_path": str(exp.cfg.log_dir / "config.yaml"),
             }
             result_status = _result_status(self.task_type, result_payload)
+            _progress(f"experiment={experiment_idx} completed status={result_status}")
             if tracking_logger:
                 self._log_tracking_outcome(
                     tracking_logger,
@@ -720,6 +779,7 @@ class Experiment:
         except Exception as exc:
             compact_error = _compact_exception(exc)
             logger.error("Experiment %s failed before completion: %s", experiment_idx, compact_error)
+            _progress(f"experiment={experiment_idx} failed before completion: {compact_error}")
             if tracking_logger:
                 tracking_logger.log_experiment_summary(
                     {
@@ -1585,6 +1645,7 @@ if __name__ == "__main__":
     # Log the models being used
     logger.info(f"Using model: {model}")
     logger.info(f"Using feedback model: {feedback_model}")
+    _validate_model_credentials(model, feedback_model)
 
     try:
         result_payload = main(
