@@ -263,7 +263,7 @@ def _normalize_dataset_eval_result(
     else:
         aggregate_metrics = getattr(eval_output, "aggregate_metrics", {}) or {}
 
-    overall_valid = bool(aggregate_metrics.get("overall_valid", False))
+    overall_valid = aggregate_metrics.get("overall_valid")
     observed_mean_speedup = aggregate_metrics.get("mean_speedup")
     observed_median_speedup = aggregate_metrics.get("median_speedup")
     num_evaluated = aggregate_metrics.get("num_evaluated")
@@ -271,6 +271,9 @@ def _normalize_dataset_eval_result(
     validity_rate = aggregate_metrics.get("validity_rate")
     if validity_rate is None and isinstance(num_evaluated, int) and num_evaluated > 0 and isinstance(num_valid, int):
         validity_rate = num_valid / num_evaluated
+    if overall_valid is None and isinstance(num_evaluated, int) and num_evaluated > 0 and isinstance(num_valid, int):
+        overall_valid = num_valid == num_evaluated
+    overall_valid = bool(overall_valid)
     metric_value = observed_mean_speedup if overall_valid and error is None else None
 
     if error is None and not compiled:
