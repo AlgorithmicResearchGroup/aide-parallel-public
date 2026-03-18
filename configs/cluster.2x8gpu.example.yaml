@@ -1,0 +1,25 @@
+mode: cluster
+
+env:
+  ssh_user: ubuntu
+  python_bin: python3.10
+  working_dir: /home/ubuntu/aide-parallel-public
+
+ray:
+  head_host: gpu-node-001
+  head_ip: 10.0.0.10
+  port: 6379
+  dashboard_port: 8265
+  object_store_memory: 10000000000
+
+nodes:
+  - host: gpu-node-001
+    role: head
+    cpus: 96
+    gpus: 8
+    node_ip: 10.0.0.10
+  - host: gpu-node-002
+    role: worker
+    cpus: 96
+    gpus: 8
+    node_ip: 10.0.0.11

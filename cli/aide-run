@@ -8,6 +8,7 @@ PYTHON_BIN="${PYTHON_BIN:-$(command -v python)}"
 
 TASK="attention"
 HEAD_NODE_IP="${AIDE_HEAD_NODE_IP:-}"
+CLUSTER_CONFIG=""
 CONTRACT_FILE=""
 NUM_EXPERIMENTS=""
 NUM_ITERATIONS=""
@@ -32,6 +33,8 @@ while [[ $# -gt 0 ]]; do
       CONTRACT_FILE="$2"; shift 2 ;;
     --head-node-ip)
       HEAD_NODE_IP="$2"; shift 2 ;;
+    --cluster-config)
+      CLUSTER_CONFIG="$2"; shift 2 ;;
     --num-experiments)
       NUM_EXPERIMENTS="$2"; shift 2 ;;
     --num-iterations)
@@ -71,6 +74,7 @@ Options:
   --task TASK              Task to run (attention, kernel, kernelbench, algotune)
   --contract FILE          Contract filename inside tasks/<task>/
   --head-node-ip IP        Ray head-node IP (default: $AIDE_HEAD_NODE_IP)
+  --cluster-config FILE    YAML topology file for local or submit-only cluster mode
   --num-experiments N      Override number of parallel experiments
   --num-iterations N       Override number of iterations
   --steps N                Override steps per experiment
@@ -91,6 +95,7 @@ Options:
 Examples:
   ./cli/aide-run --local --num-experiments 2 --steps 1
   ./cli/aide-run --task kernelbench --kb-task 1_19 --kb-reference-baseline H100_PCIe_LambdaLabs --head-node-ip 10.0.0.5
+  ./cli/aide-run --task kernelbench --kb-task 1_19 --kb-reference-baseline H100_PCIe_LambdaLabs --cluster-config configs/cluster.2x8gpu.example.yaml
   ./cli/aide-run --local --task algotune --at-task kmeans --cpus-per-experiment 2
 USAGE
       exit 0 ;;
@@ -138,6 +143,47 @@ fi
 echo "Using task=$TASK contract=$CONTRACT_FILE"
 echo "Using python=${PYTHON_BIN}"
 
+if [[ -n "$CLUSTER_CONFIG" ]]; then
+  RESOLVED_TARGET="$("${PYTHON_BIN}" - <<'PY' "$REPO_ROOT" "$CLUSTER_CONFIG" "$LOCAL_MODE" "$HEAD_NODE_IP"
+import json
+import sys
+from pathlib import Path
+
+repo_root = Path(sys.argv[1])
+cluster_config = sys.argv[2]
+local_mode = sys.argv[3].lower() == "true"
+head_node_ip = sys.argv[4] or None
+if str(repo_root) not in sys.path:
+    sys.path.insert(0, str(repo_root))
+from src.cluster_topology import resolve_execution_target, topology_summary
+
+is_local, resolved_head_ip, topology = resolve_execution_target(
+    local_flag=local_mode,
+    head_node_ip=head_node_ip,
+    cluster_config=cluster_config,
+)
+print(json.dumps({
+    "local": is_local,
+    "head_node_ip": resolved_head_ip,
+    "topology": topology_summary(topology),
+}))
+PY
+)"
+  LOCAL_MODE="$("${PYTHON_BIN}" - <<'PY' "$RESOLVED_TARGET"
+import json, sys
+payload = json.loads(sys.argv[1])
+print("true" if payload["local"] else "false")
+PY
+)"
+  HEAD_NODE_IP="$("${PYTHON_BIN}" - <<'PY' "$RESOLVED_TARGET"
+import json, sys
+payload = json.loads(sys.argv[1])
+print(payload.get("head_node_ip") or "")
+PY
+)"
+  echo "Using cluster-config=${CLUSTER_CONFIG}"
+fi
+
 CMD=("${PYTHON_BIN}" "${REPO_ROOT}/src/aide_runner.py" --task "$TASK")
 
 if [[ "$LOCAL_MODE" == "true" ]]; then
@@ -145,6 +191,7 @@ if [[ "$LOCAL_MODE" == "true" ]]; then
 elif [[ -n "$HEAD_NODE_IP" ]]; then
   CMD+=(--head-node-ip "$HEAD_NODE_IP")
 fi
+[[ -n "$CLUSTER_CONFIG" ]] && CMD+=(--cluster-config "$CLUSTER_CONFIG")
 
 [[ -n "$NUM_EXPERIMENTS" ]] && CMD+=(--num-experiments "$NUM_EXPERIMENTS")
 [[ -n "$NUM_ITERATIONS" ]] && CMD+=(--num-iterations "$NUM_ITERATIONS")

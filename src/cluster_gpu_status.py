@@ -17,6 +17,13 @@ from typing import Dict, List, Any
 import subprocess
 import json
 import os
+import sys
+from pathlib import Path
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+from src.cluster_topology import load_cluster_topology
 
 
 def get_nvidia_smi_info(node_ip: str = None, ssh_user: str = "ubuntu") -> Dict[str, Any]:
@@ -198,6 +205,12 @@ def main():
         help="IP address of Ray head node (defaults to AIDE_HEAD_NODE_IP).",
     )
     parser.add_argument(
+        "--cluster-config",
+        type=str,
+        default=None,
+        help="YAML topology file for local or submit-only cluster mode",
+    )
+    parser.add_argument(
         "--ray-port",
         type=int,
         default=int(os.getenv("AIDE_RAY_PORT", "6379")),
@@ -219,6 +232,14 @@ def main():
                        help="Output in JSON format")
 
     args = parser.parse_args()
+
+    topology = load_cluster_topology(args.cluster_config)
+    if topology:
+        args.ssh_user = topology.ssh_user
+        if topology.is_local:
+            args.head_node_ip = "local"
+        else:
+            args.head_node_ip = topology.head_ip
 
     # Initialize Ray connection
     try:

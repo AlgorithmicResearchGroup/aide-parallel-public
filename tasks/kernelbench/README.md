@@ -11,6 +11,14 @@ This repo now runs KernelBench only in a strict, publication-grade mode.
   --kb-reference-baseline H100_PCIe_LambdaLabs
 ```
 
+For a submit-only cluster run, validate every declared node instead:
+
+```bash
+./cli/aide-kernelbench-validate-env \
+  --cluster-config configs/cluster.2x8gpu.example.yaml \
+  --kb-reference-baseline H100_PCIe_LambdaLabs
+```
+
 2. Or generate a local eager baseline artifact on your hardware:
 
 ```bash
@@ -38,6 +46,17 @@ This repo now runs KernelBench only in a strict, publication-grade mode.
   --num-experiments 4 \
   --max-concurrent-tasks 4 \
   --tracking-experiment aide-kernelbench
+```
+
+Or against a submit-only Ray cluster:
+
+```bash
+./cli/aide-cluster-up --cluster-config configs/cluster.2x8gpu.example.yaml
+./cli/run-kb-sequence all \
+  --cluster-config configs/cluster.2x8gpu.example.yaml \
+  --kb-reference-baseline H100_PCIe_LambdaLabs \
+  --num-experiments 4 \
+  --max-concurrent-tasks 4
 ```
 
 ## Baselines

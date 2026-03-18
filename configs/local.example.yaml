@@ -1,0 +1,19 @@
+mode: local
+
+env:
+  ssh_user: ubuntu
+  python_bin: python
+  working_dir: /home/ubuntu/aide-parallel-public
+
+ray:
+  head_host: localhost
+  head_ip: 127.0.0.1
+  port: 6379
+  dashboard_port: 8265
+  object_store_memory: 10000000000
+
+nodes:
+  - host: localhost
+    role: head
+    cpus: 16
+    gpus: 0

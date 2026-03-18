@@ -2,6 +2,10 @@
 
 AIDE Parallel runs AIDE experiments locally or on a Ray cluster. The simplest first run is the attention task on CPU. KernelBench is available, but it requires a GPU environment and is not the recommended first-run path.
 
+Local and cluster execution now share the same interface:
+- use `--local` for one machine
+- use `--cluster-config <yaml>` for a submit-only machine targeting a remote Ray cluster
+
 ## Quick Start
 
 Use Python 3.10 or newer. `aideml` will not install on older interpreters.
@@ -94,10 +98,29 @@ Run a local KernelBench job:
 ./cli/aide-run --local --task kernelbench --kb-task 1_19 --kb-reference-baseline H100_PCIe_LambdaLabs --num-experiments 1 --num-iterations 1 --steps 1
 ```
 
+Bring up a submit-only 2x8 GPU Ray cluster from a topology file:
+
+```bash
+./cli/aide-cluster-up --cluster-config configs/cluster.2x8gpu.example.yaml
+./cli/aide-cluster-status --cluster-config configs/cluster.2x8gpu.example.yaml
+```
+
+Run the same strict KernelBench job on that cluster:
+
+```bash
+./cli/aide-run --task kernelbench --kb-task 1_19 --kb-reference-baseline H100_PCIe_LambdaLabs --cluster-config configs/cluster.2x8gpu.example.yaml --num-experiments 4 --num-iterations 1 --steps 4
+```
+
 Run a resumable strict KernelBench campaign with the same interface shape as AlgoTune:
 
 ```bash
 ./cli/run-kb-sequence all --local --kb-reference-baseline H100_PCIe_LambdaLabs --num-experiments 4 --max-concurrent-tasks 4
+```
+
+Or against the remote Ray cluster:
+
+```bash
+./cli/run-kb-sequence all --cluster-config configs/cluster.2x8gpu.example.yaml --kb-reference-baseline H100_PCIe_LambdaLabs --num-experiments 4 --max-concurrent-tasks 4
 ```
 
 For Linux GPU nodes, install CUDA-specific PyTorch wheels separately, for example:
@@ -162,6 +185,12 @@ Control per-task attempts and concurrent tasks independently:
 ./cli/run-at-sequence all --local --profile coverage --attempts-per-task 4 --max-concurrent-tasks 4
 ```
 
+Or submit the same sweep to a remote Ray cluster:
+
+```bash
+./cli/run-at-sequence all --cluster-config configs/cluster.2x8gpu.example.yaml --profile coverage --attempts-per-task 4 --max-concurrent-tasks 4
+```
+
 More details: `tasks/algotune/README.md`
 
 ## Optional Dependencies
@@ -191,5 +220,6 @@ python -m pip install -e ./aideml
 - `./cli/run-at-sequence all --profile coverage`: run a resumable AlgoTune sweep
 - `./cli/run-at-sequence all --attempts-per-task N --max-concurrent-tasks M`: control AlgoTune search depth and sweep concurrency
 - `./cli/run-kb-sequence all --num-experiments N --max-concurrent-tasks M`: run a resumable strict KernelBench sweep
-- `./cli/aide-cluster-up`: start a Ray cluster from env vars
-- `./cli/aide-cluster-down`: stop the Ray cluster
+- `./cli/aide-cluster-up --cluster-config FILE`: start a Ray cluster from a topology YAML
+- `./cli/aide-cluster-status --cluster-config FILE`: inspect Ray cluster CPUs/GPUs
+- `./cli/aide-cluster-down --cluster-config FILE`: stop a Ray cluster from a topology YAML

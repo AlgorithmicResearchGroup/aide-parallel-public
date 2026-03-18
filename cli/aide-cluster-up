@@ -1,28 +1,51 @@
 #!/usr/bin/env bash
-# Start a Ray cluster using env-driven host configuration.
+# Start a Ray cluster from a topology config or legacy env vars.
 
 set -euo pipefail
 
-SSH_USER="${AIDE_SSH_USER:-ubuntu}"
-HEAD_HOST="${AIDE_HEAD_HOST:-localhost}"
-HEAD_NODE_IP="${AIDE_HEAD_NODE_IP:-127.0.0.1}"
-WORKER_HOSTS="${AIDE_WORKER_HOSTS:-}"
-RAY_PORT="${AIDE_RAY_PORT:-6379}"
-DASHBOARD_PORT="${AIDE_DASHBOARD_PORT:-8265}"
-NUM_GPUS_PER_NODE="${AIDE_NUM_GPUS_PER_NODE:-8}"
-OBJECT_STORE_MEMORY="${AIDE_OBJECT_STORE_MEMORY:-10000000000}"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+PYTHON_BIN="${PYTHON_BIN:-$(command -v python)}"
 
-run_host_cmd() {
-  local host="$1"
-  local cmd="$2"
-  if [[ "$host" == "localhost" || "$host" == "127.0.0.1" ]]; then
-    bash -lc "$cmd"
-  else
-    ssh "${SSH_USER}@${host}" "$cmd"
-  fi
-}
+CLUSTER_CONFIG=""
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --cluster-config)
+      CLUSTER_CONFIG="$2"; shift 2 ;;
+    --help)
+      cat <<'USAGE'
+Usage: ./cli/aide-cluster-up [--cluster-config FILE]
 
-head_cmd="
+If --cluster-config is omitted, legacy env-driven behavior is used.
+USAGE
+      exit 0 ;;
+    *)
+      echo "Unknown option: $1"
+      exit 1 ;;
+  esac
+done
+
+if [[ -z "$CLUSTER_CONFIG" ]]; then
+  SSH_USER="${AIDE_SSH_USER:-ubuntu}"
+  HEAD_HOST="${AIDE_HEAD_HOST:-localhost}"
+  HEAD_NODE_IP="${AIDE_HEAD_NODE_IP:-127.0.0.1}"
+  WORKER_HOSTS="${AIDE_WORKER_HOSTS:-}"
+  RAY_PORT="${AIDE_RAY_PORT:-6379}"
+  DASHBOARD_PORT="${AIDE_DASHBOARD_PORT:-8265}"
+  NUM_GPUS_PER_NODE="${AIDE_NUM_GPUS_PER_NODE:-8}"
+  OBJECT_STORE_MEMORY="${AIDE_OBJECT_STORE_MEMORY:-10000000000}"
+
+  run_host_cmd() {
+    local host="$1"
+    local cmd="$2"
+    if [[ "$host" == "localhost" || "$host" == "127.0.0.1" ]]; then
+      bash -lc "$cmd"
+    else
+      ssh "${SSH_USER}@${host}" "$cmd"
+    fi
+  }
+
+  head_cmd="
 ray stop --force || true
 ulimit -n 65536
 ray start --head \
@@ -35,15 +58,15 @@ ray start --head \
   --include-dashboard=true
 "
 
-echo "Starting Ray head on ${HEAD_HOST} (node IP ${HEAD_NODE_IP})"
-run_host_cmd "$HEAD_HOST" "$head_cmd"
+  echo "Starting Ray head on ${HEAD_HOST} (node IP ${HEAD_NODE_IP})"
+  run_host_cmd "$HEAD_HOST" "$head_cmd"
 
-IFS=',' read -r -a workers <<< "$WORKER_HOSTS"
-for worker in "${workers[@]}"; do
-  worker="$(echo "$worker" | xargs)"
-  [[ -z "$worker" ]] && continue
+  IFS=',' read -r -a workers <<< "$WORKER_HOSTS"
+  for worker in "${workers[@]}"; do
+    worker="$(echo "$worker" | xargs)"
+    [[ -z "$worker" ]] && continue
 
-  worker_cmd="
+    worker_cmd="
 ray stop --force || true
 ulimit -n 65536
 ray start --address=${HEAD_NODE_IP}:${RAY_PORT} \
@@ -51,10 +74,144 @@ ray start --address=${HEAD_NODE_IP}:${RAY_PORT} \
   --object-store-memory=${OBJECT_STORE_MEMORY}
 "
 
-  echo "Starting Ray worker on ${worker}"
-  run_host_cmd "$worker" "$worker_cmd"
-done
+    echo "Starting Ray worker on ${worker}"
+    run_host_cmd "$worker" "$worker_cmd"
+  done
+
+  echo "Ray cluster started."
+  echo "Head address: ${HEAD_NODE_IP}:${RAY_PORT}"
+  echo "Dashboard: http://${HEAD_NODE_IP}:${DASHBOARD_PORT}"
+  exit 0
+fi
+
+CONFIG_JSON="$("${PYTHON_BIN}" - <<'PY' "$REPO_ROOT" "$CLUSTER_CONFIG"
+import json
+import sys
+from pathlib import Path
+
+repo_root = Path(sys.argv[1])
+config_path = sys.argv[2]
+if str(repo_root) not in sys.path:
+    sys.path.insert(0, str(repo_root))
+from src.cluster_topology import load_cluster_topology, topology_summary
+
+topology = load_cluster_topology(config_path)
+print(json.dumps(topology_summary(topology)))
+PY
+)"
+
+MODE="$("${PYTHON_BIN}" - <<'PY' "$CONFIG_JSON"
+import json, sys
+print(json.loads(sys.argv[1])["mode"])
+PY
+)"
+
+if [[ "$MODE" == "local" ]]; then
+  echo "Cluster config is local mode; no remote Ray cluster startup is required."
+  exit 0
+fi
+
+SSH_USER="$("${PYTHON_BIN}" - <<'PY' "$CONFIG_JSON"
+import json, sys
+print(json.loads(sys.argv[1])["ssh_user"])
+PY
+)"
+REMOTE_PYTHON_BIN="$("${PYTHON_BIN}" - <<'PY' "$CONFIG_JSON"
+import json, sys
+print(json.loads(sys.argv[1]).get("python_bin") or "python")
+PY
+)"
+HEAD_HOST="$("${PYTHON_BIN}" - <<'PY' "$CONFIG_JSON"
+import json, sys
+print(json.loads(sys.argv[1])["head_host"])
+PY
+)"
+HEAD_IP="$("${PYTHON_BIN}" - <<'PY' "$CONFIG_JSON"
+import json, sys
+print(json.loads(sys.argv[1])["head_ip"])
+PY
+)"
+RAY_PORT="$("${PYTHON_BIN}" - <<'PY' "$CONFIG_JSON"
+import json, sys
+print(json.loads(sys.argv[1])["ray_port"])
+PY
+)"
+DASHBOARD_PORT="$("${PYTHON_BIN}" - <<'PY' "$CONFIG_JSON"
+import json, sys
+print(json.loads(sys.argv[1])["dashboard_port"])
+PY
+)"
+OBJECT_STORE_MEMORY="$("${PYTHON_BIN}" - <<'PY' "$CONFIG_JSON"
+import json, sys
+print(json.loads(sys.argv[1])["object_store_memory"])
+PY
+)"
+
+run_host_cmd() {
+  local host="$1"
+  local cmd="$2"
+  if [[ "$host" == "localhost" || "$host" == "127.0.0.1" ]]; then
+    bash -lc "$cmd"
+  else
+    ssh "${SSH_USER}@${host}" "$cmd"
+  fi
+}
+
+NODE_LINES="$("${PYTHON_BIN}" - <<'PY' "$CONFIG_JSON"
+import json, sys
+for node in json.loads(sys.argv[1])["nodes"]:
+    print(f'{node["host"]}|{node["role"]}|{node["gpus"]}|{node.get("node_ip") or ""}')
+PY
+)"
+
+while IFS='|' read -r HOST ROLE GPUS NODE_IP; do
+  [[ -z "$HOST" ]] && continue
+  if [[ "$ROLE" == "head" ]]; then
+    START_CMD="
+${REMOTE_PYTHON_BIN} -m ray.scripts.scripts stop --force || true
+pkill -f 'ray::' || true
+ulimit -n 65536
+${REMOTE_PYTHON_BIN} -m ray.scripts.scripts start --head \
+  --node-ip-address=${NODE_IP:-$HEAD_IP} \
+  --port=${RAY_PORT} \
+  --dashboard-host=0.0.0.0 \
+  --dashboard-port=${DASHBOARD_PORT} \
+  --num-gpus=${GPUS} \
+  --object-store-memory=${OBJECT_STORE_MEMORY} \
+  --include-dashboard=true
+"
+    echo "Starting Ray head on ${HOST} (${NODE_IP:-$HEAD_IP}) with ${GPUS} GPU(s)"
+  else
+    START_CMD="
+${REMOTE_PYTHON_BIN} -m ray.scripts.scripts stop --force || true
+pkill -f 'ray::' || true
+ulimit -n 65536
+${REMOTE_PYTHON_BIN} -m ray.scripts.scripts start \
+  --address=${HEAD_IP}:${RAY_PORT} \
+  --node-ip-address=${NODE_IP:-$HOST} \
+  --num-gpus=${GPUS} \
+  --object-store-memory=${OBJECT_STORE_MEMORY}
+"
+    echo "Starting Ray worker on ${HOST} (${NODE_IP:-$HOST}) with ${GPUS} GPU(s)"
+  fi
+  run_host_cmd "$HOST" "$START_CMD"
+done <<< "$NODE_LINES"
+
+echo "Verifying Ray cluster..."
+"${PYTHON_BIN}" - <<'PY' "$HEAD_IP" "$RAY_PORT"
+import sys
+import ray
+
+head_ip = sys.argv[1]
+port = sys.argv[2]
+ray.init(address=f"{head_ip}:{port}")
+resources = ray.cluster_resources()
+nodes = [node for node in ray.nodes() if node.get("Alive")]
+print(f"Cluster resources: CPUs={resources.get('CPU', 0):.0f} GPUs={resources.get('GPU', 0):.0f}")
+print(f"Alive nodes: {len(nodes)}")
+ray.shutdown()
+PY
 
 echo "Ray cluster started."
-echo "Head address: ${HEAD_NODE_IP}:${RAY_PORT}"
-echo "Dashboard: http://${HEAD_NODE_IP}:${DASHBOARD_PORT}"
+echo "Head address: ${HEAD_IP}:${RAY_PORT}"
+echo "Dashboard: http://${HEAD_IP}:${DASHBOARD_PORT}"

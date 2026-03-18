@@ -1,32 +1,120 @@
 #!/usr/bin/env bash
-# Stop a Ray cluster using env-driven host configuration.
+# Stop a Ray cluster from a topology config or legacy env vars.
 
 set -euo pipefail
 
-SSH_USER="${AIDE_SSH_USER:-ubuntu}"
-HEAD_HOST="${AIDE_HEAD_HOST:-localhost}"
-WORKER_HOSTS="${AIDE_WORKER_HOSTS:-}"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+PYTHON_BIN="${PYTHON_BIN:-$(command -v python)}"
 
-stop_host() {
+CLUSTER_CONFIG=""
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --cluster-config)
+      CLUSTER_CONFIG="$2"; shift 2 ;;
+    --help)
+      cat <<'USAGE'
+Usage: ./cli/aide-cluster-down [--cluster-config FILE]
+
+If --cluster-config is omitted, legacy env-driven behavior is used.
+USAGE
+      exit 0 ;;
+    *)
+      echo "Unknown option: $1"
+      exit 1 ;;
+  esac
+done
+
+if [[ -z "$CLUSTER_CONFIG" ]]; then
+  SSH_USER="${AIDE_SSH_USER:-ubuntu}"
+  HEAD_HOST="${AIDE_HEAD_HOST:-localhost}"
+  WORKER_HOSTS="${AIDE_WORKER_HOSTS:-}"
+
+  stop_host() {
+    local host="$1"
+    [[ -z "$host" ]] && return 0
+    if [[ "$host" == "localhost" || "$host" == "127.0.0.1" ]]; then
+      ray stop --force || true
+      pkill -f "ray::" || true
+    else
+      ssh "${SSH_USER}@${host}" "ray stop --force || true; pkill -f 'ray::' || true; rm -rf /tmp/ray/* 2>/dev/null || true"
+    fi
+  }
+
+  IFS=',' read -r -a workers <<< "$WORKER_HOSTS"
+  for worker in "${workers[@]}"; do
+    worker="$(echo "$worker" | xargs)"
+    [[ -z "$worker" ]] && continue
+    echo "Stopping Ray on worker ${worker}"
+    stop_host "$worker"
+  done
+
+  echo "Stopping Ray on head ${HEAD_HOST}"
+  stop_host "$HEAD_HOST"
+
+  echo "Ray cluster stopped."
+  exit 0
+fi
+
+CONFIG_JSON="$("${PYTHON_BIN}" - <<'PY' "$REPO_ROOT" "$CLUSTER_CONFIG"
+import json
+import sys
+from pathlib import Path
+
+repo_root = Path(sys.argv[1])
+config_path = sys.argv[2]
+if str(repo_root) not in sys.path:
+    sys.path.insert(0, str(repo_root))
+from src.cluster_topology import load_cluster_topology, topology_summary
+
+topology = load_cluster_topology(config_path)
+print(json.dumps(topology_summary(topology)))
+PY
+)"
+
+MODE="$("${PYTHON_BIN}" - <<'PY' "$CONFIG_JSON"
+import json, sys
+print(json.loads(sys.argv[1])["mode"])
+PY
+)"
+
+if [[ "$MODE" == "local" ]]; then
+  echo "Cluster config is local mode; nothing to stop."
+  exit 0
+fi
+
+SSH_USER="$("${PYTHON_BIN}" - <<'PY' "$CONFIG_JSON"
+import json, sys
+print(json.loads(sys.argv[1])["ssh_user"])
+PY
+)"
+REMOTE_PYTHON_BIN="$("${PYTHON_BIN}" - <<'PY' "$CONFIG_JSON"
+import json, sys
+print(json.loads(sys.argv[1]).get("python_bin") or "python")
+PY
+)"
+
+run_host_cmd() {
   local host="$1"
-  [[ -z "$host" ]] && return 0
+  local cmd="$2"
   if [[ "$host" == "localhost" || "$host" == "127.0.0.1" ]]; then
-    ray stop --force || true
-    pkill -f "ray::" || true
+    bash -lc "$cmd"
   else
-    ssh "${SSH_USER}@${host}" "ray stop --force || true; pkill -f 'ray::' || true; rm -rf /tmp/ray/* 2>/dev/null || true"
+    ssh "${SSH_USER}@${host}" "$cmd"
   fi
 }
 
-IFS=',' read -r -a workers <<< "$WORKER_HOSTS"
-for worker in "${workers[@]}"; do
-  worker="$(echo "$worker" | xargs)"
-  [[ -z "$worker" ]] && continue
-  echo "Stopping Ray on worker ${worker}"
-  stop_host "$worker"
-done
+NODE_LINES="$("${PYTHON_BIN}" - <<'PY' "$CONFIG_JSON"
+import json, sys
+for node in reversed(json.loads(sys.argv[1])["nodes"]):
+    print(node["host"])
+PY
+)"
 
-echo "Stopping Ray on head ${HEAD_HOST}"
-stop_host "$HEAD_HOST"
+while IFS= read -r HOST; do
+  [[ -z "$HOST" ]] && continue
+  echo "Stopping Ray on ${HOST}"
+  run_host_cmd "$HOST" "${REMOTE_PYTHON_BIN} -m ray.scripts.scripts stop --force || true; pkill -f 'ray::' || true; pkill -f 'raylet' || true; pkill -f 'gcs_server' || true; rm -rf /tmp/ray/* 2>/dev/null || true"
+done <<< "$NODE_LINES"
 
 echo "Ray cluster stopped."

@@ -20,6 +20,8 @@ REPO_ROOT = SCRIPT_DIR.parent
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
+from src.cluster_topology import resolve_execution_target  # noqa: E402
+
 
 def parse_args() -> argparse.Namespace:
     from src.kernelbench_sweep import PROFILE_DEFAULTS  # noqa: WPS433
@@ -33,6 +35,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output-dir", default=None)
     parser.add_argument("--local", action="store_true")
     parser.add_argument("--head-node-ip", default=None)
+    parser.add_argument("--cluster-config", default=None, help="YAML topology file for local or submit-only cluster mode")
     parser.add_argument("--num-experiments", type=int, default=None)
     parser.add_argument("--num-iterations", type=int, default=None)
     parser.add_argument("--steps", type=int, default=None)
@@ -93,10 +96,16 @@ def effective_run_config(args: argparse.Namespace) -> dict[str, Any]:
     from src.kernelbench_sweep import PROFILE_DEFAULTS  # noqa: WPS433
 
     defaults = PROFILE_DEFAULTS[args.profile]
+    local_mode, head_node_ip, _ = resolve_execution_target(
+        local_flag=args.local,
+        head_node_ip=args.head_node_ip,
+        cluster_config=args.cluster_config,
+    )
     return {
         "profile": args.profile,
-        "local": args.local,
-        "head_node_ip": args.head_node_ip,
+        "local": local_mode,
+        "head_node_ip": head_node_ip,
+        "cluster_config": args.cluster_config,
         "num_experiments": args.num_experiments or defaults["num_experiments"],
         "num_iterations": args.num_iterations or defaults["num_iterations"],
         "steps": args.steps,
@@ -180,6 +189,8 @@ def build_command(task_name: str, result_path: Path, config: dict[str, Any], tas
         command.append("--local")
     elif config.get("head_node_ip"):
         command.extend(["--head-node-ip", str(config["head_node_ip"])])
+    if config.get("cluster_config"):
+        command.extend(["--cluster-config", str(config["cluster_config"])])
     if config.get("model"):
         command.extend(["--model", str(config["model"])])
     if config.get("feedback_model"):

@@ -28,6 +28,7 @@ from src.algotune_sweep import (  # noqa: E402
     sync_campaign_summary_to_mlflow,
     write_campaign_summary,
 )
+from src.cluster_topology import resolve_execution_target  # noqa: E402
 from tasks.algotune.at_tasks import get_all_tasks, get_task_info  # noqa: E402
 from tasks.algotune.strict_benchmark import STRICT_MODE_NAME, validate_benchmark_environment  # noqa: E402
 
@@ -59,6 +60,7 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--local", action="store_true", help="Run locally")
     parser.add_argument("--head-node-ip", default=None, help="Ray head node IP override")
+    parser.add_argument("--cluster-config", default=None, help="YAML topology file for local or submit-only cluster mode")
     parser.add_argument(
         "--attempts-per-task",
         type=int,
@@ -135,11 +137,17 @@ def effective_run_config(args: argparse.Namespace) -> dict[str, Any]:
         or args.num_experiments
         or defaults["num_experiments"]
     )
+    local_mode, head_node_ip, _ = resolve_execution_target(
+        local_flag=args.local,
+        head_node_ip=args.head_node_ip,
+        cluster_config=args.cluster_config,
+    )
     return {
         "profile": args.profile,
         "at_mode": STRICT_MODE_NAME,
-        "local": args.local,
-        "head_node_ip": args.head_node_ip,
+        "local": local_mode,
+        "head_node_ip": head_node_ip,
+        "cluster_config": args.cluster_config,
         "attempts_per_task": attempts_per_task,
         "num_experiments": attempts_per_task,
         "num_iterations": args.num_iterations or defaults["num_iterations"],
@@ -209,6 +217,8 @@ def build_command(
         command.append("--local")
     elif config.get("head_node_ip"):
         command.extend(["--head-node-ip", str(config["head_node_ip"])])
+    if config.get("cluster_config"):
+        command.extend(["--cluster-config", str(config["cluster_config"])])
     if config.get("model"):
         command.extend(["--model", str(config["model"])])
     if config.get("feedback_model"):

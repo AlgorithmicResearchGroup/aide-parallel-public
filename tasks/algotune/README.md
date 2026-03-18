@@ -39,6 +39,12 @@ Validate the strict benchmark environment before any publishable run:
 ./cli/aide-algotune-validate-env
 ```
 
+For a submit-only cluster run, validate every declared node instead:
+
+```bash
+./cli/aide-algotune-validate-env --cluster-config configs/cluster.2x8gpu.example.yaml
+```
+
 Run a strict single-task benchmark search plus held-out final test evaluation:
 
 ```bash
@@ -55,6 +61,13 @@ Control task-level and per-task parallelism independently:
 
 ```bash
 ./cli/run-at-sequence all --local --profile coverage --attempts-per-task 8 --max-concurrent-tasks 4
+```
+
+Or submit the same sweep to a remote Ray cluster:
+
+```bash
+./cli/aide-cluster-up --cluster-config configs/cluster.2x8gpu.example.yaml
+./cli/run-at-sequence all --cluster-config configs/cluster.2x8gpu.example.yaml --profile coverage --attempts-per-task 8 --max-concurrent-tasks 4
 ```
 
 Sweep outputs are written under `runs/algotune/<campaign-id>/` with per-task logs, result JSON, copied best solver code, and aggregate summaries.

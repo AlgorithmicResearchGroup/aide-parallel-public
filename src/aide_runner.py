@@ -22,6 +22,7 @@ import ray
 import yaml
 import logging
 import importlib
+from cluster_topology import resolve_execution_target
 
 # Import AIDE conditionally - it will be imported in the actor
 try:
@@ -1654,6 +1655,12 @@ if __name__ == "__main__":
         default=os.getenv("AIDE_HEAD_NODE_IP"),
         help="Ray head-node IP. Defaults to AIDE_HEAD_NODE_IP when set.",
     )
+    parser.add_argument(
+        "--cluster-config",
+        type=str,
+        default=None,
+        help="YAML topology file for local or submit-only cluster mode",
+    )
     parser.add_argument("--steps", type=int, default=None, help="Override number of steps per experiment")
     parser.add_argument("--num-experiments", type=int, default=None, help="Override number of parallel experiments")
     parser.add_argument("--num-iterations", type=int, default=None, help="Override number of iterations")
@@ -1805,8 +1812,12 @@ if __name__ == "__main__":
     num_iterations = args.num_iterations or contract["num_iterations"]
     steps = args.steps or contract.get("steps", 2)
 
-    # Use local mode if specified
-    head_node_ip = None if args.local else args.head_node_ip
+    local_mode, resolved_head_node_ip, _ = resolve_execution_target(
+        local_flag=args.local,
+        head_node_ip=args.head_node_ip,
+        cluster_config=args.cluster_config,
+    )
+    head_node_ip = None if local_mode else resolved_head_node_ip
 
     # Apply model overrides if specified
     model = args.model if args.model else contract["model"]

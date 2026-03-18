@@ -5,6 +5,8 @@ from __future__ import annotations
 
 import argparse
 import json
+import shlex
+import subprocess
 import sys
 from pathlib import Path
 
@@ -15,6 +17,23 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 from tasks.algotune.strict_benchmark import validate_benchmark_environment  # noqa: E402
+
+
+def _run_host_validation(host: str, ssh_user: str, command: list[str], workdir: str | None = None) -> dict:
+    if host in {"localhost", "127.0.0.1"}:
+        result = subprocess.run(command, capture_output=True, text=True)
+    else:
+        remote_cmd = " ".join(shlex.quote(part) for part in command)
+        if workdir:
+            remote_cmd = f"cd {shlex.quote(workdir)} && {remote_cmd}"
+        result = subprocess.run(
+            ["ssh", f"{ssh_user}@{host}", "bash", "-lc", remote_cmd],
+            capture_output=True,
+            text=True,
+        )
+    if result.returncode not in {0, 1}:
+        raise RuntimeError(result.stderr.strip() or result.stdout.strip() or f"Validation command failed on {host}")
+    return json.loads(result.stdout)
 
 
 def main() -> int:
@@ -29,7 +48,74 @@ def main() -> int:
         action="store_true",
         help="Emit machine-readable JSON only",
     )
+    parser.add_argument("--cluster-config", default=None, help="YAML topology file for local or submit-only cluster mode")
     args = parser.parse_args()
+
+    from src.cluster_topology import load_cluster_topology  # noqa: WPS433
+
+    topology = load_cluster_topology(args.cluster_config)
+    if topology and not topology.is_local:
+        python_bin = topology.python_bin or "python"
+        remote_repo_root = Path(topology.working_dir or REPO_ROOT)
+        command = [
+            python_bin,
+            str(remote_repo_root / "cli" / "aide-algotune-validate-env"),
+            "--json",
+        ]
+        if args.no_task_import_check:
+            command.append("--no-task-import-check")
+
+        node_results = []
+        errors = []
+        for node in topology.nodes:
+            try:
+                result = _run_host_validation(
+                    node.host,
+                    topology.ssh_user,
+                    command,
+                    workdir=str(remote_repo_root),
+                )
+                node_results.append({
+                    "host": node.host,
+                    "role": node.role,
+                    "ok": result.get("ok", False),
+                    "result": result,
+                })
+                if not result.get("ok", False):
+                    errors.append(f"{node.host}: validation failed")
+            except Exception as exc:  # pragma: no cover - CLI wrapper
+                node_results.append({
+                    "host": node.host,
+                    "role": node.role,
+                    "ok": False,
+                    "error": str(exc),
+                })
+                errors.append(f"{node.host}: {exc}")
+
+        payload = {
+            "ok": not errors,
+            "mode": "cluster",
+            "cluster_config": topology.config_path,
+            "head_ip": topology.head_ip,
+            "nodes": node_results,
+            "errors": errors,
+        }
+        if args.json:
+            print(json.dumps(payload, indent=2, sort_keys=True))
+        else:
+            print(f"AlgoTune strict benchmark environment: {'OK' if payload['ok'] else 'FAILED'}")
+            print(f"Cluster config: {topology.config_path}")
+            print(f"Head IP: {topology.head_ip}")
+            for item in node_results:
+                status = "OK" if item.get("ok") else "FAILED"
+                print(f" - {item['host']} ({item['role']}): {status}")
+                if item.get("error"):
+                    print(f"   {item['error']}")
+            if errors:
+                print("Errors:")
+                for error in errors:
+                    print(f" - {error}")
+        return 0 if payload["ok"] else 1
 
     result = validate_benchmark_environment(check_all_tasks=not args.no_task_import_check)
     if args.json:
