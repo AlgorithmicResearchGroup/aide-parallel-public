@@ -9,6 +9,7 @@ import json
 import math
 import os
 import re
+import shutil
 import sys
 import tempfile
 import traceback
@@ -63,13 +64,50 @@ TRACE_CONTEXT_ENV_MAP = {
     "experiment_idx": "AIDE_TRACE_EXPERIMENT_IDX",
     "iteration": "AIDE_TRACE_ITERATION",
 }
+RUNTIME_ENV_PASSTHROUGH = (
+    "CUDA_HOME",
+    "CUDA_PATH",
+    "PATH",
+    "LD_LIBRARY_PATH",
+    "CC",
+    "CXX",
+)
+ENV_ALIASES = (
+    ("ANTHROPIC_API_KEY", "ANTHROPIC_KEY"),
+)
 
 
 def _progress(message: str) -> None:
     print(f"[aide.run] {message}", flush=True)
 
 
+def _apply_env_aliases(env_vars: dict[str, str]) -> None:
+    for canonical, alias in ENV_ALIASES:
+        if not env_vars.get(canonical) and env_vars.get(alias):
+            env_vars[canonical] = env_vars[alias]
+
+
+def _infer_cuda_home() -> str | None:
+    for key in ("CUDA_HOME", "CUDA_PATH"):
+        value = os.getenv(key)
+        if value and Path(value).exists():
+            return value
+
+    nvcc_path = os.getenv("CUDACXX") or shutil.which("nvcc")
+    if nvcc_path:
+        nvcc_bin = Path(nvcc_path).resolve()
+        for candidate in (nvcc_bin.parent.parent, Path("/usr/lib/cuda")):
+            if (candidate / "include").exists():
+                return str(candidate)
+
+    fallback = Path("/usr/lib/cuda")
+    if fallback.exists():
+        return str(fallback)
+    return None
+
+
 def _validate_model_credentials(model: str, feedback_model: str) -> None:
+    _apply_env_aliases(os.environ)
     backend = _import_local_aide().backend
 
     def required_env(provider: str) -> str | None:
@@ -921,12 +959,13 @@ def _run_algotune_strict_final_evaluation(*, task_id: str, best_result: dict[str
 
 def get_cluster_resources() -> dict:
     """Get information about available resources in the Ray cluster."""
-    resources = ray.available_resources()
+    total_resources = ray.cluster_resources()
+    available_resources = ray.available_resources()
     return {
-        "total_cpus": resources.get("CPU", 0),
-        "total_gpus": resources.get("GPU", 0),
-        "available_cpus": ray.available_resources().get("CPU", 0),
-        "available_gpus": ray.available_resources().get("GPU", 0),
+        "total_cpus": total_resources.get("CPU", 0),
+        "total_gpus": total_resources.get("GPU", 0),
+        "available_cpus": available_resources.get("CPU", 0),
+        "available_gpus": available_resources.get("GPU", 0),
     }
 
 
@@ -1004,7 +1043,7 @@ def run_experiments(
 
     # Check available resources
     resources = get_cluster_resources()
-    prefer_cpu = task_type == "algotune" or cpus_per_experiment is not None
+    prefer_cpu = task_type == "algotune" or gpu_fraction <= 0
     has_gpus = resources["total_gpus"] > 0 and not prefer_cpu
     if has_gpus:
         logger.info(
@@ -1155,9 +1194,30 @@ def initialize_ray_cluster(head_node_ip: Optional[str] = None) -> None:
         "KERNELBENCH_PATH": str(project_root / "tasks" / "kernel_bench" / "KernelBench"),
         "ALGOTUNE_PATH": os.getenv("ALGOTUNE_PATH", str(DEFAULT_ALGOTUNE_PATH)),
     }
+
+    for key in RUNTIME_ENV_PASSTHROUGH:
+        value = os.environ.get(key)
+        if value:
+            env_vars[key] = value
+
+    cuda_home = _infer_cuda_home()
+    if cuda_home:
+        env_vars.setdefault("CUDA_HOME", cuda_home)
+        env_vars.setdefault("CUDA_PATH", cuda_home)
+        cuda_bin = str(Path(cuda_home) / "bin")
+        cuda_lib64 = str(Path(cuda_home) / "lib64")
+        current_path = env_vars.get("PATH", "")
+        if cuda_bin not in current_path.split(":"):
+            env_vars["PATH"] = f"{cuda_bin}:{current_path}".strip(":")
+        current_ld_library = env_vars.get("LD_LIBRARY_PATH", "")
+        if cuda_lib64 not in current_ld_library.split(":"):
+            env_vars["LD_LIBRARY_PATH"] = f"{cuda_lib64}:{current_ld_library}".strip(":")
+
     for key, value in os.environ.items():
         if value and key.startswith(RUNTIME_ENV_PREFIXES):
             env_vars[key] = value
+
+    _apply_env_aliases(env_vars)
 
     # Create a comprehensive runtime_env
     runtime_env = {
@@ -1200,6 +1260,8 @@ def initialize_ray_cluster(head_node_ip: Optional[str] = None) -> None:
             if value:
                 runtime_env["env_vars"][key] = value
                 env_vars[key] = value
+        _apply_env_aliases(runtime_env["env_vars"])
+        _apply_env_aliases(env_vars)
         logger.info(f"Loaded {len(loaded_env_vars)} environment variables from {env_file.name}")
 
     if head_node_ip:

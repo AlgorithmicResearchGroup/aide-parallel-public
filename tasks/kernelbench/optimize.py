@@ -1,11 +1,11 @@
 """
-KernelBench Task: 1_9 - Level 1 Task 9
+KernelBench Task: 1_40 - LayerNorm
 Level: 1
 
 This file contains the original Model class that needs to be optimized.
 Your task is to create a ModelNew class that:
 1. Has the EXACT same interface (__init__ and forward signatures)
-2. Produces outputs within tolerance (rtol=1e-3, atol=1e-5)
+2. Produces outputs within the official KernelBench tolerance (rtol=1e-2, atol=1e-2)
 3. Runs faster than the original on GPU
 
 IMPORTANT: You must create a class called "ModelNew" (not "Model")
@@ -20,33 +20,41 @@ import torch.nn as nn
 from torch.utils.cpp_extension import load_inline
 
 # Global variables from original task
-
+batch_size = 16
+dim1 = 256
+dim2 = 256
+    x = torch.rand(batch_size, features, dim1, dim2)
 
 # Helper functions from original task
-    def __init__(self):
-        super(Model, self).__init__()
-
-    def forward(self, A, B):
+    def __init__(self, normalized_shape: tuple):
         """
-        Performs the matrix multiplication.
+        Initializes the LayerNorm layer.
 
         Args:
-            A (torch.Tensor): Input matrix of shape (M, K) or (K, M) where M >> N or N >> M.
-            B (torch.Tensor): Input matrix of shape (K, N) or (N, K) where M >> N or N >> M.
+            normalized_shape (tuple): Shape of the input tensor to be normalized.
+        """
+        super(Model, self).__init__()
+        self.ln = nn.LayerNorm(normalized_shape=normalized_shape)
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        """
+        Applies Layer Normalization to the input tensor.
+
+        Args:
+            x (torch.Tensor): Input tensor of shape (*, normalized_shape).
 
         Returns:
-            torch.Tensor: Output matrix of shape (M, N) or (N, M)
+            torch.Tensor: Output tensor with Layer Normalization applied, same shape as input.
         """
-        return torch.matmul(A, B)
+        return self.ln(x)
 
 # Input/Init specifications from original task
 def get_inputs():
-    A = torch.rand(M, N)
-    B = torch.rand(N, M)
-    return [A, B]
+    x = torch.rand(batch_size, features, dim1, dim2)
+    return [x]
 
 def get_init_inputs():
-    return []  # No special initialization inputs needed
+    return [(features, dim1, dim2)]
 
 ###############################################################################
 # ORIGINAL MODEL (DO NOT MODIFY - FOR REFERENCE ONLY)
@@ -54,23 +62,29 @@ def get_init_inputs():
 
 class Model(nn.Module):
     """
-    Simple model that performs a single matrix multiplication (C = A * B) where one of the matrices is tall and skinny (M >> N or N >> M)
+    Simple model that performs Layer Normalization.
     """
-    def __init__(self):
-        super(Model, self).__init__()
-    
-    def forward(self, A, B):
+    def __init__(self, normalized_shape: tuple):
         """
-        Performs the matrix multiplication.
+        Initializes the LayerNorm layer.
 
         Args:
-            A (torch.Tensor): Input matrix of shape (M, K) or (K, M) where M >> N or N >> M.
-            B (torch.Tensor): Input matrix of shape (K, N) or (N, K) where M >> N or N >> M.
+            normalized_shape (tuple): Shape of the input tensor to be normalized.
+        """
+        super(Model, self).__init__()
+        self.ln = nn.LayerNorm(normalized_shape=normalized_shape)
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        """
+        Applies Layer Normalization to the input tensor.
+
+        Args:
+            x (torch.Tensor): Input tensor of shape (*, normalized_shape).
 
         Returns:
-            torch.Tensor: Output matrix of shape (M, N) or (N, M)
+            torch.Tensor: Output tensor with Layer Normalization applied, same shape as input.
         """
-        return torch.matmul(A, B)
+        return self.ln(x)
 
 ###############################################################################
 # EXAMPLE OPTIMIZATION PATTERN
@@ -181,11 +195,11 @@ class ModelNew(nn.Module):
 # Remember:
 # 1. Keep the same __init__ signature as Model
 # 2. Keep the same forward signature as Model
-# 3. Maintain numerical accuracy (rtol=1e-3, atol=1e-5)
+# 3. Maintain numerical accuracy within the official KernelBench tolerance (rtol=1e-2, atol=1e-2)
 # 4. Focus on GPU performance optimization
 
 class ModelNew(nn.Module):
-    """Optimized version of Model for Level 1 Task 9"""
+    """Optimized version of Model for LayerNorm"""
 
     def __init__(self, *args, **kwargs):
         """Initialize with same signature as Model.__init__"""
