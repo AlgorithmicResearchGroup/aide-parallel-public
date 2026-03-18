@@ -174,7 +174,7 @@ YOUR OBJECTIVE:
 Create an optimized GPU implementation of the Model class below. You must create
 a new class called "ModelNew" that:
 1. Has EXACTLY the same interface (same __init__ and forward signatures)
-2. Produces numerically equivalent outputs (within tolerance: rtol=1e-3, atol=1e-5)
+2. Produces numerically equivalent outputs within the official KernelBench tolerance (rtol=1e-2, atol=1e-2)
 3. Runs FASTER on GPU (maximize speedup while maintaining correctness)
 
 ================================================================================
@@ -205,7 +205,7 @@ PERFORMANCE METRICS:
 ================================================================================
 
 Your optimization will be evaluated on:
-1. CORRECTNESS: Output must match within tolerance (rtol=1e-3, atol=1e-5)
+1. CORRECTNESS: Output must match within the official KernelBench tolerance (rtol=1e-2, atol=1e-2)
 2. SPEEDUP: Time(Original) / Time(Optimized) - higher is better
    - Speedup > 1.0 means your optimization is faster (good)
    - Speedup = 2.0 means 2x faster (excellent)

@@ -17,10 +17,19 @@ import json
 from tqdm import tqdm
 
 # API clients
-from together import Together
+try:
+    from together import Together
+except ImportError:  # optional for local benchmark evaluation
+    Together = None
 from openai import OpenAI
-import google.generativeai as genai
-import anthropic
+try:
+    import google.generativeai as genai
+except ImportError:  # optional for local benchmark evaluation
+    genai = None
+try:
+    import anthropic
+except ImportError:  # optional for local benchmark evaluation
+    anthropic = None
 
 # from datasets import load_dataset
 import numpy as np
@@ -142,14 +151,20 @@ def query_server(
             model = model_name
 
         case "anthropic":
+            if anthropic is None:
+                raise ImportError("Anthropic client is not installed")
             client = anthropic.Anthropic(
                 api_key=ANTHROPIC_KEY,
             )
             model = model_name
         case "google":
+            if genai is None:
+                raise ImportError("google.generativeai is not installed")
             genai.configure(api_key=GEMINI_KEY)
             model = model_name
         case "together":
+            if Together is None:
+                raise ImportError("Together client is not installed")
             client = Together(api_key=TOGETHER_KEY)
             model = model_name
         case "sambanova":

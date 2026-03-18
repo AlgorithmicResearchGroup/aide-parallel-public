@@ -5,8 +5,8 @@
 num_experiments: 16  # Default - can be overridden
 num_iterations: 3    # Number of refinement iterations
 
-model: gpt-4.1-mini
-feedback_model: gpt-4.1-mini
+model: claude-sonnet-4-20250514
+feedback_model: claude-sonnet-4-20250514
 
 steps: 20            # Default - typically overridden based on level
 metric: speedup

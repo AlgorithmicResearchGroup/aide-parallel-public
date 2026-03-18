@@ -1,0 +1,56 @@
+#!/usr/bin/env python3
+"""Validate the local KernelBench strict benchmark environment."""
+
+from __future__ import annotations
+
+import argparse
+import json
+import sys
+from pathlib import Path
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description="Validate the KernelBench strict benchmark environment")
+    parser.add_argument("--kb-task", default=None, help="Optional task id to validate against baseline coverage")
+    parser.add_argument("--kb-baseline-path", default=None, help="Path to explicit KernelBench baseline JSON")
+    parser.add_argument("--kb-reference-baseline", default=None, help="Vendored reference baseline directory name")
+    parser.add_argument("--json", action="store_true", help="Emit machine-readable JSON only")
+    args = parser.parse_args()
+
+    script_dir = Path(__file__).resolve().parent
+    repo_root = script_dir.parent
+    if str(repo_root) not in sys.path:
+        sys.path.insert(0, str(repo_root))
+    from tasks.kernelbench.strict_benchmark import validate_benchmark_environment  # noqa: WPS433
+
+    result = validate_benchmark_environment(
+        baseline_path=args.kb_baseline_path,
+        reference_baseline=args.kb_reference_baseline,
+        task_id=args.kb_task,
+    )
+    if args.json:
+        print(json.dumps(result, indent=2, sort_keys=True))
+    else:
+        status = "OK" if result["ok"] else "FAILED"
+        print(f"KernelBench strict benchmark environment: {status}")
+        runtime = result["runtime"]
+        print(f"Python: {runtime['python_version']}")
+        print(f"PyTorch: {runtime['torch_version']}")
+        print(f"CUDA: {runtime['cuda_version']}")
+        print(f"GPU: {runtime['gpu_name']}")
+        print(f"KernelBench root: {runtime['kernelbench_root']}")
+        print(f"Dataset root: {runtime['dataset_root']}")
+        print(f"Baseline: {result['baseline_path']}")
+        if result["errors"]:
+            print("Errors:")
+            for error in result["errors"]:
+                print(f" - {error}")
+        if result["warnings"]:
+            print("Warnings:")
+            for warning in result["warnings"]:
+                print(f" - {warning}")
+    return 0 if result["ok"] else 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

@@ -14,7 +14,7 @@ import sys
 import time
 import traceback
 from dataclasses import dataclass
-from multiprocessing import Process, Queue
+from multiprocessing import Process, Queue, get_context
 from pathlib import Path
 
 import humanize
@@ -135,6 +135,11 @@ class Interpreter:
         self.agent_file_name = agent_file_name
         self.process: Process = None  # type: ignore
 
+    def _get_process_context(self):
+        if self.task_type in {"kernel", "kernelbench", "algotune"}:
+            return get_context("spawn")
+        return get_context()
+
     def child_proc_setup(self, result_outq: Queue) -> None:
         # disable all warnings (before importing anything)
         import shutup
@@ -191,9 +196,14 @@ class Interpreter:
         # - code_inq: send code to child to execute
         # - result_outq: receive stdout/stderr from child
         # - event_outq: receive events from child (e.g. state:ready, state:finished)
+        ctx = self._get_process_context()
         # trunk-ignore(mypy/var-annotated)
-        self.code_inq, self.result_outq, self.event_outq = Queue(), Queue(), Queue()
-        self.process = Process(
+        self.code_inq, self.result_outq, self.event_outq = (
+            ctx.Queue(),
+            ctx.Queue(),
+            ctx.Queue(),
+        )
+        self.process = ctx.Process(
             target=self._run_session,
             args=(self.code_inq, self.result_outq, self.event_outq),
         )
@@ -409,6 +419,7 @@ class Interpreter:
 
                 try:
                     logger.debug(f"Running direct evaluation for task {self.task_id}")
+                    _progress(f"calling strict KernelBench evaluation task={self.task_id}")
 
                     kernelbench_path = working_dir_path.parent.parent / "tasks" / "kernelbench"
                     kb_library_path = working_dir_path.parent.parent / "tasks" / "kernel_bench" / "KernelBench"
@@ -443,11 +454,14 @@ class Interpreter:
                         output.append(f"[Eval error]: {eval_results['error']}\n")
 
                     logger.info(f"Evaluation complete - speedup: {speedup_value}")
+                    _progress(f"completed KernelBench evaluation speedup={speedup_value}")
                 except ImportError as e:
                     output.append(f"[Eval error]: Failed to import evaluation module: {str(e)}")
                     logger.error(f"Import error during evaluation: {e}")
+                    _progress(f"KernelBench evaluation import failed: {e}")
                 except Exception as e:
                     output.append(f"[Eval error]: Failed to run evaluation: {str(e)}")
                     logger.error(f"Evaluation failed: {e}")
+                    _progress(f"KernelBench evaluation failed: {e}")
 
         return ExecutionResult(output, exec_time, e_cls_name, exc_info, exc_stack)
