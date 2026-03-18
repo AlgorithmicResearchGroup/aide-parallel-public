@@ -24,6 +24,10 @@ logger = logging.getLogger("aide")
 STRICT_ALGOTUNE_MODE = "benchmark_strict"
 
 
+def _progress(message: str) -> None:
+    print(f"[aide.exec] {message}", flush=True)
+
+
 @dataclass
 class ExecutionResult(DataClassJsonMixin):
     """
@@ -232,6 +236,9 @@ class Interpreter:
         """
 
         logger.debug(f"REPL is executing code (reset_session={reset_session})")
+        _progress(
+            f"starting code execution reset_session={reset_session} task_type={self.task_type}"
+        )
 
         if reset_session:
             if self.process is not None:
@@ -245,6 +252,7 @@ class Interpreter:
         assert self.process.is_alive()
 
         self.code_inq.put(code)
+        _progress(f"submitted code to worker chars={len(code)}")
 
         # wait for child to actually start execution (we don't want interrupt child setup)
         while True:
@@ -271,6 +279,7 @@ class Interpreter:
                 state = self.event_outq.get(timeout=1)  # wait for state:finished
                 assert state[0] == "state:finished", state
                 exec_time = time.time() - start_time
+                _progress(f"worker finished execution in {exec_time:.2f}s")
                 break
             except queue.Empty:
                 # we haven't heard back from the child -> check if it's still alive (assuming overtime interrupt wasn't sent yet)
@@ -289,6 +298,7 @@ class Interpreter:
                 running_time = time.time() - start_time
                 if running_time > self.timeout:
                     logger.warning(f"Execution exceeded timeout of {self.timeout}s")
+                    _progress(f"execution exceeded timeout={self.timeout}s; sending SIGINT")
                     os.kill(self.process.pid, signal.SIGINT)
                     child_in_overtime = True
 
@@ -336,6 +346,7 @@ class Interpreter:
         # For speedup tasks, run the evaluation directly (not as subprocess).
         if self.task_type in ["kernel", "kernelbench", "algotune"] and self.eval_cmd and e_cls_name is None:
             logger.info(f"Running evaluation for {self.task_type} task")
+            _progress(f"starting evaluation for task_type={self.task_type}")
             import sys
             from pathlib import Path
 
@@ -345,9 +356,11 @@ class Interpreter:
                 solver_path = self.working_dir / "solver.py"
                 with open(solver_path, "w") as f:
                     f.write(code)
+                _progress(f"wrote solver to {solver_path}")
 
                 try:
                     logger.debug(f"Running AlgoTune evaluation for task {self.task_id}")
+                    _progress(f"importing AlgoTune evaluator for task={self.task_id}")
 
                     algotune_path = working_dir_path.parent.parent / "tasks" / "algotune"
                     if algotune_path.exists():
@@ -355,11 +368,13 @@ class Interpreter:
 
                     from evaluate_algotune import evaluate_task
 
+                    _progress(f"calling strict AlgoTune train evaluation task={self.task_id}")
                     eval_results = evaluate_task(
                         task_name=self.task_id,
                         solver_path=str(solver_path),
                         split="train",
                     )
+                    _progress(f"AlgoTune train evaluation returned: {eval_results}")
 
                     output.append("\n=== AlgoTune Evaluation Output ===\n")
                     output.append(
@@ -378,12 +393,15 @@ class Interpreter:
                         output.append(f"[Eval error]: {eval_results['error']}\n")
 
                     logger.info(f"AlgoTune evaluation complete - speedup: {speedup_value}")
+                    _progress(f"completed evaluation speedup={speedup_value}")
                 except ImportError as e:
                     output.append(f"[Eval error]: Failed to import AlgoTune evaluation module: {str(e)}")
                     logger.error(f"Import error during AlgoTune evaluation: {e}")
+                    _progress(f"AlgoTune evaluation import failed: {e}")
                 except Exception as e:
                     output.append(f"[Eval error]: Failed to run AlgoTune evaluation: {str(e)}")
                     logger.error(f"AlgoTune evaluation failed: {e}")
+                    _progress(f"AlgoTune evaluation failed: {e}")
             else:
                 optimize_path = self.working_dir / "optimize.py"
                 with open(optimize_path, 'w') as f:

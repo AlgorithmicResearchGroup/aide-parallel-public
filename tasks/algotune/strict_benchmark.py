@@ -43,6 +43,10 @@ _STRICT_EVAL_CONTEXTS: dict[tuple[str, str, int, int], _StrictEvalContext] = {}
 _STRICT_EVAL_CONTEXTS_LOCK = threading.Lock()
 
 
+def _progress(message: str) -> None:
+    print(f"[algotune] {message}", flush=True)
+
+
 def _task_module_path(task_name: str) -> Path:
     return ALGOTUNE_TASKS_DIR / task_name / f"{task_name}.py"
 
@@ -139,10 +143,12 @@ def _candidate_execution_env(task_name: str, solver_path: str | Path):
         "AGENT_MODE": os.environ.get("AGENT_MODE"),
         "CODE_DIR": os.environ.get("CODE_DIR"),
         "CURRENT_TASK_NAME": os.environ.get("CURRENT_TASK_NAME"),
+        "ALGOTUNE_CONFIG_SILENT": os.environ.get("ALGOTUNE_CONFIG_SILENT"),
     }
     os.environ["AGENT_MODE"] = "1"
     os.environ["CODE_DIR"] = solver_dir
     os.environ["CURRENT_TASK_NAME"] = task_name
+    os.environ["ALGOTUNE_CONFIG_SILENT"] = "1"
     try:
         yield
     finally:
@@ -183,6 +189,7 @@ def _resolve_strict_dataset(
     from AlgoTuner.utils.dataset_manager import DatasetManager
     from AlgoTuner.utils.hf_datasets import ensure_hf_dataset
 
+    _progress(f"resolving strict dataset for task={task_name}")
     config = load_config()
     dataset_cfg = config.get("dataset", {}) or {}
     train_size = int(dataset_cfg.get("train_size", 100))
@@ -207,6 +214,7 @@ def _resolve_strict_dataset(
             candidate_roots.append(path)
 
     for candidate_root in candidate_roots:
+        _progress(f"checking dataset root {candidate_root}")
         manager = DatasetManager(str(candidate_root))
         train_info = manager.find_dataset(
             task_name,
@@ -224,14 +232,17 @@ def _resolve_strict_dataset(
         )
         if train_info and test_info:
             dataset_dir = Path(train_info.path).parent
+            _progress(f"resolved dataset at {dataset_dir}")
             return dataset_dir, {"train_size": train_size, "test_size": test_size}, None
 
+    _progress("failed to resolve a matching strict dataset")
     return None, None, (
         "Strict benchmark mode requires an existing official AlgoTune dataset "
         f"for task '{task_name}' with train_size={train_size} and test_size={test_size}. "
         "No matching dataset files were found in the configured data locations. "
+        "Pre-fetch the local Hugging Face snapshot first, then rerun strict benchmark mode. "
         "If you use the Hugging Face dataset path, set ALGOTUNE_HF_REVISION to a pinned "
-        "non-'main' revision before running benchmark_strict."
+        "non-'main' revision before fetching."
     )
 
 
@@ -320,6 +331,9 @@ def _get_or_create_eval_context(
                 train_size,
                 test_size,
             )
+            _progress(
+                f"reusing baseline context task={task_name} train={train_size} test={test_size}"
+            )
             return cached
 
         if task_instance is None:
@@ -340,6 +354,9 @@ def _get_or_create_eval_context(
             train_size,
             test_size,
         )
+        _progress(
+            f"created baseline context task={task_name} train={train_size} test={test_size}"
+        )
         return context
 
 
@@ -350,6 +367,7 @@ def evaluate_solver_split(
     split: str,
 ) -> dict[str, Any]:
     """Run strict AlgoTune evaluation on the requested split."""
+    _progress(f"starting strict {split} evaluation for task={task_name}")
     assert_benchmark_environment(check_all_tasks=False)
 
     from AlgoTuneTasks.factory import TaskFactory
@@ -358,6 +376,7 @@ def evaluate_solver_split(
 
     compiled, compile_error = _load_solver_for_compile_check(solver_path)
     if not compiled:
+        _progress(f"solver compile/load check failed: {compile_error}")
         return _normalize_dataset_eval_result(
             split=split,
             compiled=False,
@@ -366,11 +385,13 @@ def evaluate_solver_split(
         )
 
     task_instance = TaskFactory(task_name)
+    _progress("running solver compile/load check: success")
     dataset_dir, dataset_cfg, dataset_error = _resolve_strict_dataset(
         task_name=task_name,
         task_instance=task_instance,
     )
     if dataset_error:
+        _progress(f"dataset resolution failed: {dataset_error}")
         return _normalize_dataset_eval_result(
             split=split,
             compiled=True,
@@ -400,8 +421,12 @@ def evaluate_solver_split(
         train_size=dataset_cfg["train_size"],
         test_size=dataset_cfg["test_size"],
     )
+    _progress(
+        f"loaded dataset iterators train={dataset_cfg['train_size']} test={dataset_cfg['test_size']}"
+    )
     dataset_iterable = train_iter if split == "train" else test_iter
     num_runs = DEV_RUNS if split == "train" else EVAL_RUNS
+    _progress(f"starting vendored evaluator split={split} num_runs={num_runs}")
 
     with _candidate_execution_env(task_name, solver_path):
         eval_output = evaluate_code_on_dataset(
@@ -412,13 +437,19 @@ def evaluate_solver_split(
             default_num_eval_runs=num_runs,
             test_mode=False,
         )
+    _progress(f"finished vendored evaluator split={split}")
 
-    return _normalize_dataset_eval_result(
+    result = _normalize_dataset_eval_result(
         split=split,
         compiled=compiled,
         compile_error=None,
         eval_output=eval_output,
     )
+    _progress(
+        f"strict {split} evaluation result status={result['status']} "
+        f"metric={result.get('valid_metric')}"
+    )
+    return result
 
 
 def format_validation_result(result: dict[str, Any]) -> str:

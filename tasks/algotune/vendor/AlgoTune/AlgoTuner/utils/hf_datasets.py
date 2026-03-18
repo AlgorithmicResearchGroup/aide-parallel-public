@@ -5,6 +5,50 @@ from __future__ import annotations
 import logging
 import os
 from pathlib import Path
+from typing import Any
+
+
+def _raw_snapshot_download(**kwargs: Any) -> Any:
+    """Call the raw huggingface_hub snapshot helper directly.
+
+    This intentionally bypasses the public ``huggingface_hub.snapshot_download``
+    symbol because external instrumentation may wrap that symbol and inject
+    unsupported kwargs such as ``name='huggingface_hub.snapshot_download'``.
+    """
+    try:
+        from huggingface_hub import _snapshot_download as snapshot_module
+    except Exception as exc:
+        raise RuntimeError(
+            "Strict AlgoTune dataset download requires "
+            "huggingface_hub._snapshot_download.snapshot_download"
+        ) from exc
+
+    snapshot_download = snapshot_module.snapshot_download
+    logging.info(
+        "Using raw HF snapshot_download implementation from %s",
+        getattr(snapshot_module, "__file__", "<unknown>"),
+    )
+    return snapshot_download(**kwargs)
+
+
+def _hf_compatible_tqdm():
+    """Return a tqdm callable that tolerates HF-specific kwargs like `name`.
+
+    huggingface_hub 1.7.x passes `name=...` to the provided tqdm class. Plain
+    `tqdm.tqdm` in our environment rejects that kwarg, so wrap it and drop the
+    unsupported field.
+    """
+    try:
+        from tqdm import tqdm as base_tqdm
+    except ImportError:
+        return None
+
+    class _HFTqdm(base_tqdm):
+        def __init__(self, *args: Any, **kwargs: Any) -> None:
+            kwargs.pop("name", None)
+            super().__init__(*args, **kwargs)
+
+    return _HFTqdm
 
 
 def _project_root() -> Path:
@@ -58,6 +102,11 @@ def _get_cache_dir() -> Path:
     return _project_root() / ".hf_datasets"
 
 
+def _get_local_snapshot_root(repo_id: str | None = None) -> Path:
+    resolved_repo_id = repo_id or _get_repo_id()
+    return _get_cache_dir() / resolved_repo_id.replace("/", "__")
+
+
 def _is_lazy_mode() -> bool:
     """Check if lazy download mode is enabled (only download .jsonl initially)."""
     return os.environ.get("ALGOTUNE_HF_LAZY") == "1"
@@ -96,6 +145,21 @@ def _maybe_set_data_dir_for_hf(data_dir: Path, task_name: str | None) -> None:
             )
 
 
+def _resolve_cached_data_dir(task_name: str | None = None) -> Path | None:
+    data_dir = _get_local_snapshot_root() / "data"
+    if not data_dir.is_dir():
+        return None
+
+    if task_name:
+        task_dir = data_dir / task_name
+        if task_dir.is_dir():
+            return task_dir
+        if not _data_dir_has_task_dataset(data_dir, task_name):
+            return None
+
+    return data_dir
+
+
 def ensure_hf_dataset(task_name: str | None = None) -> Path | None:
     """
     Ensure HF datasets are available locally and return the data directory to use.
@@ -105,39 +169,44 @@ def ensure_hf_dataset(task_name: str | None = None) -> Path | None:
     """
     if os.environ.get("ALGOTUNE_HF_DISABLE") == "1":
         return None
-
-    try:
-        from huggingface_hub import snapshot_download
-    except Exception as exc:
-        logging.warning("HF download unavailable (huggingface_hub import failed): %s", exc)
+    cached = _resolve_cached_data_dir(task_name)
+    if cached is None:
+        logging.warning(
+            "HF dataset cache not present locally for repo=%s task=%s at %s. "
+            "Strict runs require a pre-fetched local snapshot.",
+            _get_repo_id(),
+            task_name or "all",
+            _get_local_snapshot_root(),
+        )
         return None
 
+    _maybe_set_data_dir_for_hf(cached.parent if task_name else cached, task_name)
+    logging.info("HF dataset available locally at %s", cached)
+    return cached
+
+
+def fetch_hf_dataset(task_name: str | None = None, *, force: bool = False) -> Path:
     repo_id = _get_repo_id()
     revision = _get_revision()
     cache_dir = _get_cache_dir()
     cache_dir.mkdir(parents=True, exist_ok=True)
 
-    local_dir = cache_dir / repo_id.replace("/", "__")
+    local_dir = _get_local_snapshot_root(repo_id)
     allow_patterns = None
     lazy_mode = _is_lazy_mode()
 
-    # Build allow_patterns based on lazy mode and task selection
     if lazy_mode:
-        # In lazy mode, only download .jsonl files initially (metadata only)
         if task_name:
             allow_patterns = [f"data/{task_name}/**/*.jsonl"]
         else:
             allow_patterns = ["data/**/*.jsonl"]
     elif task_name:
-        # Non-lazy mode: download entire task directory
         allow_patterns = [f"data/{task_name}/**"]
 
     token = _load_dotenv_token()
-    force = os.environ.get("ALGOTUNE_HF_FORCE_DOWNLOAD") == "1"
-
     mode_str = "metadata-only (lazy)" if lazy_mode else "full"
     logging.info(
-        "HF dataset download requested (repo=%s, revision=%s, task=%s, force=%s, mode=%s)",
+        "HF dataset fetch requested (repo=%s, revision=%s, task=%s, force=%s, mode=%s)",
         repo_id,
         revision,
         task_name or "all",
@@ -152,52 +221,25 @@ def ensure_hf_dataset(task_name: str | None = None) -> Path | None:
         print(f"📥 Downloading {task_name or 'all tasks'} dataset from HuggingFace ({repo_id})...")
         print("   This may take several minutes for large datasets...")
 
-    try:
-        # Import tqdm for progress display if available
-        try:
-            from tqdm import tqdm
+    tqdm_class = _hf_compatible_tqdm()
+    if tqdm_class is None:
+        print("   (Install tqdm for progress bars: pip install tqdm)")
 
-            tqdm_class = tqdm
-        except ImportError:
-            tqdm_class = None
-            print("   (Install tqdm for progress bars: pip install tqdm)")
-
-        # Set cache_dir to be within local_dir to avoid duplicating space
-        # Use symlinks to prevent storing files twice (cache + local_dir)
-        cache_dir = local_dir / ".hf_cache"
-        cache_dir.mkdir(parents=True, exist_ok=True)
-
-        snapshot_path = snapshot_download(
-            repo_id=repo_id,
-            repo_type="dataset",
-            revision=revision,
-            local_dir=str(local_dir),
-            cache_dir=str(cache_dir),
-            local_dir_use_symlinks=True,  # Use symlinks to save 113GB disk space
-            allow_patterns=allow_patterns,
-            token=token,
-            force_download=force,
-            tqdm_class=tqdm_class,
-        )
-        print(f"✓ Download complete! Dataset cached at {local_dir}")
-    except Exception as exc:
-        logging.warning("HF snapshot download failed for %s: %s", repo_id, exc)
-        print(f"❌ HF download failed: {exc}")
-        return None
-
-    data_dir = Path(snapshot_path) / "data"
-    if data_dir.is_dir():
-        _maybe_set_data_dir_for_hf(data_dir, task_name)
-        if task_name:
-            task_dir = data_dir / task_name
-            if task_dir.is_dir():
-                logging.info("HF dataset available at %s", task_dir)
-                return task_dir
-        logging.info("HF dataset available at %s", data_dir)
-        return data_dir
-
-    logging.warning("HF snapshot missing expected data directory: %s", data_dir)
-    return None
+    hf_cache_dir = local_dir / ".hf_cache"
+    hf_cache_dir.mkdir(parents=True, exist_ok=True)
+    snapshot_path = _raw_snapshot_download(
+        repo_id=repo_id,
+        repo_type="dataset",
+        revision=revision,
+        local_dir=str(local_dir),
+        cache_dir=str(hf_cache_dir),
+        allow_patterns=allow_patterns,
+        token=token,
+        force_download=force,
+        tqdm_class=tqdm_class,
+    )
+    print(f"✓ Download complete! Dataset cached at {local_dir}")
+    return Path(snapshot_path)
 
 
 def download_npy_files(task_name: str) -> bool:
@@ -215,16 +257,9 @@ def download_npy_files(task_name: str) -> bool:
         logging.info("Not in lazy mode, .npy files should already be downloaded")
         return True
 
-    try:
-        from huggingface_hub import snapshot_download
-    except Exception as exc:
-        logging.warning("HF download unavailable (huggingface_hub import failed): %s", exc)
-        return False
-
     repo_id = _get_repo_id()
     revision = _get_revision()
-    cache_dir = _get_cache_dir()
-    local_dir = cache_dir / repo_id.replace("/", "__")
+    local_dir = _get_local_snapshot_root(repo_id)
 
     allow_patterns = [f"data/{task_name}/**/*.npy"]
     token = _load_dotenv_token()
@@ -234,25 +269,22 @@ def download_npy_files(task_name: str) -> bool:
 
     try:
         # Import tqdm for progress display if available
-        try:
-            from tqdm import tqdm
-
-            tqdm_class = tqdm
-        except ImportError:
+        tqdm_class = _hf_compatible_tqdm()
+        if tqdm_class is None:
             tqdm_class = None
 
-        # Set cache_dir to be within local_dir to avoid duplicating space
-        # Use symlinks to prevent storing files twice (cache + local_dir)
+        # Set cache_dir to be within local_dir to avoid duplicating space.
+        # Recent huggingface_hub versions removed local_dir_use_symlinks, so
+        # rely on the default local_dir behavior here.
         hf_cache_dir = local_dir / ".hf_cache"
         hf_cache_dir.mkdir(parents=True, exist_ok=True)
 
-        snapshot_download(
+        _raw_snapshot_download(
             repo_id=repo_id,
             repo_type="dataset",
             revision=revision,
             local_dir=str(local_dir),
             cache_dir=str(hf_cache_dir),
-            local_dir_use_symlinks=True,  # Use symlinks to save 113GB disk space
             allow_patterns=allow_patterns,
             token=token,
             force_download=False,  # Use cached files if available

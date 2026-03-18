@@ -913,6 +913,11 @@ def evaluate_code_on_dataset(
     from AlgoTuner.utils.evaluator.legacy_adapter import LegacyAdapter
 
     logging.info(f"Using optimized evaluation pipeline (test_mode={test_mode})")
+    print(
+        f"[algotune.main] evaluate_code_on_dataset subset={data_subset} test_mode={test_mode}",
+        file=os.sys.stderr,
+        flush=True,
+    )
 
     # Import streaming iterator
 
@@ -989,8 +994,18 @@ def evaluate_code_on_dataset(
         logging.info(f"Baseline times available: {len(baseline_times)} entries")
         sample_keys = list(baseline_times.keys())[:5]
         logging.info(f"Sample baseline keys: {sample_keys}")
+        print(
+            f"[algotune.main] subset={data_subset} baseline_times_ready count={len(baseline_times)}",
+            file=os.sys.stderr,
+            flush=True,
+        )
     else:
         logging.warning("No baseline times provided for dataset evaluation!")
+        print(
+            f"[algotune.main] subset={data_subset} baseline_times_missing",
+            file=os.sys.stderr,
+            flush=True,
+        )
 
     # Create a generator that yields properly formatted problems
     def prepare_problems():
@@ -1066,12 +1081,19 @@ def evaluate_code_on_dataset(
 
     # Track all invalid solution analyses across chunks
     all_invalid_analyses = []
+    chunk_index = 0
 
     for problem_data in problem_generator:
         chunk.append(problem_data)
 
         # Process chunk when it reaches chunk_size or is the last chunk
         if len(chunk) >= chunk_size:
+            chunk_index += 1
+            print(
+                f"[algotune.main] subset={data_subset} chunk={chunk_index} starting size={len(chunk)} processed={len(all_results)}",
+                file=os.sys.stderr,
+                flush=True,
+            )
             try:
                 dataset_results = orchestrator.evaluate_dataset(
                     task_instance=task_obj,
@@ -1106,6 +1128,14 @@ def evaluate_code_on_dataset(
                 # Accumulate invalid solution analysis from this chunk
                 if hasattr(legacy_results, "invalid_solution_analysis"):
                     all_invalid_analyses.extend(legacy_results.invalid_solution_analysis)
+                aggregate = getattr(legacy_results, "aggregate_metrics", {}) or {}
+                print(
+                    f"[algotune.main] subset={data_subset} chunk={chunk_index} done "
+                    f"chunk_results={len(legacy_results)} total_results={len(all_results)} "
+                    f"valid={aggregate.get('num_valid')} evaluated={aggregate.get('num_evaluated')}",
+                    file=os.sys.stderr,
+                    flush=True,
+                )
 
             # Clear chunk and force GC
             chunk = []
@@ -1113,6 +1143,12 @@ def evaluate_code_on_dataset(
 
     # Process any remaining problems in the last chunk
     if chunk:
+        chunk_index += 1
+        print(
+            f"[algotune.main] subset={data_subset} chunk={chunk_index} starting size={len(chunk)} processed={len(all_results)}",
+            file=os.sys.stderr,
+            flush=True,
+        )
         try:
             dataset_results = orchestrator.evaluate_dataset(
                 task_instance=task_obj,
@@ -1148,6 +1184,14 @@ def evaluate_code_on_dataset(
             # Accumulate invalid solution analysis from last chunk
             if hasattr(legacy_results, "invalid_solution_analysis"):
                 all_invalid_analyses.extend(legacy_results.invalid_solution_analysis)
+            aggregate = getattr(legacy_results, "aggregate_metrics", {}) or {}
+            print(
+                f"[algotune.main] subset={data_subset} chunk={chunk_index} done "
+                f"chunk_results={len(legacy_results)} total_results={len(all_results)} "
+                f"valid={aggregate.get('num_valid')} evaluated={aggregate.get('num_evaluated')}",
+                file=os.sys.stderr,
+                flush=True,
+            )
 
     # Create AttributedList from all accumulated results
     from AlgoTuner.utils.evaluator.legacy_adapter import AttributedList
@@ -1176,6 +1220,13 @@ def evaluate_code_on_dataset(
 
     logging.info(
         f"Evaluation complete. Valid: {attributed_results.aggregate_metrics.get('num_valid', 0)}/{attributed_results.aggregate_metrics.get('num_evaluated', 0)}"
+    )
+    print(
+        f"[algotune.main] subset={data_subset} aggregate_done "
+        f"evaluated={num_evaluated} valid={num_valid} errors={num_errors} "
+        f"accuracy={attributed_results.aggregate_metrics.get('accuracy')}",
+        file=os.sys.stderr,
+        flush=True,
     )
 
     return attributed_results

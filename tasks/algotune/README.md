@@ -18,7 +18,12 @@ python -m pip install -e ./aideml
 ```
 
 If you keep AlgoTune somewhere else, set `ALGOTUNE_PATH=/absolute/path/to/AlgoTune`.
-If you use the Hugging Face dataset path in strict runs, also pin `ALGOTUNE_HF_REVISION` to a non-`main` revision.
+Strict runs no longer download the Hugging Face snapshot implicitly. Pin `ALGOTUNE_HF_REVISION` to a non-`main` revision and fetch the local snapshot first:
+
+```bash
+export ALGOTUNE_HF_REVISION='fc3744ffd7eebaa9e9b55427e2cda440955fdd2d'
+./cli/aide-algotune-fetch-dataset --task base64_encoding
+```
 
 ## Run
 
@@ -60,6 +65,7 @@ If you enable `AIDE_ENABLE_MLFLOW=1`, the sweep also logs campaign and per-attem
 
 - AlgoTune is CPU-oriented in this integration. Use `--cpus-per-experiment` when running locally or on CPU Ray workers.
 - This repo now exposes only the publication-grade AlgoTune path. It searches on the train split and reports one final held-out test evaluation.
+- Strict runs require the dataset snapshot to already exist locally. Use `./cli/aide-algotune-fetch-dataset` before benchmarking.
 - Repo-side outer task timeouts, compatibility skips, local AlgoTune config overrides, and custom fast/fallback evaluators have been removed.
 - Sweep summaries now include the benchmark-style harmonic-mean score with a 1.0 mercy floor for failed or slower-than-baseline tasks.
 - `--attempts-per-task` controls how many AIDE attempts each AlgoTune task gets.

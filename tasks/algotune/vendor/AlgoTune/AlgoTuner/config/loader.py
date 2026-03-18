@@ -18,6 +18,12 @@ _config_lock = threading.Lock()
 # --- End Singleton Pattern ---
 
 
+def _config_log(message: str) -> None:
+    if os.environ.get("ALGOTUNE_CONFIG_SILENT") == "1":
+        return
+    print(message, file=os.sys.stderr)
+
+
 def load_config(config_path: str = f"{_CONFIG_DIR_NAME}/{_DEFAULT_CONFIG_FILENAME}"):
     global _config_cache
     # Check cache first (double-checked locking pattern)
@@ -31,7 +37,7 @@ def load_config(config_path: str = f"{_CONFIG_DIR_NAME}/{_DEFAULT_CONFIG_FILENAM
 
         # --- Original loading logic starts here ---
         if yaml is None:
-            print("PyYAML not installed, returning empty config.", file=os.sys.stderr)
+            _config_log("PyYAML not installed, returning empty config.")
             _config_cache = {}  # Cache the empty dict
             return _config_cache
 
@@ -69,9 +75,8 @@ def load_config(config_path: str = f"{_CONFIG_DIR_NAME}/{_DEFAULT_CONFIG_FILENAM
             if config_path and os.path.isabs(config_path):
                 potential_paths.append(Path(config_path))
             else:
-                print(
+                _config_log(
                     f"Warning: Cannot access current directory and config_path '{config_path}' is relative",
-                    file=os.sys.stderr,
                 )
 
         loaded_config = None  # Variable to store the successfully loaded config
@@ -83,19 +88,15 @@ def load_config(config_path: str = f"{_CONFIG_DIR_NAME}/{_DEFAULT_CONFIG_FILENAM
                 # Resolve to make sure it's absolute for consistent logging
                 abs_path = p_path.resolve()
                 if abs_path.exists() and abs_path.is_file():
-                    print(f"Attempting to load config from: {abs_path}", file=os.sys.stderr)
+                    _config_log(f"Attempting to load config from: {abs_path}")
                     with open(abs_path) as file:
                         loaded_yaml = yaml.safe_load(file)
                         if loaded_yaml is not None:
-                            print(
-                                f"Successfully loaded config from: {abs_path}", file=os.sys.stderr
-                            )
+                            _config_log(f"Successfully loaded config from: {abs_path}")
                             loaded_config = loaded_yaml  # Store the loaded config
                             break  # Stop searching once loaded
                         else:
-                            print(
-                                f"Config file loaded but was empty: {abs_path}", file=os.sys.stderr
-                            )
+                            _config_log(f"Config file loaded but was empty: {abs_path}")
                             # Treat empty file as empty config, but keep searching for non-empty
                             if (
                                 loaded_config is None
@@ -104,13 +105,12 @@ def load_config(config_path: str = f"{_CONFIG_DIR_NAME}/{_DEFAULT_CONFIG_FILENAM
                 else:
                     pass  # Silently try next path
             except Exception as e:
-                print(f"Error loading or parsing config file {abs_path}: {e}", file=os.sys.stderr)
+                _config_log(f"Error loading or parsing config file {abs_path}: {e}")
                 # Continue to try other paths
 
         if loaded_config is None:  # If loop finished without loading anything valid
-            print(
+            _config_log(
                 f"Failed to load config from any potential paths. Defaulting to empty config. Searched: {[str(pp.resolve() if pp else 'None') for pp in potential_paths]}",
-                file=os.sys.stderr,
             )
             loaded_config = {}
 

@@ -115,6 +115,13 @@ Validate the strict benchmark environment before any publishable AlgoTune run:
 ./cli/aide-algotune-validate-env
 ```
 
+Fetch the local Hugging Face snapshot explicitly before strict benchmark runs:
+
+```bash
+export ALGOTUNE_HF_REVISION='fc3744ffd7eebaa9e9b55427e2cda440955fdd2d'
+./cli/aide-algotune-fetch-dataset --task kmeans
+```
+
 Run a strict held-out benchmark task:
 
 ```bash
@@ -122,7 +129,7 @@ Run a strict held-out benchmark task:
 ```
 
 The repo now exposes only the publishable AlgoTune path. It validates the Python 3.10 environment up front, searches on the train split, runs one held-out test evaluation at the end, and rejects repo-side timeout/compatibility shortcuts.
-If you source datasets from Hugging Face for strict runs, pin `ALGOTUNE_HF_REVISION` to a non-`main` revision so the benchmark data cannot drift.
+If you source datasets from Hugging Face for strict runs, pin `ALGOTUNE_HF_REVISION` to a non-`main` revision and prefetch the local snapshot so the benchmark run itself does not perform network downloads.
 The shared AlgoTune env is only valid if `./cli/aide-algotune-validate-env` still passes after `aideml` is installed.
 
 Run a resumable sweep across the full AlgoTune inventory:

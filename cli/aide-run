@@ -4,6 +4,7 @@
 set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+PYTHON_BIN="${PYTHON_BIN:-$(command -v python)}"
 
 TASK="attention"
 HEAD_NODE_IP="${AIDE_HEAD_NODE_IP:-}"
@@ -121,8 +122,9 @@ if [[ "$SOURCE_CONTRACT" != "$TARGET_CONTRACT" ]]; then
 fi
 
 echo "Using task=$TASK contract=$CONTRACT_FILE"
+echo "Using python=${PYTHON_BIN}"
 
-CMD=(python "${REPO_ROOT}/src/aide_runner.py" --task "$TASK")
+CMD=("${PYTHON_BIN}" "${REPO_ROOT}/src/aide_runner.py" --task "$TASK")
 
 if [[ "$LOCAL_MODE" == "true" ]]; then
   CMD+=(--local)
@@ -144,7 +146,7 @@ fi
 
 if [[ "$LOCAL_MODE" != "true" && -n "$HEAD_NODE_IP" ]]; then
   echo "Checking Ray cluster at ${HEAD_NODE_IP}:6379 ..."
-  if ! python -c "import ray; ray.init(address='${HEAD_NODE_IP}:6379'); print('Cluster reachable'); ray.shutdown()" >/dev/null 2>&1; then
+  if ! "${PYTHON_BIN}" -c "import ray; ray.init(address='${HEAD_NODE_IP}:6379'); print('Cluster reachable'); ray.shutdown()" >/dev/null 2>&1; then
     echo "ERROR: Ray cluster is not reachable at ${HEAD_NODE_IP}:6379"
     echo "Tip: start local mode with --local, or export AIDE_HEAD_NODE_IP correctly."
     exit 1
