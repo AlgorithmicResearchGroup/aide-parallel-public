@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -110,6 +111,24 @@ def effective_run_config(args: argparse.Namespace) -> dict[str, Any]:
     }
 
 
+def resolve_local_gpu_pool() -> list[str]:
+    visible = os.environ.get("CUDA_VISIBLE_DEVICES")
+    if visible:
+        pool = [token.strip() for token in visible.split(",") if token.strip()]
+        if pool:
+            return pool
+
+    import torch  # noqa: WPS433
+
+    gpu_count = torch.cuda.device_count()
+    if gpu_count < 1:
+        raise SystemExit(
+            "Local strict KernelBench campaigns require at least one visible CUDA GPU. "
+            "torch.cuda.device_count() returned 0."
+        )
+    return [str(index) for index in range(gpu_count)]
+
+
 def append_manifest(manifest_path: Path, record: dict[str, Any]) -> None:
     manifest_path.parent.mkdir(parents=True, exist_ok=True)
     with manifest_path.open("a", encoding="utf-8") as handle:
@@ -199,6 +218,11 @@ def create_manifest_record(
         "correct": report_result.get("correct"),
         "failure_reason": failure_reason or report_result.get("error") or (result or {}).get("error"),
         "artifact_dir": str(context["task_dir"]),
+        "assigned_gpu_id": (
+            report_result.get("assigned_gpu_id")
+            or (result or {}).get("best_result", {}).get("assigned_gpu_id")
+            or context.get("assigned_gpu_id")
+        ),
         "config_hash": context["config_hash"],
         "resume_key": f"{context['task_name']}:{context['config_hash']}",
         "baseline_path": kernelbench_eval.get("baseline_path"),
@@ -259,6 +283,7 @@ def prepare_task_context(
         "stdout_handle": None,
         "stderr_handle": None,
         "process": None,
+        "assigned_gpu_id": None,
     }
 
 
@@ -276,6 +301,8 @@ def finalize_task(campaign_id: str, context: dict[str, Any], existing_records: l
     result_payload["config_hash"] = context["config_hash"]
     result_payload["command"] = context["command"]
     result_payload["returncode"] = context["process"].returncode if context.get("process") is not None else None
+    if context.get("assigned_gpu_id") is not None:
+        result_payload.setdefault("assigned_gpu_id", context["assigned_gpu_id"])
     result_path.write_text(json.dumps(result_payload, indent=2, sort_keys=True), encoding="utf-8")
 
     best_solution_path = result_payload.get("best_result", {}).get("best_solution_path")
@@ -379,10 +406,37 @@ def main() -> int:
         for index, task_name in enumerate(selected_tasks, start=1)
     ]
     active: list[dict[str, Any]] = []
+    local_gpu_pool: list[str] = []
+    gpu_order: dict[str, int] = {}
+
+    if config["local"] and not config.get("head_node_ip") and float(config["gpu_fraction"]) > 0:
+        if int(config["num_experiments"]) != 1 or float(config["gpu_fraction"]) != 1.0:
+            raise SystemExit(
+                "Publication-grade local KernelBench campaigns require --num-experiments 1 "
+                "and --gpu-fraction 1.0 so each task owns exactly one GPU."
+            )
+        local_gpu_pool = resolve_local_gpu_pool()
+        if config["max_concurrent_tasks"] > len(local_gpu_pool):
+            raise SystemExit(
+                f"--max-concurrent-tasks={config['max_concurrent_tasks']} exceeds the "
+                f"{len(local_gpu_pool)} visible GPU(s) available for strict local runs."
+            )
+        gpu_order = {gpu_id: index for index, gpu_id in enumerate(local_gpu_pool)}
 
     def start_task(context: dict[str, Any]) -> None:
         context["started_at"] = datetime.now().isoformat()
-        print(f"[{context['index']}/{context['total']}] Running {context['task_name']} (level {context['level']}, {context['category']})")
+        env = os.environ.copy()
+        if local_gpu_pool:
+            assigned_gpu_id = local_gpu_pool.pop(0)
+            context["assigned_gpu_id"] = assigned_gpu_id
+            env["CUDA_VISIBLE_DEVICES"] = assigned_gpu_id
+            env["AIDE_ASSIGNED_GPU_ID"] = assigned_gpu_id
+            print(
+                f"[{context['index']}/{context['total']}] Running {context['task_name']} "
+                f"(level {context['level']}, {context['category']}) on GPU {assigned_gpu_id}"
+            )
+        else:
+            print(f"[{context['index']}/{context['total']}] Running {context['task_name']} (level {context['level']}, {context['category']})")
         context["stdout_handle"] = context["stdout_path"].open("w", encoding="utf-8")
         context["stderr_handle"] = context["stderr_path"].open("w", encoding="utf-8")
         context["process"] = subprocess.Popen(
@@ -391,6 +445,7 @@ def main() -> int:
             stdout=context["stdout_handle"],
             stderr=context["stderr_handle"],
             text=True,
+            env=env,
         )
         active.append(context)
 
@@ -428,6 +483,10 @@ def main() -> int:
                 context["stdout_handle"].close()
                 context["stderr_handle"].close()
                 finalize_task(campaign_id, context, existing_records, manifest_path)
+                assigned_gpu_id = context.get("assigned_gpu_id")
+                if assigned_gpu_id is not None:
+                    local_gpu_pool.append(assigned_gpu_id)
+                    local_gpu_pool.sort(key=lambda gpu_id: gpu_order.get(gpu_id, len(gpu_order)))
                 write_campaign_summary(campaign_dir)
                 reconcile_campaign_runs_in_mlflow(campaign_dir, tracking_experiment=config.get("tracking_experiment"), finalize_incomplete=False)
                 sync_campaign_summary_to_mlflow(campaign_dir, tracking_experiment=config.get("tracking_experiment"))

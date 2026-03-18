@@ -1,5 +1,5 @@
 """
-KernelBench Task: 1_40 - LayerNorm
+KernelBench Task: 1_10 - 3D tensor matrix multiplication
 Level: 1
 
 This file contains the original Model class that needs to be optimized.
@@ -20,41 +20,33 @@ import torch.nn as nn
 from torch.utils.cpp_extension import load_inline
 
 # Global variables from original task
-batch_size = 16
-dim1 = 256
-dim2 = 256
-    x = torch.rand(batch_size, features, dim1, dim2)
+
 
 # Helper functions from original task
-    def __init__(self, normalized_shape: tuple):
-        """
-        Initializes the LayerNorm layer.
-
-        Args:
-            normalized_shape (tuple): Shape of the input tensor to be normalized.
-        """
+    def __init__(self):
         super(Model, self).__init__()
-        self.ln = nn.LayerNorm(normalized_shape=normalized_shape)
 
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
+    def forward(self, A, B):
         """
-        Applies Layer Normalization to the input tensor.
+        Performs 3D tensor-matrix multiplication.
 
         Args:
-            x (torch.Tensor): Input tensor of shape (*, normalized_shape).
+            A (torch.Tensor): Input 3D tensor of shape (N, M, K).
+            B (torch.Tensor): Input matrix of shape (K, L).
 
         Returns:
-            torch.Tensor: Output tensor with Layer Normalization applied, same shape as input.
+            torch.Tensor: Output tensor of shape (N, M, L), resulting from the multiplication of A and B along the last dimension of A.
         """
-        return self.ln(x)
+        return torch.matmul(A, B)
 
 # Input/Init specifications from original task
 def get_inputs():
-    x = torch.rand(batch_size, features, dim1, dim2)
-    return [x]
+    A = torch.rand(N, M, K)
+    B = torch.rand(K, L)
+    return [A, B]
 
 def get_init_inputs():
-    return [(features, dim1, dim2)]
+    return []  # No special initialization inputs needed
 
 ###############################################################################
 # ORIGINAL MODEL (DO NOT MODIFY - FOR REFERENCE ONLY)
@@ -62,29 +54,23 @@ def get_init_inputs():
 
 class Model(nn.Module):
     """
-    Simple model that performs Layer Normalization.
+    Performs 3D tensor-matrix multiplication.
     """
-    def __init__(self, normalized_shape: tuple):
-        """
-        Initializes the LayerNorm layer.
-
-        Args:
-            normalized_shape (tuple): Shape of the input tensor to be normalized.
-        """
+    def __init__(self):
         super(Model, self).__init__()
-        self.ln = nn.LayerNorm(normalized_shape=normalized_shape)
-
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
+    
+    def forward(self, A, B):
         """
-        Applies Layer Normalization to the input tensor.
+        Performs 3D tensor-matrix multiplication.
 
         Args:
-            x (torch.Tensor): Input tensor of shape (*, normalized_shape).
+            A (torch.Tensor): Input 3D tensor of shape (N, M, K).
+            B (torch.Tensor): Input matrix of shape (K, L).
 
         Returns:
-            torch.Tensor: Output tensor with Layer Normalization applied, same shape as input.
+            torch.Tensor: Output tensor of shape (N, M, L), resulting from the multiplication of A and B along the last dimension of A.
         """
-        return self.ln(x)
+        return torch.matmul(A, B)
 
 ###############################################################################
 # EXAMPLE OPTIMIZATION PATTERN
@@ -199,7 +185,7 @@ class ModelNew(nn.Module):
 # 4. Focus on GPU performance optimization
 
 class ModelNew(nn.Module):
-    """Optimized version of Model for LayerNorm"""
+    """Optimized version of Model for 3D tensor matrix multiplication"""
 
     def __init__(self, *args, **kwargs):
         """Initialize with same signature as Model.__init__"""
