@@ -35,16 +35,20 @@ if [[ -n "${MLFLOW_TRACKING_URI:-}" || -n "${MLFLOW_EXPERIMENT_NAME:-}" ]]; then
 fi
 
 TRACKING_EXPERIMENT="${TRACKING_EXPERIMENT:-${MLFLOW_EXPERIMENT_NAME:-}}"
+NUM_EXPERIMENTS="${NUM_EXPERIMENTS:-4}"
+NUM_ITERATIONS="${NUM_ITERATIONS:-1}"
+STEPS="${STEPS:-4}"
+CPUS_PER_EXPERIMENT="${CPUS_PER_EXPERIMENT:-1}"
 
 cmd=(
   ./cli/aide-run
   --local
   --task algotune
   --at-task "$TASK_NAME"
-  --num-experiments 4
-  --num-iterations 1
-  --steps 4
-  --cpus-per-experiment 1
+  --num-experiments "$NUM_EXPERIMENTS"
+  --num-iterations "$NUM_ITERATIONS"
+  --steps "$STEPS"
+  --cpus-per-experiment "$CPUS_PER_EXPERIMENT"
   --result-json "$RESULT_JSON"
 )
 
