@@ -125,8 +125,8 @@ def _validate_model_credentials(model: str, feedback_model: str) -> None:
         if provider == "openrouter":
             return "OPENROUTER_API_KEY"
         if provider == "openai":
-            base_url = os.getenv("OPENAI_BASE_URL", "")
-            if "groq.com" in base_url or not base_url:
+            base_url = (os.getenv("OPENAI_BASE_URL") or "").strip().lower()
+            if "groq.com" in base_url:
                 return "GROQ_API_KEY"
             return "OPENAI_API_KEY"
         return None
@@ -141,7 +141,7 @@ def _validate_model_credentials(model: str, feedback_model: str) -> None:
         checked.add(marker)
         if env_name and not os.getenv(env_name):
             detail = f"Selected model '{candidate}' uses provider '{provider}'"
-            if provider == "openai" and (os.getenv("OPENAI_BASE_URL", "") == "" or "groq.com" in os.getenv("OPENAI_BASE_URL", "")):
+            if provider == "openai" and os.getenv("OPENAI_BASE_URL"):
                 detail += " via the current OpenAI-compatible endpoint configuration"
             raise RuntimeError(
                 f"{detail}, but required credential {env_name} is not set. "

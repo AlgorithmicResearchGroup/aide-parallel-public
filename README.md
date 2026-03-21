@@ -38,6 +38,14 @@ AIDE_MODEL=llama-3.3-70b-versatile
 AIDE_FEEDBACK_MODEL=llama-3.3-70b-versatile
 ```
 
+OpenAI example:
+
+```bash
+OPENAI_API_KEY=...
+AIDE_MODEL=gpt-5
+AIDE_FEEDBACK_MODEL=gpt-5-mini
+```
+
 Anthropic example:
 
 ```bash
@@ -73,7 +81,7 @@ AIDE_ATTENTION_FAST_EVAL=1 ./cli/aide-run --local --task attention --num-experim
 - Use `./cli/aide-check` first. It verifies imports and runs a baseline attention evaluation on CPU.
 - Use the attention task for first run. It now auto-prepares a tiny Shakespeare dataset if the wiki dataset is missing.
 - Set `AIDE_MODEL` and `AIDE_FEEDBACK_MODEL` explicitly. Do not rely on provider-specific default model availability.
-- For the current repo state, Groq and Anthropic are the most reliable provider paths.
+- OpenAI, Groq, and Anthropic are supported. Use `OPENAI_BASE_URL=https://api.groq.com/openai/v1` only when you actually want the Groq endpoint.
 - Enable `AIDE_ENABLE_MLFLOW=1` if you want experiment tracking. Local MLflow works without a server.
 
 ## KernelBench

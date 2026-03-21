@@ -26,8 +26,6 @@ class OpenAIAPIError(Exception):
         self.error_type = error_type
         super().__init__(self.message)
 
-OPENAI_BASE_URL = os.getenv("OPENAI_BASE_URL", "https://api.groq.com/openai/v1")
-
 _client: openai.OpenAI = None  # type: ignore
 _custom_client: openai.OpenAI = None  # type: ignore
 
@@ -42,17 +40,20 @@ OPENAI_TIMEOUT_EXCEPTIONS = (
 @once
 def _setup_openai_client():
     global _client
-    # Use real OpenAI API with proper API key, explicitly override base_url
-    api_key = os.getenv("GROQ_API_KEY")
-    _client = openai.OpenAI(api_key=api_key, base_url=OPENAI_BASE_URL, max_retries=0)
+    base_url = (os.getenv("OPENAI_BASE_URL") or "").strip() or None
+    api_key = os.getenv("GROQ_API_KEY") if base_url and "groq.com" in base_url.lower() else os.getenv("OPENAI_API_KEY")
+    client_kwargs = {"api_key": api_key, "max_retries": 0}
+    if base_url:
+        client_kwargs["base_url"] = base_url
+    _client = openai.OpenAI(**client_kwargs)
 
 
 @once
 def _setup_custom_client():
     global _custom_client
     # Only create custom client if base URL is set
-    base_url = os.getenv("OPENAI_BASE_URL")
-    api_key = os.getenv("GROQ_API_KEY")
+    base_url = (os.getenv("OPENAI_BASE_URL") or "").strip()
+    api_key = os.getenv("GROQ_API_KEY") if "groq.com" in base_url.lower() else os.getenv("OPENAI_API_KEY")
     if base_url:
         _custom_client = openai.OpenAI(
             api_key=api_key, base_url=base_url, max_retries=0
@@ -84,8 +85,8 @@ def query(
 
     # Use different API based on whether this is a non-OpenAI model with custom base URL
     model_name = filtered_kwargs.get("model", "")
-    is_openai_model = re.match(r"^(gpt-|o\d-|codex-mini-latest$)", model_name)
-    use_chat_api = os.getenv("OPENAI_BASE_URL") is not None and not is_openai_model
+    is_openai_model = re.match(r"^(gpt-.*|o\d+(-.*)?|codex-mini-latest)$", model_name)
+    use_chat_api = bool((os.getenv("OPENAI_BASE_URL") or "").strip()) and not is_openai_model
 
     if use_chat_api:
         _setup_custom_client()
